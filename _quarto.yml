@@ -1,0 +1,25 @@
+project:
+  type: book
+
+book:
+  title: "Machine Learning Playbook"
+  author: "Mateus Molina"
+  date: today
+  chapters:
+    - index.qmd
+    - intro.qmd
+    - summary.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme:
+      - cosmo
+      - brand
+  pdf:
+    documentclass: scrreprt
+
+
+
