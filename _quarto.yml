@@ -34,3 +34,5 @@ filters:
   - custom-amsthm-environments
   - pseudocode
 
+resources:
+  - CNAME

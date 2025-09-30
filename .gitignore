@@ -1,9 +1,9 @@
 /.quarto/
 **/*.quarto_ipynb
 _book
-*_files
 .mypy_cache
-
+*_files
+!docs/**/*_files
 
 Latex
 *.acn
