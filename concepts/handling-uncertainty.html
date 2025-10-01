@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.24">
+<meta name="generator" content="quarto-1.8.25">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -59,10 +59,10 @@ div.csl-indent {
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-27c261d06b905028a18691de25d09dde.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-0dd2bd5de344125cf763a379ddc3eb04.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="../site_libs/quarto-contrib/pseudocode-2.4.1/pseudocode.min.js"></script>
 <link href="../site_libs/quarto-contrib/pseudocode-2.4.1/pseudocode.min.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -309,7 +309,7 @@ p(d\vert f)=\frac{p(f\vert d)p(d)}{p(f)}=\frac{p(f\vert d)p(d)}{p(f\vert d)p(d) 
 </div>
 </div>
 </div>
-<div id="algo-bayesian-update" class="pseudocode-container quarto-float" data-caption-prefix="Algorithm" data-pseudocode-number="1" data-line-number="true" data-line-number-punc=":" data-comment-delimiter="//" data-indent-size="1.2em" data-no-end="false">
+<div id="algo-bayesian-update" class="pseudocode-container quarto-float" data-indent-size="1.2em" data-line-number="true" data-line-number-punc=":" data-pseudocode-number="1" data-comment-delimiter="//" data-caption-prefix="Algorithm" data-no-end="false">
 <div class="pseudocode">
 \begin{algorithm} \caption{Sequential Bayesian Update for $p(d\mid f)$}\begin{algorithmic} \Require $\alpha_d, \beta_d$ \Comment{prior counts for $p(d)$} \Require $\alpha_{f\mid d}, \beta_{f\mid d}$ \Comment{prior counts for $p(f\mid d)$} \Require $\alpha_{f\mid nd}, \beta_{f\mid nd}$ \Comment{prior counts for $p(f\mid nd)$} \Require $\{(f_i, d_i)\}_{i=1}^n$ \Comment{sequence of observations} \Ensure $\{\hat{p}_{d\mid f}(i)\}_{i=1}^n$ \Comment{posterior after each observation} \Procedure{UpdatePosterior}{$\alpha_d, \beta_d, \alpha_{f\mid d}, \beta_{f\mid d}, \alpha_{f\mid nd}, \beta_{f\mid nd}, \{(f_i, d_i)\}_{i=1}^n$} \State $c_d \leftarrow 0$ \Comment{defects observed} \State $c_{f\wedge d} \leftarrow 0$ \Comment{flagged defects} \State $c_{f\wedge nd} \leftarrow 0$ \Comment{false alarms} \For{$i = 1$ \To $n$} \State $(f, d) \leftarrow (f_i, d_i)$ \Comment{$f_i \in \{\texttt{flag}, \texttt{no\_flag}\}$} \State $c_d \leftarrow c_d + \mathbb{I}[d = \texttt{defect}]$ \State $c_{nd} \leftarrow i - c_d$ \If{$f = \texttt{flag}$} \If{$d = \texttt{defect}$} \State $c_{f\wedge d} \leftarrow c_{f\wedge d} + 1$ \Else \State $c_{f\wedge nd} \leftarrow c_{f\wedge nd} + 1$ \EndIf \EndIf \State $\hat{p}_d \leftarrow \dfrac{\alpha_d + c_d}{\alpha_d + \beta_d + i}$ \State $\hat{p}_{f\mid d} \leftarrow \dfrac{\alpha_{f\mid d} + c_{f\wedge d}}{\alpha_{f\mid d} + \beta_{f\mid d} + c_d}$ \State $\hat{p}_{f\mid nd} \leftarrow \dfrac{\alpha_{f\mid nd} + c_{f\wedge nd}}{\alpha_{f\mid nd} + \beta_{f\mid nd} + c_{nd}}$ \State $\hat{p}_f \leftarrow \hat{p}_{f\mid d}\hat{p}_d + \hat{p}_{f\mid nd}(1-\hat{p}_d)$ \State $\hat{p}_{d\mid f}(i) \leftarrow \dfrac{\hat{p}_{f\mid d}\hat{p}_d}{\hat{p}_f}$ \EndFor \State \textbf{return} $\{\hat{p}_{d\mid f}(i)\}_{i=1}^n$ \EndProcedure \end{algorithmic} \end{algorithm}
 </div>
