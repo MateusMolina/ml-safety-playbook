@@ -29,6 +29,9 @@ jobs:
         if: github.event.action != 'closed'
         run: pip install -r requirements.txt
 
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+
       - name: Render Quarto Project
         if: github.event.action != 'closed'
         uses: quarto-dev/quarto-actions/render@v2
