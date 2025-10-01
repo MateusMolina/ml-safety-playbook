@@ -6,9 +6,9 @@ title: "Handling Uncertainty"
 
 1. Understand the Bayes Theorem as a foundational block for making sense of uncertainty.
 
-## Bayesian Interpreation of Uncertainty
+## Bayesian Interpretation of Uncertainty
 
-Instead of viewing probabilities in terms of the frequencies of random, repeatabale events, what is referred as the _frequentist_ interpretation of probability, one can see them as proxy for uncertainty quantification. That means, that new events serve as new data points -- evidence! -- for improving the understanding of uncertainty in a process of interest.
+Instead of viewing probabilities in terms of the frequencies of random, repeatable events, what is referred as the _frequentist_ interpretation of probability, one can see them as proxy for uncertainty quantification. That means, that new events serve as new data points -- evidence! -- for improving the understanding of uncertainty in a process of interest.
 
 ### Bayes Theorem
 
@@ -23,7 +23,7 @@ $$ {#eq-bayes}
 
 :::
 
-The events $x$ and $y$ can be understood as outcomes of the _random variables_ $X$ and $Y$, respectively. Random variables are functions that maps our event space $\Omega$ to event outcomes, e.g., $x$ and $y$. When we write $p(X=x)$ we are referering to the probability that the random variable function $X$ is evaluated to $x$. When the context is clear, we can abuse the notation and just write $p(x)$ or $p(y)$.
+The events $x$ and $y$ can be understood as outcomes of the _random variables_ $X$ and $Y$, respectively. Random variables are functions that maps our event space $\Omega$ to event outcomes, e.g., $x$ and $y$. When we write $p(X=x)$ we are referring to the probability that the random variable function $X$ is evaluated to $x$. When the context is clear, we can abuse the notation and just write $p(x)$ or $p(y)$.
 
 @def-bayes is a consequence of two important probability rules: _sum rule_ and _product rule_. 
 
@@ -48,11 +48,11 @@ Looking at @eq-bayes, we see that the probability of $y$ happening given that $x
 
 ::: {#exm-anomaly-detection}
 ## Anomaly Detection
-A machine is equipped with a electric current sensor and a control system that flags if the electric current is outside of the typical range. We can assign a random variable $A$ (anomaly) that maps boolean outcomes to events in $\Omega$, i.e., $A: \Omega\rightarrow\{f,nf\}$, where $F$ represents at least a flagged event and $NF$ a non-flagged one, and $\Omega$ represents the event space for workpieces being processed in the machine.
+A machine is equipped with an electric current sensor and a control system that flags if the electric current is outside of the typical range. We can assign a random variable $A$ (anomaly) that maps boolean outcomes to events in $\Omega$, i.e., $A: \Omega\rightarrow\{f,nf\}$, where $f$ represents at least one flagged event and $nf$ a non-flagged one, and $\Omega$ represents the event space for workpieces being processed in the machine.
 
-Let us assume that we monitor another property of this machine, namely, how often we have to discard a workpiece being produced there. We attribute another random variable $Y$ (outcome) to this processes that also maps $Y:\Omega\rightarrow\{d,nd\}$ 
+Let us assume that we monitor another property of this machine, namely, how often we have to discard a workpiece being produced there. We attribute another random variable $Y$ (outcome) to this process that also maps $Y:\Omega\rightarrow\{d,nd\}$ 
 
-We want to continuously verify how effective is our anomaly detection metric in predicting defective workpieces, that is, monitor our $p(Y=d\vert A=f)$ or simply $p(d,f)$ for convenience. This will be our _posterior_. Ideally, if we want to implement a metric as proxy for defective workpieces, this posterior should be close to $1$, i.e., all flagged events led to a defective workpiece. 
+We want to continuously verify how effective our anomaly detection metric is in predicting defective workpieces, that is, monitor our $p(Y=d\vert A=f)$ or simply $p(d|f)$ for convenience. This will be our _posterior_. Ideally, if we want to implement a metric as proxy for defective workpieces, this posterior should be close to $1$, i.e., all flagged events led to a defective workpiece. 
 ::: 
 
 To make the discussion concrete, consider the following toy scenario. Suppose that, historically, $2\%$ of the parts produced by the machine turn out defective (a really bad rate, but useful for the demonstration). This means:
@@ -78,7 +78,7 @@ $$
 p(d\vert f)=\frac{p(f\vert d)p(d)}{p(f)}=\frac{p(f\vert d)p(d)}{p(f\vert d)p(d) + p(f\vert nd)(1-p(d))}
 $$
 
-This computes to $p(d\vert f) =$ `{python} f"{0.9*0.02/(0.9*0.02+0.15*(1-0.02)):.2f}"`, which is still surprisingly low given our prior and likelihood. The method, however, forces us to be realistic in our belief and say that we either need more _evidence_ to prove $A$ as a metric for $Y$ or we should pivot to other experiments. Since our result depended so strongly on our choice of priors, we can assume that reliabily collecting this information is critically important for significant outcomes using the method. Indeed, this is a common critique about the Bayesian approach to probability: it's often more difficult to be reproduced in comparison to frequentist approaches, since the research outcome depends heavily on these initial assumptions.
+This computes to $p(d\vert f) =$ `{python} f"{0.9*0.02/(0.9*0.02+0.15*(1-0.02)):.2f}"`, which is still surprisingly low given our prior and likelihood. The method, however, forces us to be realistic in our belief and say that we either need more _evidence_ to prove $A$ as a metric for $Y$ or we should pivot to other experiments. Since our result depended so strongly on our choice of priors, we can assume that reliably collecting this information is critically important for significant outcomes using the method. Indeed, this is a common critique about the Bayesian approach to probability: it's often more difficult to be reproduced in comparison to frequentist approaches, since the research outcome depends heavily on these initial assumptions.
 
 To see how new observations gradually nudge our belief, the next simulation follows 1000 consecutive parts using the @algo-bayesian-update. After each part, we recompute the quantities in Bayes' rule using the empirical frequencies observed so far.
 
