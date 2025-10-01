@@ -1,5 +1,5 @@
 # Preface {.unnumbered}
 
-This is a collection of notes about machine learning, safety of machine learning and other related topics.
+This is a collection of notes about machine learning, the safety of machine learning and other related topics.
 
 Please feel free to raise an issue if you find any error/typo/mistake or want to discuss a topic covered here.
