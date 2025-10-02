@@ -158,6 +158,9 @@ window.Quarto = {
       </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Machine Learning Safety Playbook</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/MateusMolina/ml-safety-playbook" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -220,7 +223,7 @@ window.Quarto = {
   <li><a href="#developing-the-intuition-for-understanding-uncertainty" id="toc-developing-the-intuition-for-understanding-uncertainty" class="nav-link" data-scroll-target="#developing-the-intuition-for-understanding-uncertainty"><span class="header-section-number">2.2.3</span> Developing the Intuition For Understanding Uncertainty</a></li>
   </ul></li>
   </ul>
-</nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/MateusMolina/ml-safety-playbook/edit/main/concepts/handling-uncertainty.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -300,7 +303,7 @@ p(d\vert f)=\frac{p(f\vert d)p(d)}{p(f)}=\frac{p(f\vert d)p(d)}{p(f\vert d)p(d) 
 \]</span></p>
 <p>This computes to <span class="math inline">\(p(d\vert f) =\)</span> 0.11, which is still surprisingly low given our prior and likelihood. The method, however, forces us to be realistic in our belief and say that we either need more <em>evidence</em> to prove <span class="math inline">\(A\)</span> as a metric for <span class="math inline">\(Y\)</span> or we should pivot to other experiments. Since our result depended so strongly on our choice of priors, we can assume that reliably collecting this information is critically important for significant outcomes using the method. Indeed, this is a common critique about the Bayesian approach to probability: it’s often more difficult to be reproduced in comparison to frequentist approaches, since the research outcome depends heavily on these initial assumptions.</p>
 <p>To see how new observations gradually nudge our belief, the next simulation follows 1000 consecutive parts using the <a href="#algo-bayesian-update" class="quarto-xref">Algorithm 1</a>. After each part, we recompute the quantities in Bayes’ rule using the empirical frequencies observed so far.</p>
-<div id="ebe9ae4a" class="cell" data-execution_count="1">
+<div id="05ab13b3" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -309,7 +312,7 @@ p(d\vert f)=\frac{p(f\vert d)p(d)}{p(f)}=\frac{p(f\vert d)p(d)}{p(f\vert d)p(d) 
 </div>
 </div>
 </div>
-<div id="algo-bayesian-update" class="pseudocode-container quarto-float" data-line-number="true" data-caption-prefix="Algorithm" data-indent-size="1.2em" data-line-number-punc=":" data-pseudocode-number="1" data-comment-delimiter="//" data-no-end="false">
+<div id="algo-bayesian-update" class="pseudocode-container quarto-float" data-pseudocode-number="1" data-no-end="false" data-line-number-punc=":" data-caption-prefix="Algorithm" data-comment-delimiter="//" data-indent-size="1.2em" data-line-number="true">
 <div class="pseudocode">
 \begin{algorithm} \caption{Sequential Bayesian Update for $p(d\mid f)$}\begin{algorithmic} \Require $\alpha_d, \beta_d$ \Comment{prior counts for $p(d)$} \Require $\alpha_{f\mid d}, \beta_{f\mid d}$ \Comment{prior counts for $p(f\mid d)$} \Require $\alpha_{f\mid nd}, \beta_{f\mid nd}$ \Comment{prior counts for $p(f\mid nd)$} \Require $\{(f_i, d_i)\}_{i=1}^n$ \Comment{sequence of observations} \Ensure $\{\hat{p}_{d\mid f}(i)\}_{i=1}^n$ \Comment{posterior after each observation} \Procedure{UpdatePosterior}{$\alpha_d, \beta_d, \alpha_{f\mid d}, \beta_{f\mid d}, \alpha_{f\mid nd}, \beta_{f\mid nd}, \{(f_i, d_i)\}_{i=1}^n$} \State $c_d \leftarrow 0$ \Comment{defects observed} \State $c_{f\wedge d} \leftarrow 0$ \Comment{flagged defects} \State $c_{f\wedge nd} \leftarrow 0$ \Comment{false alarms} \For{$i = 1$ \To $n$} \State $(f, d) \leftarrow (f_i, d_i)$ \Comment{$f_i \in \{\texttt{flag}, \texttt{no\_flag}\}$} \State $c_d \leftarrow c_d + \mathbb{I}[d = \texttt{defect}]$ \State $c_{nd} \leftarrow i - c_d$ \If{$f = \texttt{flag}$} \If{$d = \texttt{defect}$} \State $c_{f\wedge d} \leftarrow c_{f\wedge d} + 1$ \Else \State $c_{f\wedge nd} \leftarrow c_{f\wedge nd} + 1$ \EndIf \EndIf \State $\hat{p}_d \leftarrow \dfrac{\alpha_d + c_d}{\alpha_d + \beta_d + i}$ \State $\hat{p}_{f\mid d} \leftarrow \dfrac{\alpha_{f\mid d} + c_{f\wedge d}}{\alpha_{f\mid d} + \beta_{f\mid d} + c_d}$ \State $\hat{p}_{f\mid nd} \leftarrow \dfrac{\alpha_{f\mid nd} + c_{f\wedge nd}}{\alpha_{f\mid nd} + \beta_{f\mid nd} + c_{nd}}$ \State $\hat{p}_f \leftarrow \hat{p}_{f\mid d}\hat{p}_d + \hat{p}_{f\mid nd}(1-\hat{p}_d)$ \State $\hat{p}_{d\mid f}(i) \leftarrow \dfrac{\hat{p}_{f\mid d}\hat{p}_d}{\hat{p}_f}$ \EndFor \State \textbf{return} $\{\hat{p}_{d\mid f}(i)\}_{i=1}^n$ \EndProcedure \end{algorithmic} \end{algorithm}
 </div>
@@ -739,7 +742,7 @@ Bishop, Christopher M. 2006. <em>Pattern Recognition and Machine Learning</em>. 
   </div>
 </nav>
 </div> <!-- /content -->
-    <script type="text/javascript">
+    <footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/MateusMolina/ml-safety-playbook/edit/main/concepts/handling-uncertainty.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div></div></footer><script type="text/javascript">
     (function(d) {
       d.querySelectorAll(".pseudocode-container").forEach(function(el) {
         let pseudocodeOptions = {
