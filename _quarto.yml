@@ -4,6 +4,8 @@ project:
 book:
   title: "Machine Learning Safety Playbook"
   author: "Mateus Molina"
+  repo-url: https://github.com/MateusMolina/ml-safety-playbook
+  repo-actions: [edit]
   date: today
   chapters:
     - index.qmd
