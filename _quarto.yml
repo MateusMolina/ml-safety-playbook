@@ -10,11 +10,11 @@ book:
   chapters:
     - index.qmd
     - summary.qmd
-    - part: "Concepts"
+    - part: "Introduction"
       chapters:
-        - concepts/handling-uncertainty.qmd
+        - introduction/handling-uncertainty.qmd
     - references.qmd
-
+    - part: "Concepts"
 bibliography: references.bib
 
 format:
