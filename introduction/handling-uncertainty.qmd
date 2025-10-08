@@ -48,11 +48,11 @@ Looking at @eq-bayes, we see that the probability of $y$ happening given that $x
 
 ::: {#exm-anomaly-detection}
 ## Anomaly Detection
-A machine is equipped with an electric current sensor and a control system that flags if the electric current is outside of the typical range. We can assign a random variable $A$ (anomaly) that maps boolean outcomes to events in $\Omega$, i.e., $A: \Omega\rightarrow\{f,nf\}$, where $f$ represents at least one flagged event and $nf$ a non-flagged one, and $\Omega$ represents the event space for workpieces being processed in the machine.
+A machine is equipped with an electric current sensor and a control system that flags if the electric current is outside of the typical range. We can assign a random variable $F$ that maps boolean outcomes to events in $\Omega$, i.e., $F: \Omega\rightarrow\{f,nf\}$, where $f$ represents at least one flagged event and $nf$ a non-flagged one, and $\Omega$ represents the event space for workpieces being processed in the machine.
 
-Let us assume that we monitor another property of this machine, namely, how often we have to discard a workpiece being produced there. We attribute another random variable $Y$ (outcome) to this process that also maps $Y:\Omega\rightarrow\{d,nd\}$ 
+Let us assume that we monitor another property of this machine, namely, how often we have to discard a workpiece being produced there. We attribute another random variable $D$ to this process that also maps $D:\Omega\rightarrow\{d,nd\}$ 
 
-We want to continuously verify how effective our anomaly detection metric is in predicting defective workpieces, that is, monitor our $p(Y=d\vert A=f)$ or simply $p(d|f)$ for convenience. This will be our _posterior_. Ideally, if we want to implement a metric as proxy for defective workpieces, this posterior should be close to $1$, i.e., all flagged events led to a defective workpiece. 
+We want to continuously verify how effective our anomaly detection metric is in predicting defective workpieces, that is, monitor our $p(D=d\vert F=f)$ or simply $p(d|f)$ for convenience. This will be our _posterior_. Ideally, if we want to implement a metric as proxy for defective workpieces, this posterior should be close to $1$, i.e., all flagged events led to a defective workpiece. 
 ::: 
 
 To make the discussion concrete, consider the following toy scenario. Suppose that, historically, $2\%$ of the parts produced by the machine turn out defective (a really bad rate, but useful for the demonstration). This means:
@@ -79,6 +79,19 @@ p(d\vert f)=\frac{p(f\vert d)p(d)}{p(f)}=\frac{p(f\vert d)p(d)}{p(f\vert d)p(d) 
 $$
 
 This computes to $p(d\vert f) =$ `{python} f"{0.9*0.02/(0.9*0.02+0.15*(1-0.02)):.2f}"`, which is still surprisingly low given our prior and likelihood. The method, however, forces us to be realistic in our belief and say that we either need more _evidence_ to prove $A$ as a metric for $Y$ or we should pivot to other experiments. Since our result depended so strongly on our choice of priors, we can assume that reliably collecting this information is critically important for significant outcomes using the method. Indeed, this is a common critique about the Bayesian approach to probability: it's often more difficult to be reproduced in comparison to frequentist approaches, since the research outcome depends heavily on these initial assumptions.
+
+### Extending the example with online update
+
+The previous example computed an analytical estimate for our posterior, making no explicit assumption about the underlying probability distribution of the prior and likelihood, treating them as fixed point estimates based on historical data.
+
+The bayesian approach conceptualizes probabilities as uncertainty. This is useful to online learning scenarios, where part of the dataset is encountered during runtime. In order to apply online learning to @exm-anomaly-detection, it's necessary to assume a probability distribution for both the prior and posterior. An useful distribution to model boolean outcomes is the Bernoulli Distribution. In that case, we have:
+$$
+F\sim Ber(\theta) 
+$$
+
+Where $\sim$ implies that the random variable $F$ follows the probability distribution $Ber(\theta) and $\theta\in[0,1]$ represents how probable that $F=f$. We can rewrite the likelihood differently:
+
+$$p(F\vert \theta)$$
 
 To see how new observations gradually nudge our belief, the next simulation follows 1000 consecutive parts using the @algo-bayesian-update. After each part, we recompute the quantities in Bayes' rule using the empirical frequencies observed so far.
 
