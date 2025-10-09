@@ -351,31 +351,44 @@ p(\theta_{f,d} \vert \ \mathcal{D}_f)&amp;\propto Ber(\theta_{f,d})Beta(a, b) \\
 \end{align*}
 \tag{2.7}\]</span></span></p>
 <p>Where <span class="math inline">\(N_f=N_{f,d}+N_{f,nd}\)</span> is the total number of flagged events. Let us plot the prior, likelihood and posterior distributions for our initial example. We can choose the hyperparameters <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> such that the prior mean matches our initial belief of <span class="math inline">\(p(d)=0.02\)</span>. A good choice is to set <span class="math inline">\(a=2\)</span> and <span class="math inline">\(b=98\)</span>, which gives us the same prior mean of <span class="math inline">\(2/(2+98)=0.02\)</span>. For the likelihood, we can use the counts of flagged defective and non-defective events based on our initial example. Assuming we observed <span class="math inline">\(90\)</span> flagged defective events and <span class="math inline">\(15\)</span> flagged non-defective events, we have <span class="math inline">\(N_{f,d}=90\)</span> and <span class="math inline">\(N_{f,nd}=15\)</span>. Thus, our posterior will have parameters <span class="math inline">\(a+N_{f,d}=2+90=92\)</span> and <span class="math inline">\(b+N_{f,nd}=98+15=113\)</span>.</p>
-<div id="62074592" class="cell" data-execution_count="1">
+<div id="89f9112a" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="handling-uncertainty_files/figure-html/cell-2-output-1.png" width="659" height="378" class="figure-img"></p>
+<p><img src="handling-uncertainty_files/figure-html/cell-2-output-1.png" width="656" height="375" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>To see how new observations gradually nudge our posterior beliefs, the next simulation follows 1000 consecutive parts. After each part, the posterior is updated and the mode and the error bar is computed based on <a href="#eq-beta-props" class="quarto-xref">Equation&nbsp;<span>2.6</span></a>. The error bar is computed as three times the standard deviation (<span class="math inline">\(3\sigma\)</span>) around the mode, assuming a latent true latent defect probability of flagged events of <span class="math inline">\(\theta_{f,d}^\star=0.6\)</span>.</p>
-<div id="3eb7b215" class="cell" data-execution_count="2">
+<p>To see how new observations gradually nudge our posterior beliefs, the next simulation follows 1000 consecutive parts using the <a href="#algo-beta-bernoulli-update" class="quarto-xref">Algorithm 1</a>. After each part, the posterior is updated and the mode and the error bar is computed based on <a href="#eq-beta-props" class="quarto-xref">Equation&nbsp;<span>2.6</span></a>. The error bar is computed as three times the standard deviation (<span class="math inline">\(3\sigma\)</span>) around the mode, assuming a latent true latent defect probability of flagged events of <span class="math inline">\(\theta_{f,d}^\star=0.6\)</span>.</p>
+<div id="e0e00040" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="handling-uncertainty_files/figure-html/cell-3-output-1.png" width="756" height="373" class="figure-img"></p>
+<p><img src="handling-uncertainty_files/figure-html/cell-3-output-1.png" width="758" height="374" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>TODOS:</p>
-<ol type="1">
-<li>Add insights about the plot</li>
-<li>The error at the beginning is too small, how can we improve this?</li>
-<li>Add algorithm for the online update</li>
-</ol>
+<p>Our error bar shrinks as we observe more data, reflecting our increased confidence in the estimate. The mode converges towards the true latent defect probability of flagged events, <span class="math inline">\(\theta_{f,d}^\star=0.6\)</span>, demonstrating how Bayesian updating refines our beliefs with accumulating evidence.</p>
+<div id="algo-beta-bernoulli-update" class="pseudocode-container quarto-float" data-no-end="false" data-indent-size="1.2em" data-pseudocode-number="1" data-line-number="true" data-line-number-punc=":" data-comment-delimiter="//" data-caption-prefix="Algorithm">
+<div class="pseudocode">
+\begin{algorithm} \caption{Sequential Beta-Bernoulli Update for $\theta_{f,d}$}\begin{algorithmic} \INPUT $a_0 \geq 1, b_0 \geq 1$, prior Beta hyperparameters \INPUT $\{d_i\}_{i=1}^T$, sequence of flagged defect observations \OUTPUT $\{\hat{\theta}_{f,d}(t)\}_{t=1}^T$, $\{\sigma(t)\}_{t=1}^T$ \Procedure{BetaBernoulliUpdate}{$a_0, b_0, \{d_i\}_{i=1}^T$} \State $a \leftarrow a_0$ \Comment{initialize posterior parameters} \State $b \leftarrow b_0$ \For{$t = 1$ \To $T$} \State $d \leftarrow d_i$ \Comment{observe whether part is defective} \If{$d = \texttt{defect}$} \State $a \leftarrow a + 1$ \Comment{increment success count} \Else \State $b \leftarrow b + 1$ \Comment{increment failure count} \EndIf \State $\hat{\theta}_{f,d}(t) \leftarrow \dfrac{a - 1}{a + b - 2}$ \Comment{MAP estimate (mode)} \State $\sigma^2(t) \leftarrow \dfrac{ab}{(a+b)^2(a+b+1)}$ \Comment{posterior variance} \State $\sigma(t) \leftarrow \sqrt{\sigma^2(t)}$ \EndFor \State \textbf{return} $\{\hat{\theta}_{f,d}(t)\}_{t=1}^T, \{\sigma(t)\}_{t=1}^T$ \EndProcedure \end{algorithmic} \end{algorithm}
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Generalization
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This algorithm assumes <span class="math inline">\(a_0 \geq 1\)</span> and <span class="math inline">\(b_0 \geq 1\)</span>, which corresponds to using the Beta distribution to encode pseudo-counts or prior observations. For more general priors (e.g., Jeffreys prior with <span class="math inline">\(a_0 = b_0 = 0.5\)</span>), the MAP estimate should be replaced with the posterior mean <span class="math inline">\(\frac{a}{a+b}\)</span> when <span class="math inline">\(a \leq 1\)</span> or <span class="math inline">\(b \leq 1\)</span>, since the mode is undefined in those cases.</p>
+</div>
+</div>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
