@@ -1,3 +1,7 @@
+---
+citation: true
+---
+
 # Preface {.unnumbered}
 
 This is a collection of notes about machine learning, the safety of machine learning and other related topics.

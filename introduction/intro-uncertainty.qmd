@@ -1,0 +1,49 @@
+---
+title: "Introduction to Uncertainty"
+---
+
+## Learning goals
+
+1. Understand the Bayes Theorem as a foundational block for making sense of uncertainty.
+
+## Bayesian Interpretation of Uncertainty
+
+Instead of viewing probabilities in terms of the frequencies of random, repeatable events, what is referred as the _frequentist_ interpretation of probability, one can see them as proxy for uncertainty quantification. That means, that new events serve as new data points -- evidence! -- for improving the understanding of uncertainty in a process of interest.
+
+### Bayes Equation
+
+Let us first formally define the Bayes equation.
+
+::: {#def-bayes}
+
+The probability of an event $x$ given knowledge of an event $y$ can be expressed in the following form:
+$$
+p(y\vert x)=\frac{p(x\vert y)p(y)}{p(x)}
+$$ {#eq-bayes}
+
+:::
+
+The events $x$ and $y$ can be understood as outcomes of the _random variables_ $X$ and $Y$, respectively. Random variables are functions that maps our event space $\Omega$ to event outcomes, e.g., $x$ and $y$. When we write $p(X=x)$ we are referring to the probability that the random variable function $X$ is evaluated to $x$. When the context is clear, we can abuse the notation and just write $p(x)$ or $p(y)$.
+
+@def-bayes is a consequence of two important probability rules: _sum rule_ and _product rule_. 
+
+### Probability rules: Sum Rule and Product Rule
+
+The _sum rule_ is also known as _Law of Total Probability_. @bishopPatternRecognitionMachine2006 expresses them as:
+
+$$
+p(X) = \sum_Y p(X,Y)
+$$ {#eq-sum}
+$$
+p(X,Y)=p(Y\vert X)p(X)
+$$ {#eq-prob}
+
+Where $p(X,Y)$ is the _joint probability_ of random variables $X$ and $Y$, also commonly expressed as their intersection $p(X\cap Y)$.
+
+The _product rule_ (@eq-prob) is also the definition of conditional probability.
+
+### Developing the Intuition For Understanding Uncertainty
+
+Looking at @eq-bayes, we see that the probability of $y$ happening given that $x$ happened depends on the probability of what we knew before about the process, $p(x)$, which is commonly referred as the _priors_ and the _likelihood_ of it happening, $p(x\vert y)$. What we compute is the _posterior_, that is, the updated probability of $y$ happening given $x$ having happened.
+
+In the next section, we will explore examples of classification and regression problems where we can apply the Bayesian interpretation for understanding uncertainty.

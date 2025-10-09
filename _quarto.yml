@@ -9,10 +9,10 @@ book:
   date: today
   chapters:
     - index.qmd
-    - summary.qmd
     - part: "Introduction"
       chapters:
-        - introduction/handling-uncertainty.qmd
+        - introduction/intro-uncertainty.qmd
+        - introduction/example-anomaly-detection.qmd
     - references.qmd
     - part: "Concepts"
 bibliography: references.bib
