@@ -48,7 +48,7 @@ $$
 
 Where $\theta_{f,d}$ is the probability of the part being defective given the sensor reading, $\mathcal{D}_f=\{D_1, D_2, \dots, D_i\}$ is the set of observations of $D$ outcomes when $F=f$. Interestingly, $\theta_{f,d}$ is both a probability and a random variable itself, since we are uncertain about its value.
 
-We can once again express our task in terms of the bayesian equation (@eq-bayes):
+We can once again express our task in terms of the bayesian equation (@eq-bayes), but now making use of proportionality since, for the moment, we are not interested in the normalizing constant $p(\mathcal{D}_f)$:
 $$
 \begin{align*}
 p(\theta_{f,d} \vert \ \mathcal{D}_f)&\propto p(\mathcal{D}_f\vert \theta_{f,d})p(\theta_{f,d}) \\ 
