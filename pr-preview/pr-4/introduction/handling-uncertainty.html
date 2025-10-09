@@ -313,33 +313,31 @@ p(d\vert f)=\frac{p(f\vert d)p(d)}{p(f)}=\frac{p(f\vert d)p(d)}{p(f\vert d)p(d) 
 <p>The previous example computed an analytical estimate for our posterior, making no explicit assumption about the underlying probability distribution of the prior and likelihood, treating them as fixed point estimates based on historical data.</p>
 <p>The bayesian approach conceptualizes probabilities as uncertainty. This is useful for online learning scenarios, where part of the dataset is encountered during runtime. In order to apply online learning to <a href="#exm-anomaly-detection" class="quarto-xref">Example&nbsp;<span>2.1</span></a>, let us first formally define our new learning task:</p>
 <p><span class="math display">\[
-p(\theta_d \vert \ \mathcal{D}_f, f)=?
+p(\theta_{f,d} \vert \ \mathcal{D}_f)=?
 \]</span></p>
-<p>Where <span class="math inline">\(\theta_d\)</span> is the probability of the part being defective, <span class="math inline">\(\mathcal{D}_f=\{D_1, D_2, \dots, D_i\}\)</span> is the set of observations of <span class="math inline">\(D\)</span> outcomes when <span class="math inline">\(F=f\)</span>. Interestingly, <span class="math inline">\(\theta_d\)</span> is both a probability and a random variable itself, since we are uncertain about its value.</p>
+<p>Where <span class="math inline">\(\theta_{f,d}\)</span> is the probability of the part being defective given the sensor reading, <span class="math inline">\(\mathcal{D}_f=\{D_1, D_2, \dots, D_i\}\)</span> is the set of observations of <span class="math inline">\(D\)</span> outcomes when <span class="math inline">\(F=f\)</span>. Interestingly, <span class="math inline">\(\theta_{f,d}\)</span> is both a probability and a random variable itself, since we are uncertain about its value.</p>
 <p>We can once again express our task in terms of the bayesian equation (<a href="#eq-bayes" class="quarto-xref">Equation&nbsp;<span>2.1</span></a>): <span id="eq-exm-update"><span class="math display">\[
 \begin{align*}
-p(\theta_d \vert \ \mathcal{D}_f, f)&amp;\propto p(\mathcal{D}_f, f\vert \theta_d)p(\theta_d) \\
-&amp;\propto p(\mathcal{D}_f\vert \theta_d, f)p(f\vert \theta_d)p(\theta_d) \\
-&amp;\propto p(\mathcal{D}_f\vert \theta_d, f)p(\theta_d)\\
+p(\theta_{f,d} \vert \ \mathcal{D}_f)&amp;\propto p(\mathcal{D}_f\vert \theta_{f,d})p(\theta_{f,d}) \\
+&amp;\propto p(\mathcal{D}_f\vert \theta_{f,d})(\theta_{f,d})
 \end{align*}
 \tag{2.4}\]</span></span></p>
-<p>Since <span class="math inline">\(f\)</span> is an observation and thus not directly governed by <span class="math inline">\(\theta_d\)</span> – it’s independent to it, we can drop the term <span class="math inline">\(p(f\vert \theta_d)\)</span>, as it will be a constant factor in the expression and it will be absorbed by normalization.</p>
 <section id="modelling-the-prior-and-likelihood" class="level4" data-number="2.2.4.1">
 <h4 data-number="2.2.4.1" class="anchored" data-anchor-id="modelling-the-prior-and-likelihood"><span class="header-section-number">2.2.4.1</span> Modelling the prior and likelihood</h4>
 <p>Now, we need ways to express both our likelihood and prior as probability distributions, instead of point estimates, since we want to update our belief as new data points are observed. For that, we use the concept of <em>conjugate priors</em>, which are pairs of probability distributions that, when used together in Bayes’ rule, yield a posterior distribution of the same family as the prior distribution. This property greatly simplifies the process of updating beliefs with new evidence.</p>
-<p>In our case, we can use the Beta distribution as our prior and the Bernoulli distribution as our likelihood. Specifically, we can model the prior distribution of <span class="math inline">\(\theta_d\)</span> as a Beta distribution, <span class="math inline">\(Beta(\alpha_d, \beta_d)\)</span>, and the likelihood of the observed data as a Bernoulli distribution, <span class="math inline">\(Ber(\theta_d)\)</span>.</p>
+<p>In our case, we can use the Beta distribution as our prior and the Bernoulli distribution as our likelihood. Specifically, we can model the prior distribution of <span class="math inline">\(\theta_{f,d}\)</span> as a Beta distribution, <span class="math inline">\(Beta(a, b)\)</span>, and the likelihood of the observed data as a Bernoulli distribution, <span class="math inline">\(Ber(\theta_{f,d})\)</span>.</p>
 <p><span class="math display">\[
-\mathcal{D}_f\vert \theta_d, f \sim Ber(\theta_d)
+\mathcal{D}_f\vert \theta_{f,d} \sim Ber(\theta_{f,d})
 \]</span> <span class="math display">\[
-\theta_d \sim Beta(a, b)
+\theta_{f,d} \sim Beta(a, b)
 \]</span></p>
 <p>Where <span class="math inline">\(\sim\)</span> means that the random variable follows the probability distribution on the right side. The Beta distribution is defined on the interval <span class="math inline">\([0, 1]\)</span> and is parameterized by two positive shape parameters, <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>, commonly referred as hyperparameters and they are used to encode our beliefs into the prior distribution. It is often used to model the distribution of probabilities. The Bernoulli distribution, on the other hand, models binary outcomes (success/failure) and is parameterized by a single probability parameter <span class="math inline">\(\theta\)</span>.</p>
-<p>We can write our likelihood and prior as: <span class="math display">\[p(\mathcal{D}_f\vert \theta_d, f)=\theta_d^{N_{f,d}}(1-\theta_d)^{N_{f,nd}}\]</span> <span class="math display">\[p(\theta_d)\propto \theta_d^{a-1}(1-\theta_d)^{b-1}\]</span></p>
+<p>We can write our likelihood and prior as: <span class="math display">\[p(\mathcal{D}_f\vert \theta_{f,d})=\theta_{f,d}^{N_{f,d}}(1-\theta_{f,d})^{N_{f,nd}}\]</span> <span class="math display">\[p(\theta_{f,d})\propto \theta_{f,d}^{a-1}(1-\theta_{f,d})^{b-1}\]</span></p>
 <p>Here, <span class="math inline">\(N_{f,d}\)</span> and <span class="math inline">\(N_{f,nd}\)</span> are the counts of flagged defective and non-defective events. Plugging in these expressions into <a href="#eq-exm-update" class="quarto-xref">Equation&nbsp;<span>2.4</span></a>, we get: <span id="eq-exm-update-2"><span class="math display">\[
 \begin{align*}
-p(\theta_d \vert \ \mathcal{D}_f, f)&amp;\propto Ber(\theta_d)Beta(a, b) \\
-&amp;\propto \theta_d^{N_{f,d}}(1-\theta_d)^{N_{f,nd}}\theta_d^{a-1}(1-\theta_d)^{b-1} \\
-&amp;\propto \theta_d^{N_{f,d}+a-1}(1-\theta_d)^{N_{f,nd}+b-1} \\
+p(\theta_{f,d} \vert \ \mathcal{D}_f)&amp;\propto Ber(\theta_{f,d})Beta(a, b) \\
+&amp;\propto \theta_{f,d}^{N_{f,d}}(1-\theta_{f,d})^{N_{f,nd}}\theta_{f,d}^{a-1}(1-\theta_{f,d})^{b-1} \\
+&amp;\propto \theta_{f,d}^{N_{f,d}+a-1}(1-\theta_{f,d})^{N_{f,nd}+b-1} \\
 &amp;\propto Beta(a+N_{f,d}, b+N_{f,nd})
 \end{align*}
 \tag{2.5}\]</span></span></p>
@@ -348,26 +346,26 @@ p(\theta_d \vert \ \mathcal{D}_f, f)&amp;\propto Ber(\theta_d)Beta(a, b) \\
 \tag{2.6}\]</span></span></p>
 <p>Based on that, we can compute the mode, or MAP estimate, of our posterior distribution as: <span id="eq-exm-map"><span class="math display">\[
 \begin{align*}
-\hat{\theta_d}\vert \ \mathcal{D}_f, f&amp;=\frac{a+N_{f,d}-1}{a+b+N_{f,d}+N_{f,nd}-2} \\
+\hat{\theta}_{f,d}\vert \ \mathcal{D}_f&amp;=\frac{a+N_{f,d}-1}{a+b+N_{f,d}+N_{f,nd}-2} \\
 &amp;=\frac{a+N_{f,d}-1}{a+b+N_f-2} \\
 \end{align*}
 \tag{2.7}\]</span></span></p>
 <p>Where <span class="math inline">\(N_f=N_{f,d}+N_{f,nd}\)</span> is the total number of flagged events. Let us plot the prior, likelihood and posterior distributions for our initial example. We can choose the hyperparameters <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> such that the prior mean matches our initial belief of <span class="math inline">\(p(d)=0.02\)</span>. A good choice is to set <span class="math inline">\(a=2\)</span> and <span class="math inline">\(b=98\)</span>, which gives us the same prior mean of <span class="math inline">\(2/(2+98)=0.02\)</span>. For the likelihood, we can use the counts of flagged defective and non-defective events based on our initial example. Assuming we observed <span class="math inline">\(90\)</span> flagged defective events and <span class="math inline">\(15\)</span> flagged non-defective events, we have <span class="math inline">\(N_{f,d}=90\)</span> and <span class="math inline">\(N_{f,nd}=15\)</span>. Thus, our posterior will have parameters <span class="math inline">\(a+N_{f,d}=2+90=92\)</span> and <span class="math inline">\(b+N_{f,nd}=98+15=113\)</span>.</p>
-<div id="f43fbb11" class="cell" data-execution_count="1">
+<div id="62074592" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="handling-uncertainty_files/figure-html/cell-2-output-1.png" width="659" height="376" class="figure-img"></p>
+<p><img src="handling-uncertainty_files/figure-html/cell-2-output-1.png" width="659" height="378" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>To see how new observations gradually nudge our posterior beliefs, the next simulation follows 1000 consecutive parts. After each part, the posterior is updated and the mode and the error bar is computed based on <a href="#eq-beta-props" class="quarto-xref">Equation&nbsp;<span>2.6</span></a>. The error bar is computed as one standard deviation around the mode, assuming a latent true latent defect probability of flagged events of <span class="math inline">\(0.6\)</span>.</p>
-<div id="60aa1296" class="cell" data-execution_count="2">
+<p>To see how new observations gradually nudge our posterior beliefs, the next simulation follows 1000 consecutive parts. After each part, the posterior is updated and the mode and the error bar is computed based on <a href="#eq-beta-props" class="quarto-xref">Equation&nbsp;<span>2.6</span></a>. The error bar is computed as three times the standard deviation (<span class="math inline">\(3\sigma\)</span>) around the mode, assuming a latent true latent defect probability of flagged events of <span class="math inline">\(\theta_{f,d}^\star=0.6\)</span>.</p>
+<div id="3eb7b215" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="handling-uncertainty_files/figure-html/cell-3-output-1.png" width="758" height="374" class="figure-img"></p>
+<p><img src="handling-uncertainty_files/figure-html/cell-3-output-1.png" width="756" height="373" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -375,7 +373,6 @@ p(\theta_d \vert \ \mathcal{D}_f, f)&amp;\propto Ber(\theta_d)Beta(a, b) \\
 <p>TODOS:</p>
 <ol type="1">
 <li>Add insights about the plot</li>
-<li>Simplify <span class="math inline">\(\theta_d\vert f\)</span> to <span class="math inline">\(\theta_{d,f}\)</span> since we are computting the posterior only when <span class="math inline">\(F=f\)</span></li>
 <li>The error at the beginning is too small, how can we improve this?</li>
 <li>Add algorithm for the online update</li>
 </ol>
