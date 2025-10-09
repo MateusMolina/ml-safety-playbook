@@ -1,0 +1,252 @@
+---
+title: "Example: Anomaly Detection"
+---
+
+::: {#exm-anomaly-detection}
+## Anomaly Detection
+A machine is equipped with an electric current sensor and a control system that flags if the electric current is outside of the typical range. We can assign a random variable $F$ that maps boolean outcomes to events in $\Omega$, i.e., $F: \Omega\rightarrow\{f,nf\}$, where $f$ represents at least one flagged event and $nf$ a non-flagged one, and $\Omega$ represents the event space for workpieces being processed in the machine.
+
+Let us assume that we monitor another property of this machine, namely, how often we have to discard a workpiece being produced there. We attribute another random variable $D$ to this process that also maps $D:\Omega\rightarrow\{d,nd\}$ 
+
+We want to continuously verify how effective our anomaly detection metric is in predicting defective workpieces, that is, monitor our $p(D=d\vert F=f)$ or simply $p(d|f)$ for convenience. This will be our _posterior_. Ideally, if we want to implement a metric as proxy for defective workpieces, this posterior should be close to $1$, i.e., all flagged events led to a defective workpiece. 
+::: 
+
+To make the discussion concrete, consider the following toy scenario. Suppose that, historically, $2\%$ of the parts produced by the machine turn out defective (a really bad rate, but useful for the demonstration). This means:
+$$
+p(d)=0.02
+$$
+
+We also happen to know from historical data that when a defect is present, the current sensor raises a flag $90\%$ of the time, but it also generates false alarms: even when the part is fine, it still flags $15\%$ of the time. Formally: 
+$$
+p(f\vert d)  = 0.9 \text{, }
+p(f\vert nd) = 0.15 
+$$
+
+From @eq-prob and @eq-sum, we can compute $p(f)$:
+
+$$
+p(f)=p(f\vert d)p(d) + p(f\vert nd)p(nd)
+$$
+
+Bayes' rule lets us update the belief about a part being defective as soon as the sensor fires. Applying @eq-bayes and since $Y$ can only assume one of the values in the set $\{d,nd\}$, i.e., $p(nd)=1-p(d)$, we have the following equation in function of the variables we already know:
+
+$$
+p(d\vert f)=\frac{p(f\vert d)p(d)}{p(f)}=\frac{p(f\vert d)p(d)}{p(f\vert d)p(d) + p(f\vert nd)(1-p(d))}
+$$
+
+This computes to $p(d\vert f) =$ `{python} f"{0.9*0.02/(0.9*0.02+0.15*(1-0.02)):.2f}"`, which is still surprisingly low given our prior and likelihood. The method, however, forces us to be realistic in our belief and say that we either need more _evidence_ to prove $A$ as a metric for $Y$ or we should pivot to other experiments. Since our result depended so strongly on our choice of priors, we can assume that reliably collecting this information is critically important for significant outcomes using the method. Indeed, this is a common critique about the Bayesian approach to probability: it's often more difficult to be reproduced in comparison to frequentist approaches, since the research outcome depends heavily on these initial assumptions.
+
+## Extending the example with online update
+
+The previous example computed an analytical estimate for our posterior, making no explicit assumption about the underlying probability distribution of the prior and likelihood, treating them as fixed point estimates based on historical data.
+
+The bayesian approach conceptualizes probabilities as uncertainty. This is useful for online learning scenarios, where part of the dataset is encountered during runtime. In order to apply online learning to @exm-anomaly-detection, let us first formally define our new learning task:
+
+$$
+p(\theta_{f,d} \vert \ \mathcal{D}_f)=?
+$$
+
+Where $\theta_{f,d}$ is the probability of the part being defective given the sensor reading, $\mathcal{D}_f=\{D_1, D_2, \dots, D_i\}$ is the set of observations of $D$ outcomes when $F=f$. Interestingly, $\theta_{f,d}$ is both a probability and a random variable itself, since we are uncertain about its value.
+
+We can once again express our task in terms of the bayesian equation (@eq-bayes), but now making use of proportionality since, for the moment, we are not interested in the normalizing constant $p(\mathcal{D}_f)$:
+$$
+\begin{align*}
+p(\theta_{f,d} \vert \ \mathcal{D}_f)&\propto p(\mathcal{D}_f\vert \theta_{f,d})p(\theta_{f,d}) \\ 
+&\propto p(\mathcal{D}_f\vert \theta_{f,d})(\theta_{f,d})
+\end{align*}
+$$ {#eq-exm-update}
+
+### Modelling the prior and likelihood as beta-bernoulli distributions
+
+Now, we need ways to express both our likelihood and prior as probability distributions, instead of point estimates, since we want to update our belief as new data points are observed. For that, we use the concept of _conjugate priors_, which are pairs of probability distributions that, when used together in Bayes' rule, yield a posterior distribution of the same family as the prior distribution. This property greatly simplifies the process of updating beliefs with new evidence. 
+
+In our case, we can use the Beta distribution as our prior and the Bernoulli distribution as our likelihood. Specifically, we can model the prior distribution of $\theta_{f,d}$ as a Beta distribution, $Beta(a, b)$, and the likelihood of the observed data as a Bernoulli distribution, $Ber(\theta_{f,d})$.
+
+$$
+\mathcal{D}_f\vert \theta_{f,d} \sim Ber(\theta_{f,d})
+$$
+$$
+\theta_{f,d} \sim Beta(a, b)
+$$
+
+Where $\sim$ means that the random variable follows the probability distribution on the right side. The Beta distribution is defined on the interval $[0, 1]$ and is parameterized by two positive shape parameters, $a$ and $b$, commonly referred as hyperparameters and they are used to encode our beliefs into the prior distribution. It is often used to model the distribution of probabilities. The Bernoulli distribution, on the other hand, models binary outcomes (success/failure) and is parameterized by a single probability parameter $\theta$.
+
+We can write our likelihood and prior as:
+$$p(\mathcal{D}_f\vert \theta_{f,d})=\theta_{f,d}^{N_{f,d}}(1-\theta_{f,d})^{N_{f,nd}}$$
+$$p(\theta_{f,d})\propto \theta_{f,d}^{a-1}(1-\theta_{f,d})^{b-1}$$
+
+Here, $N_{f,d}$ and $N_{f,nd}$ are the counts of flagged defective and non-defective events. Plugging in these expressions into @eq-exm-update, we get:
+$$
+\begin{align*}
+p(\theta_{f,d} \vert \ \mathcal{D}_f)&\propto Ber(\theta_{f,d})Beta(a, b) \\
+&\propto \theta_{f,d}^{N_{f,d}}(1-\theta_{f,d})^{N_{f,nd}}\theta_{f,d}^{a-1}(1-\theta_{f,d})^{b-1} \\
+&\propto \theta_{f,d}^{N_{f,d}+a-1}(1-\theta_{f,d})^{N_{f,nd}+b-1} \\
+&\propto Beta(a+N_{f,d}, b+N_{f,nd})
+\end{align*}
+$$ {#eq-exm-update-2}
+
+We see that the posterior also follows a Beta distribution, with updated parameters $a+N_{f,d}$ and $b+N_{f,nd}$. This means that we can update our belief about the probability of a part being defective by simply updating the parameters of the Beta distribution as we observe new data. Therefore, Bayesian inference can be used both sequentially or in batch mode with equivalent results, which it makes it suitable for online learning scenarios. For a proof of this property, see @murphyMachineLearningProbabilistic2014. From Murphy's book, we can also look at useful properties of the Beta distribution, such as its mean, mode and variance:
+$$
+\mathbb{E}[\theta]=\frac{a}{a+b}, \quad mode(\theta)=\frac{a-1}{a+b-2}, \quad Var(\theta)=\frac{ab}{(a+b)^2(a+b+1)}
+$$ {#eq-beta-props}
+
+Based on that, we can compute the mode, or MAP estimate, of our posterior distribution as:
+$$
+\begin{align*}
+\hat{\theta}_{f,d}\vert \ \mathcal{D}_f&=\frac{a+N_{f,d}-1}{a+b+N_{f,d}+N_{f,nd}-2} \\
+&=\frac{a+N_{f,d}-1}{a+b+N_f-2} \\
+\end{align*}
+$$ {#eq-exm-map}
+
+Where $N_f=N_{f,d}+N_{f,nd}$ is the total number of flagged events. Let us plot the prior, likelihood and posterior distributions for our initial example. We can choose the hyperparameters $a$ and $b$ such that the prior mean matches our initial belief of $p(d)=0.02$. A good choice is to set $a=2$ and $b=98$, which gives us the same prior mean of $2/(2+98)=0.02$. For the likelihood, we can use the counts of flagged defective and non-defective events based on our initial example. Assuming we observed $90$ flagged defective events and $15$ flagged non-defective events, we have $N_{f,d}=90$ and $N_{f,nd}=15$. Thus, our posterior will have parameters $a+N_{f,d}=2+90=92$ and $b+N_{f,nd}=98+15=113$.
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.stats import beta
+
+plt.rcParams['text.usetex'] = True
+
+# Parameters
+a, b = 2, 98
+N_d, N_nd = 90, 15
+N_f = N_d + N_nd
+
+x = np.linspace(0, 1, 1000)
+
+# Prior and Posterior (Beta)
+prior = beta.pdf(x, a, b)
+posterior = beta.pdf(x, a + N_d, b + N_nd)
+
+# Likelihood (normalized to integrate to 1)
+lik = beta.pdf(x, N_d + 1, N_nd + 1)
+
+# Posterior mode (MAP)
+alpha_post = a + N_d
+beta_post = b + N_nd
+posterior_mode = (alpha_post - 1) / (alpha_post + beta_post - 2)
+
+# Plot
+plt.figure(figsize=(8, 4))
+plt.plot(x, prior, label='Prior (Beta)', color='blue')
+plt.plot(x, lik, label='Likelihood (scaled)', color='orange')
+plt.plot(x, posterior, label='Posterior (Beta)', color='green')
+plt.axvline(posterior_mode, color='green', linestyle='--', linewidth=1)
+plt.title('Prior, Likelihood, and Posterior (Bernoulli/Binomial Model)')
+plt.xlabel(r'Probability of Defective Part ($\theta_{f,d}$)')
+plt.ylabel('Density (relative scale)')
+plt.legend()
+plt.grid()
+
+# Annotate posterior mode
+max_y = max(prior.max(), posterior.max(), lik.max())
+plt.annotate(f"mode={posterior_mode:.3f}", 
+             xy=(posterior_mode, max_y * 0.6),
+             xytext=(posterior_mode + 0.02, max_y * 0.6),
+             color='green')
+
+plt.show()
+
+```
+
+
+## Online updates of beta-bernoulli model
+
+To see how new observations gradually nudge our posterior beliefs, the next simulation follows 1000 consecutive parts using the @algo-beta-bernoulli-update. After each part, the posterior is updated and the mode and the error bar is computed based on @eq-beta-props. The error bar is computed as three times the standard deviation ($3\sigma$) around the mode, assuming a latent true latent defect probability of flagged events of $\theta_{f,d}^\star=0.6$.
+
+```{python}
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.stats import beta
+
+# Parameters
+np.random.seed(0)
+T = 1000  # number of observations (parts)
+true_p = 0.6  # latent true defect probability of flagged events
+# Prior hyperparameters (starting from the posterior of the previous example)
+a0, b0 = 2.0 + 90, 98.0 + 15  # a0 = 92, b0 = 113
+
+# to keep it simple, we'll assume every part corresponds to an observed flagged event (i.e., we observe D when F=f). That lets us see how posterior updates with each observed outcome.
+
+# Arrays to store results
+modes = np.zeros(T)
+stds = np.zeros(T)
+alphas = np.zeros(T)
+betas = np.zeros(T)
+
+# Initialize
+a, b = a0, b0
+
+for t in range(T):
+    # Simulate whether the part is defective (observe D) using true_p
+    d = np.random.rand() < true_p
+    # Update counts: N_d increments if d is True, else N_nd increments
+    if d:
+        a += 1
+    else:
+        b += 1
+
+    # Save posterior parameters
+    alphas[t] = a
+    betas[t] = b
+
+    # Mode (MAP) for Beta: (a-1)/(a+b-2)
+    mode = (a - 1) / (a + b - 2)
+
+    var = (a * b) / (((a + b) ** 2) * (a + b + 1))
+    std = np.sqrt(var)
+
+    modes[t] = mode
+    stds[t] = std
+
+# Plot the trajectory of the MAP estimate with one-sigma shaded region
+x = np.arange(1, T + 1)
+plt.figure(figsize=(8, 4))
+plt.plot(x, modes, label='Posterior mode (MAP)', color='green')
+plt.fill_between(x, modes - 3*stds, modes + 3*stds, color='green', alpha=0.2, label=r'$\pm 3\sigma$')
+plt.hlines(y=true_p, xmin=1, xmax=T, color='red', linestyle='--', label=r'$\theta_{f,d}^\star=$'+f'{true_p:.3f}')
+plt.title(r'Online Beta-Bernoulli Updates (MAP and $\pm 3\sigma$)')
+plt.xlabel('Observation (t)')
+plt.ylabel(r"Estimated defect probability ($\hat{\theta}_{f,d}$)")
+plt.ylim(0.4, 0.8)
+plt.legend()
+plt.grid(alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+Our error bar shrinks as we observe more data, reflecting our increased confidence in the estimate. The mode converges towards the true latent defect probability of flagged events, $\theta_{f,d}^\star=0.6$, demonstrating how Bayesian updating refines our beliefs with accumulating evidence.
+
+```pseudocode
+#| label: algo-beta-bernoulli-update
+
+\begin{algorithm}
+\caption{Sequential Beta-Bernoulli Update for $\theta_{f,d}$}
+\begin{algorithmic}[1]
+\INPUT $a_0 \geq 1, b_0 \geq 1$, prior Beta hyperparameters
+\INPUT $\{d_i\}_{i=1}^T$, sequence of flagged defect observations
+\OUTPUT $\{\hat{\theta}_{f,d}(t)\}_{t=1}^T$, $\{\sigma(t)\}_{t=1}^T$
+\Procedure{BetaBernoulliUpdate}{$a_0, b_0, \{d_i\}_{i=1}^T$}
+  \State $a \leftarrow a_0$ \Comment{initialize posterior parameters}
+  \State $b \leftarrow b_0$
+  \For{$t = 1$ \To $T$}
+    \State $d \leftarrow d_i$ \Comment{observe whether part is defective}
+    \If{$d = \texttt{defect}$}
+      \State $a \leftarrow a + 1$ \Comment{increment success count}
+    \Else
+      \State $b \leftarrow b + 1$ \Comment{increment failure count}
+    \EndIf
+    \State $\hat{\theta}_{f,d}(t) \leftarrow \dfrac{a - 1}{a + b - 2}$ \Comment{MAP estimate (mode)}
+    \State $\sigma^2(t) \leftarrow \dfrac{ab}{(a+b)^2(a+b+1)}$ \Comment{posterior variance}
+    \State $\sigma(t) \leftarrow \sqrt{\sigma^2(t)}$
+  \EndFor
+  \State \textbf{return} $\{\hat{\theta}_{f,d}(t)\}_{t=1}^T, \{\sigma(t)\}_{t=1}^T$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+```
+
+::: {.callout-note}
+## Generalization
+This algorithm assumes $a_0 \geq 1$ and $b_0 \geq 1$, which corresponds to using the Beta distribution to encode pseudo-counts or prior observations. For more general priors (e.g., Jeffreys prior with $a_0 = b_0 = 0.5$), the MAP estimate should be replaced with the posterior mean $\frac{a}{a+b}$ when $a \leq 1$ or $b \leq 1$, since the mode is undefined in those cases.
+:::

@@ -1,0 +1,6 @@
+---
+title: Maximum a Posteriori Estimation
+abbreviation: MAP
+---
+
+Maximum a Posteriori (MAP) estimation is a method used in Bayesian statistics to estimate an unknown parameter by maximizing its posterior distribution. It combines prior knowledge about the parameter with observed data to provide a more informed estimate.

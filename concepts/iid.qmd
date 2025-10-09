@@ -1,0 +1,4 @@
+---
+title: "Independent and identically distributed"
+abbrevation: "IID"
+---
