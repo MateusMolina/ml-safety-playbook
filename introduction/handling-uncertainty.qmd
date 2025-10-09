@@ -87,47 +87,44 @@ The previous example computed an analytical estimate for our posterior, making n
 The bayesian approach conceptualizes probabilities as uncertainty. This is useful for online learning scenarios, where part of the dataset is encountered during runtime. In order to apply online learning to @exm-anomaly-detection, let us first formally define our new learning task:
 
 $$
-p(\theta_d \vert \ \mathcal{D}_f, f)=?
+p(\theta_{f,d} \vert \ \mathcal{D}_f)=?
 $$
 
-Where $\theta_d$ is the probability of the part being defective, $\mathcal{D}_f=\{D_1, D_2, \dots, D_i\}$ is the set of observations of $D$ outcomes when $F=f$. Interestingly, $\theta_d$ is both a probability and a random variable itself, since we are uncertain about its value.
+Where $\theta_{f,d}$ is the probability of the part being defective given the sensor reading, $\mathcal{D}_f=\{D_1, D_2, \dots, D_i\}$ is the set of observations of $D$ outcomes when $F=f$. Interestingly, $\theta_{f,d}$ is both a probability and a random variable itself, since we are uncertain about its value.
 
 We can once again express our task in terms of the bayesian equation (@eq-bayes):
 $$
 \begin{align*}
-p(\theta_d \vert \ \mathcal{D}_f, f)&\propto p(\mathcal{D}_f, f\vert \theta_d)p(\theta_d) \\ 
-&\propto p(\mathcal{D}_f\vert \theta_d, f)p(f\vert \theta_d)p(\theta_d) \\
-&\propto p(\mathcal{D}_f\vert \theta_d, f)p(\theta_d)\\
+p(\theta_{f,d} \vert \ \mathcal{D}_f)&\propto p(\mathcal{D}_f\vert \theta_{f,d})p(\theta_{f,d}) \\ 
+&\propto p(\mathcal{D}_f\vert \theta_{f,d})(\theta_{f,d})
 \end{align*}
 $$ {#eq-exm-update}
-
-Since $f$ is an observation and thus not directly governed by $\theta_d$ -- it's independent to it, we can drop the term $p(f\vert \theta_d)$, as it will be a constant factor in the expression and it will be absorbed by normalization.
 
 #### Modelling the prior and likelihood
 
 Now, we need ways to express both our likelihood and prior as probability distributions, instead of point estimates, since we want to update our belief as new data points are observed. For that, we use the concept of _conjugate priors_, which are pairs of probability distributions that, when used together in Bayes' rule, yield a posterior distribution of the same family as the prior distribution. This property greatly simplifies the process of updating beliefs with new evidence. 
 
-In our case, we can use the Beta distribution as our prior and the Bernoulli distribution as our likelihood. Specifically, we can model the prior distribution of $\theta_d$ as a Beta distribution, $Beta(\alpha_d, \beta_d)$, and the likelihood of the observed data as a Bernoulli distribution, $Ber(\theta_d)$.
+In our case, we can use the Beta distribution as our prior and the Bernoulli distribution as our likelihood. Specifically, we can model the prior distribution of $\theta_{f,d}$ as a Beta distribution, $Beta(a, b)$, and the likelihood of the observed data as a Bernoulli distribution, $Ber(\theta_{f,d})$.
 
 $$
-\mathcal{D}_f\vert \theta_d, f \sim Ber(\theta_d)
+\mathcal{D}_f\vert \theta_{f,d} \sim Ber(\theta_{f,d})
 $$
 $$
-\theta_d \sim Beta(a, b)
+\theta_{f,d} \sim Beta(a, b)
 $$
 
 Where $\sim$ means that the random variable follows the probability distribution on the right side. The Beta distribution is defined on the interval $[0, 1]$ and is parameterized by two positive shape parameters, $a$ and $b$, commonly referred as hyperparameters and they are used to encode our beliefs into the prior distribution. It is often used to model the distribution of probabilities. The Bernoulli distribution, on the other hand, models binary outcomes (success/failure) and is parameterized by a single probability parameter $\theta$.
 
 We can write our likelihood and prior as:
-$$p(\mathcal{D}_f\vert \theta_d, f)=\theta_d^{N_{f,d}}(1-\theta_d)^{N_{f,nd}}$$
-$$p(\theta_d)\propto \theta_d^{a-1}(1-\theta_d)^{b-1}$$
+$$p(\mathcal{D}_f\vert \theta_{f,d})=\theta_{f,d}^{N_{f,d}}(1-\theta_{f,d})^{N_{f,nd}}$$
+$$p(\theta_{f,d})\propto \theta_{f,d}^{a-1}(1-\theta_{f,d})^{b-1}$$
 
 Here, $N_{f,d}$ and $N_{f,nd}$ are the counts of flagged defective and non-defective events. Plugging in these expressions into @eq-exm-update, we get:
 $$
 \begin{align*}
-p(\theta_d \vert \ \mathcal{D}_f, f)&\propto Ber(\theta_d)Beta(a, b) \\
-&\propto \theta_d^{N_{f,d}}(1-\theta_d)^{N_{f,nd}}\theta_d^{a-1}(1-\theta_d)^{b-1} \\
-&\propto \theta_d^{N_{f,d}+a-1}(1-\theta_d)^{N_{f,nd}+b-1} \\
+p(\theta_{f,d} \vert \ \mathcal{D}_f)&\propto Ber(\theta_{f,d})Beta(a, b) \\
+&\propto \theta_{f,d}^{N_{f,d}}(1-\theta_{f,d})^{N_{f,nd}}\theta_{f,d}^{a-1}(1-\theta_{f,d})^{b-1} \\
+&\propto \theta_{f,d}^{N_{f,d}+a-1}(1-\theta_{f,d})^{N_{f,nd}+b-1} \\
 &\propto Beta(a+N_{f,d}, b+N_{f,nd})
 \end{align*}
 $$ {#eq-exm-update-2}
@@ -140,12 +137,13 @@ $$ {#eq-beta-props}
 Based on that, we can compute the mode, or MAP estimate, of our posterior distribution as:
 $$
 \begin{align*}
-\hat{\theta_d}\vert \ \mathcal{D}_f, f&=\frac{a+N_{f,d}-1}{a+b+N_{f,d}+N_{f,nd}-2} \\
+\hat{\theta}_{f,d}\vert \ \mathcal{D}_f&=\frac{a+N_{f,d}-1}{a+b+N_{f,d}+N_{f,nd}-2} \\
 &=\frac{a+N_{f,d}-1}{a+b+N_f-2} \\
 \end{align*}
 $$ {#eq-exm-map}
 
 Where $N_f=N_{f,d}+N_{f,nd}$ is the total number of flagged events. Let us plot the prior, likelihood and posterior distributions for our initial example. We can choose the hyperparameters $a$ and $b$ such that the prior mean matches our initial belief of $p(d)=0.02$. A good choice is to set $a=2$ and $b=98$, which gives us the same prior mean of $2/(2+98)=0.02$. For the likelihood, we can use the counts of flagged defective and non-defective events based on our initial example. Assuming we observed $90$ flagged defective events and $15$ flagged non-defective events, we have $N_{f,d}=90$ and $N_{f,nd}=15$. Thus, our posterior will have parameters $a+N_{f,d}=2+90=92$ and $b+N_{f,nd}=98+15=113$.
+
 ```{python}
 import numpy as np
 import matplotlib.pyplot as plt
@@ -177,7 +175,7 @@ plt.plot(x, lik, label='Likelihood (scaled)', color='orange')
 plt.plot(x, posterior, label='Posterior (Beta)', color='green')
 plt.axvline(posterior_mode, color='green', linestyle='--', linewidth=1)
 plt.title('Prior, Likelihood, and Posterior (Bernoulli/Binomial Model)')
-plt.xlabel('Probability of Defective Part (p)')
+plt.xlabel(r'Probability of Defective Part ($\theta_{f,d}$)')
 plt.ylabel('Density (relative scale)')
 plt.legend()
 plt.grid()
@@ -194,7 +192,7 @@ plt.show()
 ```
 
 
-To see how new observations gradually nudge our posterior beliefs, the next simulation follows 1000 consecutive parts. After each part, the posterior is updated and the mode and the error bar is computed based on @eq-beta-props. The error bar is computed as one standard deviation around the mode, assuming a latent true latent defect probability of flagged events of $0.6$.
+To see how new observations gradually nudge our posterior beliefs, the next simulation follows 1000 consecutive parts. After each part, the posterior is updated and the mode and the error bar is computed based on @eq-beta-props. The error bar is computed as three times the standard deviation ($3\sigma$) around the mode, assuming a latent true latent defect probability of flagged events of $\theta_{f,d}^\star=0.6$.
 
 ```{python}
 import numpy as np
@@ -249,11 +247,11 @@ for t in range(T):
 x = np.arange(1, T + 1)
 plt.figure(figsize=(8, 4))
 plt.plot(x, modes, label='Posterior mode (MAP)', color='green')
-plt.fill_between(x, modes - stds, modes + stds, color='green', alpha=0.2, label='±1 std')
-plt.hlines(y=true_p, xmin=1, xmax=T, color='red', linestyle='--', label=f'True p={true_p:.3f}')
-plt.title('Online Beta-Bernoulli Updates (MAP and ±1 std)')
+plt.fill_between(x, modes - 3*stds, modes + 3*stds, color='green', alpha=0.2, label=r'$\pm 3\sigma$')
+plt.hlines(y=true_p, xmin=1, xmax=T, color='red', linestyle='--', label=r'$\theta_{f,d}^\star=$'+f'{true_p:.3f}')
+plt.title(r'Online Beta-Bernoulli Updates (MAP and $\pm 3\sigma$)')
 plt.xlabel('Observation (t)')
-plt.ylabel('Estimated defect probability')
+plt.ylabel(r"Estimated defect probability ($\hat{\theta}_{f,d}$)")
 plt.ylim(0.4, 0.8)
 plt.legend()
 plt.grid(alpha=0.3)
@@ -264,6 +262,5 @@ plt.show()
 TODOS:
 
 1. Add insights about the plot
-2. Simplify $\theta_d\vert f$ to $\theta_{d,f}$ since we are computting the posterior only when $F=f$
 3. The error at the beginning is too small, how can we improve this?
 4. Add algorithm for the online update
