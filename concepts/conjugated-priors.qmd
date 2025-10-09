@@ -1,0 +1,5 @@
+---
+title: Conjugated Priors
+---
+
+Conjugated priors are pairs of probability distributions that, when used together in Bayes' rule, yield a posterior distribution of the same family as the prior distribution. This property greatly simplifies the process of updating beliefs with new evidence.
