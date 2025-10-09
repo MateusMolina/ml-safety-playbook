@@ -149,6 +149,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import beta
 
+plt.rcParams['text.usetex'] = True
+
 # Parameters
 a, b = 2, 98
 N_d, N_nd = 90, 15
@@ -192,7 +194,7 @@ plt.show()
 ```
 
 
-To see how new observations gradually nudge our posterior beliefs, the next simulation follows 1000 consecutive parts. After each part, the posterior is updated and the mode and the error bar is computed based on @eq-beta-props. The error bar is computed as three times the standard deviation ($3\sigma$) around the mode, assuming a latent true latent defect probability of flagged events of $\theta_{f,d}^\star=0.6$.
+To see how new observations gradually nudge our posterior beliefs, the next simulation follows 1000 consecutive parts using the @algo-beta-bernoulli-update. After each part, the posterior is updated and the mode and the error bar is computed based on @eq-beta-props. The error bar is computed as three times the standard deviation ($3\sigma$) around the mode, assuming a latent true latent defect probability of flagged events of $\theta_{f,d}^\star=0.6$.
 
 ```{python}
 import numpy as np
@@ -230,12 +232,8 @@ for t in range(T):
     alphas[t] = a
     betas[t] = b
 
-    # Mode (MAP) for Beta when a,b > 1: (a-1)/(a+b-2)
-    if a > 1 and b > 1:
-        mode = (a - 1) / (a + b - 2)
-    else:
-        # mode undefined at edges; fallback to mean
-        mode = a / (a + b)
+    # Mode (MAP) for Beta: (a-1)/(a+b-2)
+    mode = (a - 1) / (a + b - 2)
 
     var = (a * b) / (((a + b) ** 2) * (a + b + 1))
     std = np.sqrt(var)
@@ -259,8 +257,38 @@ plt.tight_layout()
 plt.show()
 ```
 
-TODOS:
+Our error bar shrinks as we observe more data, reflecting our increased confidence in the estimate. The mode converges towards the true latent defect probability of flagged events, $\theta_{f,d}^\star=0.6$, demonstrating how Bayesian updating refines our beliefs with accumulating evidence.
 
-1. Add insights about the plot
-3. The error at the beginning is too small, how can we improve this?
-4. Add algorithm for the online update
+```pseudocode
+#| label: algo-beta-bernoulli-update
+
+\begin{algorithm}
+\caption{Sequential Beta-Bernoulli Update for $\theta_{f,d}$}
+\begin{algorithmic}[1]
+\INPUT $a_0 \geq 1, b_0 \geq 1$, prior Beta hyperparameters
+\INPUT $\{d_i\}_{i=1}^T$, sequence of flagged defect observations
+\OUTPUT $\{\hat{\theta}_{f,d}(t)\}_{t=1}^T$, $\{\sigma(t)\}_{t=1}^T$
+\Procedure{BetaBernoulliUpdate}{$a_0, b_0, \{d_i\}_{i=1}^T$}
+  \State $a \leftarrow a_0$ \Comment{initialize posterior parameters}
+  \State $b \leftarrow b_0$
+  \For{$t = 1$ \To $T$}
+    \State $d \leftarrow d_i$ \Comment{observe whether part is defective}
+    \If{$d = \texttt{defect}$}
+      \State $a \leftarrow a + 1$ \Comment{increment success count}
+    \Else
+      \State $b \leftarrow b + 1$ \Comment{increment failure count}
+    \EndIf
+    \State $\hat{\theta}_{f,d}(t) \leftarrow \dfrac{a - 1}{a + b - 2}$ \Comment{MAP estimate (mode)}
+    \State $\sigma^2(t) \leftarrow \dfrac{ab}{(a+b)^2(a+b+1)}$ \Comment{posterior variance}
+    \State $\sigma(t) \leftarrow \sqrt{\sigma^2(t)}$
+  \EndFor
+  \State \textbf{return} $\{\hat{\theta}_{f,d}(t)\}_{t=1}^T, \{\sigma(t)\}_{t=1}^T$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+```
+
+::: {.callout-note}
+## Generalization
+This algorithm assumes $a_0 \geq 1$ and $b_0 \geq 1$, which corresponds to using the Beta distribution to encode pseudo-counts or prior observations. For more general priors (e.g., Jeffreys prior with $a_0 = b_0 = 0.5$), the MAP estimate should be replaced with the posterior mean $\frac{a}{a+b}$ when $a \leq 1$ or $b \leq 1$, since the mode is undefined in those cases.
+:::
