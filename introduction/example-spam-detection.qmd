@@ -1,0 +1,70 @@
+---
+title: "Example: Spam Detection"
+---
+
+::: {#exm-spam-detection}
+A spam detection system classifies incoming messages as spam or non-spam based on the presence of specific words. The system uses a fixed vocabulary and is trained on example messages labeled as spam or non-spam.
+
+::: {layout-ncol=2}
+
+```{python}
+#| label: tbl-spam-vocab
+#| tbl-cap: Vocabulary
+
+from IPython.display import Markdown
+from tabulate import tabulate
+vocab = [[i, w] for i, w in enumerate([
+	"word",
+	"secret",
+	"offer",
+	"low",
+	"price",
+	"valued",
+	"customer",
+	"today",
+	"dollar",
+	"million",
+	"sports",
+	"is",
+	"for",
+	"play",
+	"healthy",
+	"pizza",
+])]
+Markdown(tabulate(vocab, headers=["id", "word"]))
+```
+
+```{python}
+#| label: tbl-spam-data
+#| tbl-cap: Spam dataset
+
+from IPython.display import Markdown
+from tabulate import tabulate
+dataset = [
+	["spam","million dollar offer"],
+	["spam","secret offer today"],
+	["spam","secret is secret"],
+	["non-spam","low price for valued customer"],
+	["non-spam","play secret sports today"],
+	["non-spam","sports is healthy"],
+	["non-spam","low price pizza"],
+]
+Markdown(tabulate(dataset, headers=["label","message"]))
+```
+
+:::
+
+This example is based on the exercise 3.22 from @murphyMachineLearningProbabilistic2014.
+:::
+
+Our goal is to build a spam detection system capable of classifying a message as spam or not spam. Let us formulate the task:
+
+$$
+p(y=spam\vert \mathbf{x}, \mathcal{D}) = ? 
+$$
+
+Where $y$ is the output of our classifier; $\mathbf{x}$ is the vector of features we want to classify, i.e., the output of some kind of builder $\mathbb{B}$ that decomposes an input message in terms of the vocabulary $\mathcal{V}$ from @tbl-spam-vocab; and a training dataset $\mathcal{D}$ based on a sample from @tbl-spam-data. Expressing the task in terms of @eq-bayes, we get:
+
+$$
+p(y=spam\vert \mathbf{x}, \mathcal{D}) \propto p(\mathbf{x})
+$$ {#eq-exm-spam-task}

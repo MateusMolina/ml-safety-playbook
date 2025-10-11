@@ -13,6 +13,7 @@ book:
       chapters:
         - introduction/intro-uncertainty.qmd
         - introduction/example-anomaly-detection.qmd
+        - introduction/example-spam-detection.qmd
     - references.qmd
     - part: "Concepts"
 bibliography: references.bib
