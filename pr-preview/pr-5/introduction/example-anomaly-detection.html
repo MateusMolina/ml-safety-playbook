@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>2&nbsp; Example: Anomaly Detection – Machine Learning Safety Playbook</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../introduction/example-spam-detection.html" rel="next">
+<link href="../introduction/intro-uncertainty.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-0dd2bd5de344125cf763a379ddc3eb04.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/pseudocode-2.4.1/pseudocode.min.js"></script>
+<link href="../site_libs/quarto-contrib/pseudocode-2.4.1/pseudocode.min.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+    <style type="text/css">
+    .pseudocode-container {
+      text-align: left;
+    }
+    </style>
+  
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../introduction/intro-uncertainty.html">Introduction</a></li><li class="breadcrumb-item"><a href="../introduction/example-anomaly-detection.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Example: Anomaly Detection</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../index.html" class="sidebar-logo-link">
+      </a>
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Machine Learning Safety Playbook</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/MateusMolina/ml-safety-playbook" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Introduction</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../introduction/intro-uncertainty.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to Uncertainty</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../introduction/example-anomaly-detection.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Example: Anomaly Detection</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../introduction/example-spam-detection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Example: Spam Detection</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Concepts</span></span>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#extending-the-example-with-online-update" id="toc-extending-the-example-with-online-update" class="nav-link active" data-scroll-target="#extending-the-example-with-online-update"><span class="header-section-number">2.1</span> Extending the example with online update</a>
+  <ul class="collapse">
+  <li><a href="#modelling-the-prior-and-likelihood-as-beta-bernoulli-distributions" id="toc-modelling-the-prior-and-likelihood-as-beta-bernoulli-distributions" class="nav-link" data-scroll-target="#modelling-the-prior-and-likelihood-as-beta-bernoulli-distributions"><span class="header-section-number">2.1.1</span> Modelling the prior and likelihood as beta-bernoulli distributions</a></li>
+  </ul></li>
+  <li><a href="#online-updates-of-beta-bernoulli-model" id="toc-online-updates-of-beta-bernoulli-model" class="nav-link" data-scroll-target="#online-updates-of-beta-bernoulli-model"><span class="header-section-number">2.2</span> Online updates of beta-bernoulli model</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/MateusMolina/ml-safety-playbook/edit/main/introduction/example-anomaly-detection.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../introduction/intro-uncertainty.html">Introduction</a></li><li class="breadcrumb-item"><a href="../introduction/example-anomaly-detection.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Example: Anomaly Detection</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Example: Anomaly Detection</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div id="exm-anomaly-detection" class="theorem example">
+<p><span class="theorem-title"><strong>Example 2.1 (Anomaly Detection)</strong></span> A machine is equipped with an electric current sensor and a control system that flags if the electric current is outside of the typical range. We can assign a random variable <span class="math inline">\(F\)</span> that maps boolean outcomes to events in <span class="math inline">\(\Omega\)</span>, i.e., <span class="math inline">\(F: \Omega\rightarrow\{f,nf\}\)</span>, where <span class="math inline">\(f\)</span> represents at least one flagged event and <span class="math inline">\(nf\)</span> a non-flagged one, and <span class="math inline">\(\Omega\)</span> represents the event space for workpieces being processed in the machine.</p>
+<p>Let us assume that we monitor another property of this machine, namely, how often we have to discard a workpiece being produced there. We attribute another random variable <span class="math inline">\(D\)</span> to this process that also maps <span class="math inline">\(D:\Omega\rightarrow\{d,nd\}\)</span></p>
+<p>We want to continuously verify how effective our anomaly detection metric is in predicting defective workpieces, that is, monitor our <span class="math inline">\(p(D=d\vert F=f)\)</span> or simply <span class="math inline">\(p(d|f)\)</span> for convenience. This will be our <em>posterior</em>. Ideally, if we want to implement a metric as proxy for defective workpieces, this posterior should be close to <span class="math inline">\(1\)</span>, i.e., all flagged events led to a defective workpiece.</p>
+</div>
+<p>To make the discussion concrete, consider the following toy scenario. Suppose that, historically, <span class="math inline">\(2\%\)</span> of the parts produced by the machine turn out defective (a really bad rate, but useful for the demonstration). This means: <span class="math display">\[
+p(d)=0.02
+\]</span></p>
+<p>We also happen to know from historical data that when a defect is present, the current sensor raises a flag <span class="math inline">\(90\%\)</span> of the time, but it also generates false alarms: even when the part is fine, it still flags <span class="math inline">\(15\%\)</span> of the time. Formally: <span class="math display">\[
+p(f\vert d)  = 0.9 \text{, }
+p(f\vert nd) = 0.15
+\]</span></p>
+<p>From <a href="intro-uncertainty.html#eq-prob" class="quarto-xref">Equation&nbsp;<span>1.3</span></a> and <a href="intro-uncertainty.html#eq-sum" class="quarto-xref">Equation&nbsp;<span>1.2</span></a>, we can compute <span class="math inline">\(p(f)\)</span>:</p>
+<p><span class="math display">\[
+p(f)=p(f\vert d)p(d) + p(f\vert nd)p(nd)
+\]</span></p>
+<p>Bayes’ rule lets us update the belief about a part being defective as soon as the sensor fires. Applying <a href="intro-uncertainty.html#eq-bayes" class="quarto-xref">Equation&nbsp;<span>1.1</span></a> and since <span class="math inline">\(Y\)</span> can only assume one of the values in the set <span class="math inline">\(\{d,nd\}\)</span>, i.e., <span class="math inline">\(p(nd)=1-p(d)\)</span>, we have the following equation in function of the variables we already know:</p>
+<p><span class="math display">\[
+p(d\vert f)=\frac{p(f\vert d)p(d)}{p(f)}=\frac{p(f\vert d)p(d)}{p(f\vert d)p(d) + p(f\vert nd)(1-p(d))}
+\]</span></p>
+<p>This computes to <span class="math inline">\(p(d\vert f) =\)</span> 0.11, which is still surprisingly low given our prior and likelihood. The method, however, forces us to be realistic in our belief and say that we either need more <em>evidence</em> to prove <span class="math inline">\(A\)</span> as a metric for <span class="math inline">\(Y\)</span> or we should pivot to other experiments. Since our result depended so strongly on our choice of priors, we can assume that reliably collecting this information is critically important for significant outcomes using the method. Indeed, this is a common critique about the Bayesian approach to probability: it’s often more difficult to be reproduced in comparison to frequentist approaches, since the research outcome depends heavily on these initial assumptions.</p>
+<section id="extending-the-example-with-online-update" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="extending-the-example-with-online-update"><span class="header-section-number">2.1</span> Extending the example with online update</h2>
+<p>The previous example computed an analytical estimate for our posterior, making no explicit assumption about the underlying probability distribution of the prior and likelihood, treating them as fixed point estimates based on historical data.</p>
+<p>The bayesian approach conceptualizes probabilities as uncertainty. This is useful for online learning scenarios, where part of the dataset is encountered during runtime. In order to apply online learning to <a href="#exm-anomaly-detection" class="quarto-xref">Example&nbsp;<span>2.1</span></a>, let us first formally define our new learning task:</p>
+<p><span class="math display">\[
+p(\theta_{f,d} \vert \ \mathcal{D}_f)=?
+\]</span></p>
+<p>Where <span class="math inline">\(\theta_{f,d}\)</span> is the probability of the part being defective given the sensor reading, <span class="math inline">\(\mathcal{D}_f=\{D_1, D_2, \dots, D_i\}\)</span> is the set of observations of <span class="math inline">\(D\)</span> outcomes when <span class="math inline">\(F=f\)</span>. Interestingly, <span class="math inline">\(\theta_{f,d}\)</span> is both a probability and a random variable itself, since we are uncertain about its value.</p>
+<p>We can once again express our task in terms of the bayesian equation (<a href="intro-uncertainty.html#eq-bayes" class="quarto-xref">Equation&nbsp;<span>1.1</span></a>), but now making use of proportionality since, for the moment, we are not interested in the normalizing constant <span class="math inline">\(p(\mathcal{D}_f)\)</span>: <span id="eq-exm-update"><span class="math display">\[
+\begin{align*}
+p(\theta_{f,d} \vert \ \mathcal{D}_f)&amp;\propto p(\mathcal{D}_f\vert \theta_{f,d})p(\theta_{f,d}) \\
+&amp;\propto p(\mathcal{D}_f\vert \theta_{f,d})(\theta_{f,d})
+\end{align*}
+\tag{2.1}\]</span></span></p>
+<section id="modelling-the-prior-and-likelihood-as-beta-bernoulli-distributions" class="level3" data-number="2.1.1">
+<h3 data-number="2.1.1" class="anchored" data-anchor-id="modelling-the-prior-and-likelihood-as-beta-bernoulli-distributions"><span class="header-section-number">2.1.1</span> Modelling the prior and likelihood as beta-bernoulli distributions</h3>
+<p>Now, we need ways to express both our likelihood and prior as probability distributions, instead of point estimates, since we want to update our belief as new data points are observed. For that, we use the concept of <em>conjugate priors</em>, which are pairs of probability distributions that, when used together in Bayes’ rule, yield a posterior distribution of the same family as the prior distribution. This property greatly simplifies the process of updating beliefs with new evidence.</p>
+<p>In our case, we can use the Beta distribution as our prior and the Bernoulli distribution as our likelihood. Specifically, we can model the prior distribution of <span class="math inline">\(\theta_{f,d}\)</span> as a Beta distribution, <span class="math inline">\(Beta(a, b)\)</span>, and the likelihood of the observed data as a Bernoulli distribution, <span class="math inline">\(Ber(\theta_{f,d})\)</span>.</p>
+<p><span class="math display">\[
+\mathcal{D}_f\vert \theta_{f,d} \sim Ber(\theta_{f,d})
+\]</span> <span class="math display">\[
+\theta_{f,d} \sim Beta(a, b)
+\]</span></p>
+<p>Where <span class="math inline">\(\sim\)</span> means that the random variable follows the probability distribution on the right side. The Beta distribution is defined on the interval <span class="math inline">\([0, 1]\)</span> and is parameterized by two positive shape parameters, <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>, commonly referred as hyperparameters and they are used to encode our beliefs into the prior distribution. It is often used to model the distribution of probabilities. The Bernoulli distribution, on the other hand, models binary outcomes (success/failure) and is parameterized by a single probability parameter <span class="math inline">\(\theta\)</span>.</p>
+<p>We can write our likelihood and prior as: <span class="math display">\[p(\mathcal{D}_f\vert \theta_{f,d})=\theta_{f,d}^{N_{f,d}}(1-\theta_{f,d})^{N_{f,nd}}\]</span> <span class="math display">\[p(\theta_{f,d})\propto \theta_{f,d}^{a-1}(1-\theta_{f,d})^{b-1}\]</span></p>
+<p>Here, <span class="math inline">\(N_{f,d}\)</span> and <span class="math inline">\(N_{f,nd}\)</span> are the counts of flagged defective and non-defective events. Plugging in these expressions into <a href="#eq-exm-update" class="quarto-xref">Equation&nbsp;<span>2.1</span></a>, we get: <span id="eq-exm-update-2"><span class="math display">\[
+\begin{align*}
+p(\theta_{f,d} \vert \ \mathcal{D}_f)&amp;\propto Ber(\theta_{f,d})Beta(a, b) \\
+&amp;\propto \theta_{f,d}^{N_{f,d}}(1-\theta_{f,d})^{N_{f,nd}}\theta_{f,d}^{a-1}(1-\theta_{f,d})^{b-1} \\
+&amp;\propto \theta_{f,d}^{N_{f,d}+a-1}(1-\theta_{f,d})^{N_{f,nd}+b-1} \\
+&amp;\propto Beta(a+N_{f,d}, b+N_{f,nd})
+\end{align*}
+\tag{2.2}\]</span></span></p>
+<p>We see that the posterior also follows a Beta distribution, with updated parameters <span class="math inline">\(a+N_{f,d}\)</span> and <span class="math inline">\(b+N_{f,nd}\)</span>. This means that we can update our belief about the probability of a part being defective by simply updating the parameters of the Beta distribution as we observe new data. Therefore, Bayesian inference can be used both sequentially or in batch mode with equivalent results, which it makes it suitable for online learning scenarios. For a proof of this property, see <span class="citation" data-cites="murphyMachineLearningProbabilistic2014">Murphy (<a href="../references.html#ref-murphyMachineLearningProbabilistic2014" role="doc-biblioref">2014</a>)</span>. From Murphy’s book, we can also look at useful properties of the Beta distribution, such as its mean, mode and variance: <span id="eq-beta-props"><span class="math display">\[
+\mathbb{E}[\theta]=\frac{a}{a+b}, \quad mode(\theta)=\frac{a-1}{a+b-2}, \quad Var(\theta)=\frac{ab}{(a+b)^2(a+b+1)}
+\tag{2.3}\]</span></span></p>
+<p>Based on that, we can compute the mode, or MAP estimate, of our posterior distribution as: <span id="eq-exm-map"><span class="math display">\[
+\begin{align*}
+\hat{\theta}_{f,d}\vert \ \mathcal{D}_f&amp;=\frac{a+N_{f,d}-1}{a+b+N_{f,d}+N_{f,nd}-2} \\
+&amp;=\frac{a+N_{f,d}-1}{a+b+N_f-2} \\
+\end{align*}
+\tag{2.4}\]</span></span></p>
+<p>Where <span class="math inline">\(N_f=N_{f,d}+N_{f,nd}\)</span> is the total number of flagged events. Let us plot the prior, likelihood and posterior distributions for our initial example. We can choose the hyperparameters <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> such that the prior mean matches our initial belief of <span class="math inline">\(p(d)=0.02\)</span>. A good choice is to set <span class="math inline">\(a=2\)</span> and <span class="math inline">\(b=98\)</span>, which gives us the same prior mean of <span class="math inline">\(2/(2+98)=0.02\)</span>. For the likelihood, we can use the counts of flagged defective and non-defective events based on our initial example. Assuming we observed <span class="math inline">\(90\)</span> flagged defective events and <span class="math inline">\(15\)</span> flagged non-defective events, we have <span class="math inline">\(N_{f,d}=90\)</span> and <span class="math inline">\(N_{f,nd}=15\)</span>. Thus, our posterior will have parameters <span class="math inline">\(a+N_{f,d}=2+90=92\)</span> and <span class="math inline">\(b+N_{f,nd}=98+15=113\)</span>.</p>
+<div id="fb4d4ad1" class="cell" data-execution_count="1">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="example-anomaly-detection_files/figure-html/cell-2-output-1.png" width="656" height="375" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="online-updates-of-beta-bernoulli-model" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="online-updates-of-beta-bernoulli-model"><span class="header-section-number">2.2</span> Online updates of beta-bernoulli model</h2>
+<p>To see how new observations gradually nudge our posterior beliefs, the next simulation follows 1000 consecutive parts using the <a href="#algo-beta-bernoulli-update" class="quarto-xref">Algorithm 1</a>. After each part, the posterior is updated and the mode and the error bar is computed based on <a href="#eq-beta-props" class="quarto-xref">Equation&nbsp;<span>2.3</span></a>. The error bar is computed as three times the standard deviation (<span class="math inline">\(3\sigma\)</span>) around the mode, assuming a latent true latent defect probability of flagged events of <span class="math inline">\(\theta_{f,d}^\star=0.6\)</span>.</p>
+<div id="2bdb3ebb" class="cell" data-execution_count="2">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="example-anomaly-detection_files/figure-html/cell-3-output-1.png" width="758" height="374" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Our error bar shrinks as we observe more data, reflecting our increased confidence in the estimate. The mode converges towards the true latent defect probability of flagged events, <span class="math inline">\(\theta_{f,d}^\star=0.6\)</span>, demonstrating how Bayesian updating refines our beliefs with accumulating evidence.</p>
+<div id="algo-beta-bernoulli-update" class="pseudocode-container quarto-float" data-caption-prefix="Algorithm" data-line-number="true" data-line-number-punc=":" data-no-end="false" data-indent-size="1.2em" data-pseudocode-number="1" data-comment-delimiter="//">
+<div class="pseudocode">
+\begin{algorithm} \caption{Sequential Beta-Bernoulli Update for $\theta_{f,d}$}\begin{algorithmic} \INPUT $a_0 \geq 1, b_0 \geq 1$, prior Beta hyperparameters \INPUT $\{d_i\}_{i=1}^T$, sequence of flagged defect observations \OUTPUT $\{\hat{\theta}_{f,d}(t)\}_{t=1}^T$, $\{\sigma(t)\}_{t=1}^T$ \Procedure{BetaBernoulliUpdate}{$a_0, b_0, \{d_i\}_{i=1}^T$} \State $a \leftarrow a_0$ \Comment{initialize posterior parameters} \State $b \leftarrow b_0$ \For{$t = 1$ \To $T$} \State $d \leftarrow d_i$ \Comment{observe whether part is defective} \If{$d = \texttt{defect}$} \State $a \leftarrow a + 1$ \Comment{increment success count} \Else \State $b \leftarrow b + 1$ \Comment{increment failure count} \EndIf \State $\hat{\theta}_{f,d}(t) \leftarrow \dfrac{a - 1}{a + b - 2}$ \Comment{MAP estimate (mode)} \State $\sigma^2(t) \leftarrow \dfrac{ab}{(a+b)^2(a+b+1)}$ \Comment{posterior variance} \State $\sigma(t) \leftarrow \sqrt{\sigma^2(t)}$ \EndFor \State \textbf{return} $\{\hat{\theta}_{f,d}(t)\}_{t=1}^T, \{\sigma(t)\}_{t=1}^T$ \EndProcedure \end{algorithmic} \end{algorithm}
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Generalization
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This algorithm assumes <span class="math inline">\(a_0 \geq 1\)</span> and <span class="math inline">\(b_0 \geq 1\)</span>, which corresponds to using the Beta distribution to encode pseudo-counts or prior observations. For more general priors (e.g., Jeffreys prior with <span class="math inline">\(a_0 = b_0 = 0.5\)</span>), the MAP estimate should be replaced with the posterior mean <span class="math inline">\(\frac{a}{a+b}\)</span> when <span class="math inline">\(a \leq 1\)</span> or <span class="math inline">\(b \leq 1\)</span>, since the mode is undefined in those cases.</p>
+</div>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-murphyMachineLearningProbabilistic2014" class="csl-entry" role="listitem">
+Murphy, Kevin P. 2014. <em>Machine <span>Learning</span> - <span>A Probabilistic Perspective</span></em>. Adaptive <span>Computation</span> and <span>Machine Learning</span>. Cambridge: MIT Press.
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../introduction/intro-uncertainty.html" class="pagination-link" aria-label="Introduction to Uncertainty">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction to Uncertainty</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../introduction/example-spam-detection.html" class="pagination-link" aria-label="Example: Spam Detection">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Example: Spam Detection</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+    <footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/MateusMolina/ml-safety-playbook/edit/main/introduction/example-anomaly-detection.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div></div></footer><script type="text/javascript">
+    (function(d) {
+      d.querySelectorAll(".pseudocode-container").forEach(function(el) {
+        let pseudocodeOptions = {
+          indentSize: el.dataset.indentSize,
+          commentDelimiter: el.dataset.commentDelimiter,
+          lineNumber: el.dataset.lineNumber.toLowerCase() === "true",
+          lineNumberPunc: el.dataset.lineNumberPunc,
+          noEnd: el.dataset.noEnd.toLowerCase() === "true",
+          titlePrefix: el.dataset.captionPrefix
+        };
+        pseudocode.renderElement(el.querySelector(".pseudocode"), pseudocodeOptions);
+      });
+    })(document);
+    (function(d) {
+      d.querySelectorAll(".pseudocode-container").forEach(function(el) {
+        let captionSpan = el.querySelector(".ps-root > .ps-algorithm > .ps-line > .ps-keyword")
+        if (captionSpan !== null) {
+          let captionPrefix = el.dataset.captionPrefix + " ";
+          let captionNumber = "";
+          if (el.dataset.pseudocodeNumber) {
+            captionNumber = el.dataset.pseudocodeNumber + " ";
+            if (el.dataset.chapterLevel) {
+              captionNumber = el.dataset.chapterLevel + "." + captionNumber;
+            }
+          }
+          captionSpan.innerHTML = captionPrefix + captionNumber;
+        }
+      });
+    })(document);
+    </script>
+  
+
+
+
+
+</body></html>
