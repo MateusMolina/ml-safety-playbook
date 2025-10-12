@@ -4,3 +4,4 @@ numpy
 jupyter
 scipy
 tabulate
+scikit-learn

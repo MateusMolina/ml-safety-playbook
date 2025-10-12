@@ -57,14 +57,86 @@ Markdown(tabulate(dataset, headers=["label","message"]))
 This example is based on the exercise 3.22 from @murphyMachineLearningProbabilistic2014.
 :::
 
-Our goal is to build a spam detection system capable of classifying a message as spam or not spam. Let us formulate the task:
+Our goal is to build a spam detection system capable of classifying the messages as spam or not spam. Let us formulate the task:
 
 $$
-p(y=spam\vert \mathbf{x}, \mathcal{D}) = ? 
+p(y_i = c \vert \mathbf{x}_i, \pmb{\theta}) = ? 
 $$
 
-Where $y$ is the output of our classifier; $\mathbf{x}$ is the vector of features we want to classify, i.e., the output of some kind of builder $\mathbb{B}$ that decomposes an input message in terms of the vocabulary $\mathcal{V}$ from @tbl-spam-vocab; and a training dataset $\mathcal{D}$ based on a sample from @tbl-spam-data. Expressing the task in terms of @eq-bayes, we get:
+Where $p(y_i = c)$ is the probability of the message $i$ being of class $c$ in $\mathcal{C}$; $\pmb{\theta}$ is the matrix of probabilities of all $\theta_{jc}$, where $j$ indexes the words in the vocabulary $\mathcal{V}$; $\mathbf{x}_i$ is the vector of features we want to classify, i.e., the output of some kind of builder $B$ that decomposes the message from @tbl-spam-data in terms of $\mathcal{V}$ from @tbl-spam-vocab. Expressing the task in terms of @eq-bayes, we get:
 
 $$
-p(y=spam\vert \mathbf{x}, \mathcal{D}) \propto p(\mathbf{x})
+p(y_i = c \vert \mathbf{x}_i, \pmb{\theta}) \propto p(\mathbf{x}_i\vert y_i=c, \pmb{\theta})p(y_i=c\vert \pmb{\theta})
 $$ {#eq-exm-spam-task}
+
+
+Since we only have two classes, spam and non-spam, let us apply a builder $B_\mathbb{I}: \mathcal{D} \to \{0,1\}^{|\mathcal{V}|}$ that transforms the data set into binary feature vectors indicating the presence or absence of each word in the vocabulary. With this transformation, we can model each $x_i$ as a Bernoulli distribution. Assuming that $x_{ij}$ are conditionally independent given the classes $C$, we can express the likelihood as:
+$$
+p(\mathbf{x}_i\vert y_i=c, \pmb{\theta}) = \prod_j \theta_{jc}^{x_{ij}}(1-\theta_{jc})^{1-x_{ij}}
+$$ {#eq-exm-spam-likelihood}
+
+Let us for now use a uniform prior for the classes:
+$$
+p(y_i=c\vert \pmb{\theta}) = \frac{1}{|\mathcal{C}|}
+$$ {#eq-exm-spam-prior}
+
+where $|\mathcal{C}|$ is the number of classes.
+
+## Training the model: Computing $\pmb{\theta}$
+
+To compute the matrix of probabilities $\pmb{\theta}$, we can use the maximum likelihood estimate (MLE) for each word $j$ in the vocabulary and each class $c$:
+
+$$
+\theta_{jc} = \frac{\sum_{i} x_{ij} \mathbb{I}(y_i=c)}{\sum_{i} \mathbb{I}(y_i=c)}
+$$ {#eq-exm-spam-mle}
+
+Where $\mathbb{I}(\cdot)$ is the indicator function that returns 1 if the condition is true and 0 otherwise. Let us compute the matrix $\pmb{\theta}$ using the dataset from @tbl-spam-data, considering that we have two classes: "spam" and "non-spam", where $c=1$ for "spam" and $c=0$ for "non-spam".
+
+```{python}
+#| label: tbl-spam-theta
+#| tbl-cap: Matrix of probabilities $\pmb{\theta}$
+import numpy as np
+import pandas as pd
+from sklearn.feature_extraction.text import CountVectorizer
+data = pd.DataFrame(dataset, columns=["label","message"])
+vectorizer = CountVectorizer(vocabulary=[w for i,w in vocab])
+X = vectorizer.fit_transform(data["message"]).toarray()
+y = data["label"].values
+classes = np.unique(y)
+theta = np.zeros((len(vocab), len(classes)))
+for j, w in enumerate(vocab):
+	for c in classes:
+		theta[j, np.where(classes==c)[0][0]] = np.sum(X[y==c, j]) / np.sum(y==c)
+theta_df = pd.DataFrame(theta, index=[w for i,w in vocab], columns=classes)
+theta_df
+```
+
+The resulting matrix $\pmb{\theta}$ indicates the probability of each word in the vocabulary given the class (spam or non-spam). For example, the word "secret" has a high probability of appearing in spam messages, while "sports" is more likely to appear in non-spam messages.
+
+## Making Predictions
+
+To make predictions on new messages, we can use the learned parameters from @tbl-spam-theta and apply @eq-exm-spam-task. For the existing messages in @tbl-spam-data, we can compute the posterior probabilities for each class and classify the messages accordingly.
+
+```{python}
+#| label: tbl-spam-predictions
+#| tbl-cap: Predictions on the spam dataset
+predictions = []
+for i, row in data.iterrows():
+	x_i = vectorizer.transform([row["message"]]).toarray()[0]
+	posteriors = {}
+	for c in classes:
+		likelihood = np.prod([theta[j, np.where(classes==c)[0][0]]**x_ij * (1-theta[j, np.where(classes==c)[0][0]])**(1-x_ij) for j, x_ij in enumerate(x_i)])
+		prior = 1 / len(classes)
+		posteriors[c] = likelihood * prior
+	# Format posterior probabilities in scientific notation for clearer display
+	posteriors = {c: f"{p:.2e}" for c, p in posteriors.items()}
+	predicted_class = max(posteriors, key=posteriors.get)
+	predictions.append((row["message"], row["label"], predicted_class, posteriors))
+predictions_df = pd.DataFrame(predictions, columns=["message", "true_label", "predicted_label", "posteriors"])
+predictions_df
+```
+
+From @tbl-spam-predictions, we can identify a few issues with our current model. The most glaring one is that our posteriors are extremly low, which could be a sign of numerical underflow when multiplying many small probabilities together. This is a common issue in Naive Bayes classifiers, especially when dealing with a large vocabulary. To mitigate this, we could consider using the log-sum-exp trick:
+
+## Avoiding Numerical Underflow
+
