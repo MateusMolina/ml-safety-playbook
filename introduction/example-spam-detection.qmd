@@ -44,6 +44,10 @@ dataset = [
 	["spam","million dollar offer"],
 	["spam","secret offer today"],
 	["spam","secret is secret"],
+	["spam","low price for secret valued customer"],
+	["non-spam","play sports today"],
+	["non-spam","sports costs dollar"],
+	["non-spam","healthy pizza for customer"],
 	["non-spam","low price for valued customer"],
 	["non-spam","play secret sports today"],
 	["non-spam","sports is healthy"],
@@ -77,7 +81,7 @@ $$ {#eq-exm-spam-likelihood}
 
 Let us for now use a uniform prior for the classes:
 $$
-p(y_i=c\vert \pmb{\theta}) = \frac{1}{|\mathcal{C}|}
+p(y_i=c\vert \pmb{\theta}) = \frac{1}{|\mathcal{C}|} = \hat{\pi}_c
 $$ {#eq-exm-spam-prior}
 
 where $|\mathcal{C}|$ is the number of classes.
@@ -87,14 +91,30 @@ where $|\mathcal{C}|$ is the number of classes.
 To compute the matrix of probabilities $\pmb{\theta}$, we can use the maximum likelihood estimate (MLE) for each word $j$ in the vocabulary and each class $c$:
 
 $$
-\theta_{jc} = \frac{\sum_{i} x_{ij} \mathbb{I}(y_i=c)}{\sum_{i} \mathbb{I}(y_i=c)}
+\hat{\theta}_{jc} = \frac{\sum_{i} x_{ij} \mathbb{I}(y_i=c)}{\sum_{i} \mathbb{I}(y_i=c)}
 $$ {#eq-exm-spam-mle}
 
-Where $\mathbb{I}(\cdot)$ is the indicator function that returns 1 if the condition is true and 0 otherwise. Let us compute the matrix $\pmb{\theta}$ using the dataset from @tbl-spam-data, considering that we have two classes: "spam" and "non-spam", where $c=1$ for "spam" and $c=0$ for "non-spam".
+Where $\mathbb{I}(\cdot)$ is the indicator function that returns 1 if the condition is true and 0 otherwise. 
+
+However, using the MLE directly suffers from the **black swan problem**: it assigns extreme probabilities (exactly 0 or 1) when a word never appears or always appears in messages of a particular class. This leads to several issues:
+
+1. **Zero probabilities** ($\theta_{jc} = 0$) cause numerical problems, e.g. when computing log-probabilities, since $\log(0) = -\infty$.
+2. **Probabilities of 1** ($\theta_{jc} = 1$) make the model overly confident and brittle. If a word that always appeared in spam suddenly appears in a non-spam message, the likelihood becomes exactly 0, since we compute the product, completely ignoring all other evidence.
+3. **Poor generalization**: The model becomes unable to handle unseen word-class combinations, even when they are plausible.
+
+This is analogous to the classical black swan problem: just because we've never observed a black swan doesn't mean the probability of seeing one should be exactly zero. To address this, we use **Laplace smoothing** (also called add-one smoothing):
+
+$$
+\hat{\theta}_{jc} = \frac{\sum_{i} x_{ij} \mathbb{I}(y_i=c) + \alpha}{\sum_{i} \mathbb{I}(y_i=c) + \alpha |\mathcal{V}|}
+$$ {#eq-exm-spam-mle-smoothed}
+
+where $\alpha > 0$ is the smoothing parameter (typically $\alpha=1$) and $|\mathcal{V}|$ is the size of the vocabulary. This ensures all probabilities are strictly in the interval $(0, 1)$, preventing both numerical instability and overconfident predictions.
+
+Let us compute the matrix $\pmb{\hat{\theta}}$ using the dataset from @tbl-spam-data, considering that we have two classes: "spam" and "non-spam", where $c=1$ for "spam" and $c=0$ for "non-spam".
 
 ```{python}
 #| label: tbl-spam-theta
-#| tbl-cap: Matrix of probabilities $\pmb{\theta}$
+#| tbl-cap: Matrix of probabilities $\pmb{\hat{\theta}}$
 import numpy as np
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
@@ -104,11 +124,18 @@ X = vectorizer.fit_transform(data["message"]).toarray()
 y = data["label"].values
 classes = np.unique(y)
 theta = np.zeros((len(vocab), len(classes)))
+theta_no_laplace = np.zeros((len(vocab), len(classes)))
+alpha = 1 # Laplace smoothing parameter
 for j, w in enumerate(vocab):
 	for c in classes:
-		theta[j, np.where(classes==c)[0][0]] = np.sum(X[y==c, j]) / np.sum(y==c)
+		# Add Laplace smoothing to avoid zero probabilities
+		theta[j, np.where(classes==c)[0][0]] = (np.sum(X[y==c, j]) + alpha) / (np.sum(y==c) + alpha * len(vocab))
+		theta_no_laplace[j, np.where(classes==c)[0][0]] = (np.sum(X[y==c, j])) / (np.sum(y==c))	
+# Both estimations in the same dataframe
 theta_df = pd.DataFrame(theta, index=[w for i,w in vocab], columns=classes)
-theta_df
+theta_no_laplace_df = pd.DataFrame(theta_no_laplace, index=[w for i,w in vocab], columns=classes)
+theta_combined_df = pd.concat([theta_df, theta_no_laplace_df], axis=1, keys=["W/ Laplace Smoothing", "W/O Laplace Smoothing"])
+theta_combined_df
 ```
 
 The resulting matrix $\pmb{\theta}$ indicates the probability of each word in the vocabulary given the class (spam or non-spam). For example, the word "secret" has a high probability of appearing in spam messages, while "sports" is more likely to appear in non-spam messages.
@@ -136,7 +163,36 @@ predictions_df = pd.DataFrame(predictions, columns=["message", "true_label", "pr
 predictions_df
 ```
 
-From @tbl-spam-predictions, we can identify a few issues with our current model. The most glaring one is that our posteriors are extremly low, which could be a sign of numerical underflow when multiplying many small probabilities together. This is a common issue in Naive Bayes classifiers, especially when dealing with a large vocabulary. To mitigate this, we could consider using the log-sum-exp trick:
+From @tbl-spam-predictions, we can identify a few issues with our current model. The most glaring one is that our posteriors are extremely low, which could be a sign of numerical underflow when multiplying many small probabilities together. This is a common issue in Naive Bayes classifiers, increasing with the size of vocabulary, since all probabilities of the likelihood $\sum_x p(\mathbf{x}\vert y)$ should add to $1$. To mitigate this, we could consider using log for out computations, as shown in the next section.
 
 ## Avoiding Numerical Underflow
 
+To avoid numerical underflow, we can compute the logarithm of the posterior probabilities instead of the probabilities themselves. This transforms the product of probabilities into a sum of logarithms, which is numerically more stable. The logarithm of the posterior probability can be expressed as:
+
+$$
+\begin{align*}
+\log p(y_i = c \vert \mathbf{x}_i, \pmb{\theta}) &\propto \log p(\mathbf{x}_i\vert y_i=c, \pmb{\theta}) + \log p(y_i=c\vert \pmb{\theta}) \\
+&\propto \sum_j \left[ x_{ij} \log \theta_{jc} + (1-x_{ij}) \log (1-\theta_{jc}) \right] + \log \hat{\pi}_c
+\end{align*}
+$$ {#eq-exm-spam-log-posterior}
+
+That means, we can maximize the log-posterior instead of the posterior itself and use it to classify messages. Let us recompute the predictions using log-probabilities.
+
+```{python}
+#| label: tbl-spam-log-predictions
+#| tbl-cap: Predictions using log-probabilities
+predictions_log = []
+for i, row in data.iterrows():
+	x_i = vectorizer.transform([row["message"]]).toarray()[0]
+	log_posteriors = {}
+	for c in classes:
+		log_likelihood = np.sum([x_ij * np.log(theta[j, np.where(classes==c)[0][0]]) + (1-x_ij) * np.log(1-theta[j, np.where(classes==c)[0][0]]) for j, x_ij in enumerate(x_i)])
+		log_prior = np.log(1 / len(classes))
+		log_posteriors[c] = log_likelihood + log_prior
+	# Format log-posterior probabilities in scientific notation for clearer display
+	log_posteriors = {c: f"{p:.2e}" for c, p in log_posteriors.items()}
+	predicted_class = max(log_posteriors, key=log_posteriors.get)
+	predictions_log.append((row["message"], row["label"], predicted_class, log_posteriors))
+predictions_log_df = pd.DataFrame(predictions_log, columns=["message", "true_label", "predicted_label", "log_posteriors"])
+predictions_log_df
+```
