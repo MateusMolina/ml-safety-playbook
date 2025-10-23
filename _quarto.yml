@@ -24,6 +24,7 @@ format:
     theme:
       - cosmo
       - brand
+    css: styles.css
 
 execute:
   echo: false

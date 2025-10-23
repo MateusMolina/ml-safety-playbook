@@ -1,0 +1,34 @@
+.box {
+  border: 2px solid #000;   
+  border-radius: 8px;    
+  padding: 0.5rem;      
+  margin: 1rem 0;  
+}
+
+.proof {
+  position: relative;
+  padding-bottom: 1.5rem;
+}
+
+.proof::after {
+  content: "■";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  font-size: 1.0em;
+  font-weight: bold;
+}
+
+.example {
+  position: relative;
+  padding-bottom: 1.5rem;
+}
+
+.example::after {
+  content: "□";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  font-size: 1.5em;
+  font-weight: bold;
+}

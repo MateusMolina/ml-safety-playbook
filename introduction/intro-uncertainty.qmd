@@ -11,24 +11,13 @@ title: "Introduction to Uncertainty"
 
 Instead of viewing probabilities in terms of the frequencies of random, repeatable events, what is referred as the _frequentist_ interpretation of probability, one can see them as proxy for uncertainty quantification. That means, that new events serve as new data points -- evidence! -- for improving the understanding of uncertainty in a process of interest.
 
-### Bayes Equation
+::: {#def-random-variable}
 
-Let us first formally define the Bayes equation.
-
-::: {#thm-bayes-rule}
-
-## Bayes Rule
-
-The probability of an event $y$ happening, conditioned on knowing that event $x$ happened can be expressed in the following form:
-$$
-\overbrace{p(y\vert x)}^\text{posterior}=\frac{\overbrace{p(x\vert y)}^\text{likelihood}\overbrace{p(y)}^\text{prior}}{\underbrace{p(x)}_\text{normalizing term}}.
-$$ {#eq-bayes}
-
-:::
+## Random Variable
 
 The events $x$ and $y$ can be understood as outcomes of the _random variables_ $X$ and $Y$, respectively. Random variables are functions that maps our event space $\Omega$ to event outcomes, e.g., $x$ and $y$. When we write $p(X=x)$ we are referring to the probability that the random variable function $X$ is evaluated to $x$. When the context is clear, we can abuse the notation and just write $p(x)$ or $p(y)$.
 
-@thm-bayes-rule is a consequence of two important probability rules: _sum rule_ and _product rule_.
+:::
 
 ### Probability rules: Sum Rule and Product Rule
 
@@ -51,6 +40,41 @@ $$ {#eq-prob}
 Where $p(X,Y)$ is the _joint probability_ of random variables $X$ and $Y$, also commonly expressed as their intersection $p(X\cap Y)$.
 :::
 
+From @eq-prob we obtain the Bayes rule expressed in @eq-bayes.
+
+::: {#thm-bayes-rule}
+
+## Bayes Rule
+
+The probability of an event $y$ happening, conditioned on knowing that event $x$ happened can be expressed in the following form:
+$$
+\overbrace{p(y\vert x)}^\text{posterior}=\frac{\overbrace{p(x\vert y)}^\text{likelihood}\overbrace{p(y)}^\text{prior}}{\underbrace{p(x)}_\text{normalizing term}}.
+$$ {#eq-bayes}
+
+:::
+
+::: {.proof}
+Let $X$ and $Y$ be random variables. Applying @eq-prob for both $p(X,Y)$ and $p(Y,X)$, we have that:
+$$
+p(X,Y)=p(Y\vert X)p(X) \quad \text{and} \quad p(Y,X)=p(X\vert Y)p(Y).
+$$
+Equating both expressions and rearranging, we obtain that:
+$$
+\begin{aligned}
+p(Y\vert X)p(X) &= p(X\vert Y)p(Y) \\
+\implies p(Y\vert X) &= \frac{p(X\vert Y)p(Y)}{p(X)},
+\end{aligned}
+$$
+which is the expression in @eq-bayes.
+
+:::
+
+Another common representation of Bayes rule is obtained by applying the sum rule to the normalizing term $p(x)$ in @eq-bayes, yielding:
+$$
+p(y\vert x) = \frac{p(x\vert y)p(y)}{\sum_{y_i} p(x\vert y_i)p(y_i)}.
+$$ {#eq-bayes-sum}
+
+@eq-bayes-sum is particularly useful because it expresses the denominator in the same terms as the numerator.
 
 ### Developing the Intuition For Understanding Uncertainty
 
