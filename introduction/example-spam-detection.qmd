@@ -61,7 +61,7 @@ Markdown(tabulate(dataset, headers=["label","message"]))
 This example is based on the exercise 3.22 from @murphyMachineLearningProbabilistic2014.
 :::
 
-Our goal is to build a spam detection system capable of classifying the messages as spam or not spam. Let us formulate the task:
+**Goal.** Our goal is to build a spam detection system capable of classifying the messages as spam or not spam. Let us formulate the task:
 
 $$
 p(y_i = c \vert \mathbf{x}_i, \pmb{\theta}) = ? 
@@ -73,18 +73,21 @@ $$
 p(y_i = c \vert \mathbf{x}_i, \pmb{\theta}) \propto p(\mathbf{x}_i\vert y_i=c, \pmb{\theta})p(y_i=c\vert \pmb{\theta})
 $$ {#eq-exm-spam-task}
 
+In the equation, $\pmb{\theta}$ is seem as 
 
-Since we only have two classes, spam and non-spam, let us apply a builder $B_\mathbb{I}: \mathcal{D} \to \{0,1\}^{|\mathcal{V}|}$ that transforms the data set into binary feature vectors indicating the presence or absence of each word in the vocabulary. With this transformation, we can model each $x_i$ as a Bernoulli distribution. Assuming that $x_{ij}$ are conditionally independent given the classes $C$, we can express the likelihood as:
+Since we only have two classes, spam and non-spam, let us apply a builder $B_\mathbb{I}: \mathcal{D} \to \{0,1\}^{|\mathcal{V}|}$ that transforms the data set into binary feature vectors indicating the presence or absence of each word in the vocabulary. With this transformation, we can model each $x_i$ as a joint distribution of Bernoulli distributions of the corresponding feature for each word in $\mathcal{V}$, $$x_i\vert y_i=c \sim \bigcap_j^{|\mathcal{V}|} ber(\theta_{jc}).$$ 
+**Assumption for the likelihood.** Assuming that all $x_{ij}$ are conditionally independent given the classes $C$, we can express the likelihood as:
 $$
+\forall x_a, x_b \in \mathbf{x}_i, x_a \perp x_b \vert y_i=c \implies\\
 p(\mathbf{x}_i\vert y_i=c, \pmb{\theta}) = \prod_j \theta_{jc}^{x_{ij}}(1-\theta_{jc})^{1-x_{ij}}
 $$ {#eq-exm-spam-likelihood}
 
-Let us for now use a uniform prior for the classes:
+**Assumption for the prior.** For now, let us use a uniform prior for the classes:
 $$
 p(y_i=c\vert \pmb{\theta}) = \frac{1}{|\mathcal{C}|} = \hat{\pi}_c
 $$ {#eq-exm-spam-prior}
 
-where $|\mathcal{C}|$ is the number of classes.
+where $|\mathcal{C}|$ is the number of classes. @eq-exm-spam-prior assumes that each class is equaly likely to show up in the population. However, this can be a too strong of an assumption for our example of sorting messages as spam and not-spam (think: are we equally likely to receive spam and non-spam messages?).
 
 ## Training the model: Computing $\pmb{\theta}$
 
@@ -96,13 +99,19 @@ $$ {#eq-exm-spam-mle}
 
 Where $\mathbb{I}(\cdot)$ is the indicator function that returns 1 if the condition is true and 0 otherwise. 
 
-However, using the MLE directly suffers from the **black swan problem**: it assigns extreme probabilities (exactly 0 or 1) when a word never appears or always appears in messages of a particular class. This leads to several issues:
+::: {#chl-black-swan}
+
+## Black Swan
+
+However, using the MLE directly suffers from the **black swan problem**: This is analogous to the classical black swan problem: just because we've never observed a black swan doesn't mean the probability of seeing one should be exactly zero. It assigns extreme probabilities (exactly 0 or 1) when a word never appears or always appears in messages of a particular class. This leads to several issues:
 
 1. **Zero probabilities** ($\theta_{jc} = 0$) cause numerical problems, e.g. when computing log-probabilities, since $\log(0) = -\infty$.
 2. **Probabilities of 1** ($\theta_{jc} = 1$) make the model overly confident and brittle. If a word that always appeared in spam suddenly appears in a non-spam message, the likelihood becomes exactly 0, since we compute the product, completely ignoring all other evidence.
 3. **Poor generalization**: The model becomes unable to handle unseen word-class combinations, even when they are plausible.
 
-This is analogous to the classical black swan problem: just because we've never observed a black swan doesn't mean the probability of seeing one should be exactly zero. To address this, we use **Laplace smoothing** (also called add-one smoothing):
+:::
+
+**Laplace Smoothing.** To address @chl-black-swan, we can use **Laplace smoothing** (also called add-one smoothing):
 
 $$
 \hat{\theta}_{jc} = \frac{\sum_{i} x_{ij} \mathbb{I}(y_i=c) + \alpha}{\sum_{i} \mathbb{I}(y_i=c) + \alpha |\mathcal{V}|}
@@ -165,6 +174,14 @@ predictions_df
 
 From @tbl-spam-predictions, we can identify a few issues with our current model. The most glaring one is that our posteriors are extremely low, which could be a sign of numerical underflow when multiplying many small probabilities together. This is a common issue in Naive Bayes classifiers, increasing with the size of vocabulary, since all probabilities of the likelihood $\sum_x p(\mathbf{x}\vert y)$ should add to $1$. To mitigate this, we could consider using log for out computations, as shown in the next section.
 
+:::{#chl-numerical-underflow}
+
+## Numerical Underflow
+
+Numerical underflow occurs when small numbers are rounded to zero in a computer. In the context of our spam detection model, when we compute the likelihood $p(\mathbf{x}_i\vert y_i=c, \pmb{\theta})$ as a product of many small probabilities (especially with a large vocabulary), the result can become so small that it is effectively treated as zero by the computer. This leads to incorrect posterior probabilities and unreliable classifications.
+:::
+
+
 ## Avoiding Numerical Underflow
 
 To avoid numerical underflow, we can compute the logarithm of the posterior probabilities instead of the probabilities themselves. This transforms the product of probabilities into a sum of logarithms, which is numerically more stable. The logarithm of the posterior probability can be expressed as:
@@ -196,3 +213,7 @@ for i, row in data.iterrows():
 predictions_log_df = pd.DataFrame(predictions_log, columns=["message", "true_label", "predicted_label", "log_posteriors"])
 predictions_log_df
 ```
+
+## Relaxing assumption for the prior
+
+In @eq-exm-spam-prior, we assumed a uniform prior for the classes. However, this may not reflect the true distribution of spam and non-spam messages in practice. To relax this assumption, we can estimate the class priors from the training data:

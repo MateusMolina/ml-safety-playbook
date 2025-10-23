@@ -1,4 +1,4 @@
-/.quarto/
+.quarto
 **/*.quarto_ipynb
 _book
 .mypy_cache

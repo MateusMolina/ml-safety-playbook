@@ -1,0 +1,19 @@
+---
+title: Probability Distributions
+---
+
+## Bernoulli
+
+## Binomial
+
+## Multinomial (generalization of Binomial)
+
+## Gaussian: (Normal) Distribution
+
+## Conjugate Priors
+
+### Beta-Bernoulli
+
+### Dirichlet-Multinomial
+
+### And Gaussian?
