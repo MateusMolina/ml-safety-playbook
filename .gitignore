@@ -4,6 +4,7 @@ _book
 .mypy_cache
 *_files
 !docs/**/*_files
+.venv
 
 Latex
 *.acn
