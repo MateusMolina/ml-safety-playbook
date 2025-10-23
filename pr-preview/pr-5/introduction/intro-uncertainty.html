@@ -50,7 +50,7 @@ div.csl-indent {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../introduction/example-anomaly-detection.html" rel="next">
+<link href="../introduction/probability-distributions.html" rel="next">
 <link href="../index.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -193,14 +193,20 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../introduction/probability-distributions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Probability Distributions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../introduction/example-anomaly-detection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Example: Anomaly Detection</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Example: Anomaly Detection</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../introduction/example-spam-detection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Example: Spam Detection</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Example: Spam Detection</span></span></a>
   </div>
 </li>
       </ul>
@@ -260,7 +266,8 @@ window.Quarto = {
 <section id="learning-goals" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="learning-goals"><span class="header-section-number">1.1</span> Learning goals</h2>
 <ol type="1">
-<li>Understand the Bayes Theorem as a foundational block for making sense of uncertainty.</li>
+<li>Foundation of probabilistic reasoning for understanding uncertainty.</li>
+<li>Understand the Bayes Theorem and its components: prior, likelihood, posterior.</li>
 </ol>
 </section>
 <section id="bayesian-interpretation-of-uncertainty" class="level2" data-number="1.2">
@@ -269,24 +276,28 @@ window.Quarto = {
 <section id="bayes-equation" class="level3" data-number="1.2.1">
 <h3 data-number="1.2.1" class="anchored" data-anchor-id="bayes-equation"><span class="header-section-number">1.2.1</span> Bayes Equation</h3>
 <p>Let us first formally define the Bayes equation.</p>
-<div id="def-bayes" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 1.1</strong></span> The probability of an event <span class="math inline">\(x\)</span> given knowledge of an event <span class="math inline">\(y\)</span> can be expressed in the following form: <span id="eq-bayes"><span class="math display">\[
-p(y\vert x)=\frac{p(x\vert y)p(y)}{p(x)}
+<div id="thm-bayes-rule" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 1.1 (Bayes Rule)</strong></span> The probability of an event <span class="math inline">\(y\)</span> happening, conditioned on knowing that event <span class="math inline">\(x\)</span> happened can be expressed in the following form: <span id="eq-bayes"><span class="math display">\[
+\overbrace{p(y\vert x)}^\text{posterior}=\frac{\overbrace{p(x\vert y)}^\text{likelihood}\overbrace{p(y)}^\text{prior}}{\underbrace{p(x)}_\text{normalizing term}}.
 \tag{1.1}\]</span></span></p>
 </div>
 <p>The events <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> can be understood as outcomes of the <em>random variables</em> <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, respectively. Random variables are functions that maps our event space <span class="math inline">\(\Omega\)</span> to event outcomes, e.g., <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>. When we write <span class="math inline">\(p(X=x)\)</span> we are referring to the probability that the random variable function <span class="math inline">\(X\)</span> is evaluated to <span class="math inline">\(x\)</span>. When the context is clear, we can abuse the notation and just write <span class="math inline">\(p(x)\)</span> or <span class="math inline">\(p(y)\)</span>.</p>
-<p><a href="#def-bayes" class="quarto-xref">Definition&nbsp;<span>1.1</span></a> is a consequence of two important probability rules: <em>sum rule</em> and <em>product rule</em>.</p>
+<p><a href="#thm-bayes-rule" class="quarto-xref">Theorem&nbsp;<span>1.1</span></a> is a consequence of two important probability rules: <em>sum rule</em> and <em>product rule</em>.</p>
 </section>
 <section id="probability-rules-sum-rule-and-product-rule" class="level3" data-number="1.2.2">
 <h3 data-number="1.2.2" class="anchored" data-anchor-id="probability-rules-sum-rule-and-product-rule"><span class="header-section-number">1.2.2</span> Probability rules: Sum Rule and Product Rule</h3>
 <p>The <em>sum rule</em> is also known as <em>Law of Total Probability</em>. <span class="citation" data-cites="bishopPatternRecognitionMachine2006">Bishop (<a href="../references.html#ref-bishopPatternRecognitionMachine2006" role="doc-biblioref">2006</a>)</span> expresses them as:</p>
-<p><span id="eq-sum"><span class="math display">\[
+<div id="thm-total-probability" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 1.2 (Sum rule/Law of Total Probability)</strong></span> <span id="eq-sum"><span class="math display">\[
 p(X) = \sum_Y p(X,Y)
-\tag{1.2}\]</span></span> <span id="eq-prob"><span class="math display">\[
+\tag{1.2}\]</span></span></p>
+</div>
+<div id="thm-product-rule" class="theorem">
+<p><span class="theorem-title"><strong>Theorem 1.3 (Product Rule/Definition of Conditional Probability)</strong></span> <span id="eq-prob"><span class="math display">\[
 p(X,Y)=p(Y\vert X)p(X)
 \tag{1.3}\]</span></span></p>
 <p>Where <span class="math inline">\(p(X,Y)\)</span> is the <em>joint probability</em> of random variables <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, also commonly expressed as their intersection <span class="math inline">\(p(X\cap Y)\)</span>.</p>
-<p>The <em>product rule</em> (<a href="#eq-prob" class="quarto-xref">Equation&nbsp;<span>1.3</span></a>) is also the definition of conditional probability.</p>
+</div>
 </section>
 <section id="developing-the-intuition-for-understanding-uncertainty" class="level3" data-number="1.2.3">
 <h3 data-number="1.2.3" class="anchored" data-anchor-id="developing-the-intuition-for-understanding-uncertainty"><span class="header-section-number">1.2.3</span> Developing the Intuition For Understanding Uncertainty</h3>
@@ -710,8 +721,8 @@ Bishop, Christopher M. 2006. <em>Pattern Recognition and Machine Learning</em>. 
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../introduction/example-anomaly-detection.html" class="pagination-link" aria-label="Example: Anomaly Detection">
-        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Example: Anomaly Detection</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../introduction/probability-distributions.html" class="pagination-link" aria-label="Probability Distributions">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Probability Distributions</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

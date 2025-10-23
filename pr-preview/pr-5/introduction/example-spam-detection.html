@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>3&nbsp; Example: Spam Detection – Machine Learning Safety Playbook</title>
+<title>4&nbsp; Example: Spam Detection – Machine Learning Safety Playbook</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -143,7 +143,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../introduction/intro-uncertainty.html">Introduction</a></li><li class="breadcrumb-item"><a href="../introduction/example-spam-detection.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Example: Spam Detection</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../introduction/intro-uncertainty.html">Introduction</a></li><li class="breadcrumb-item"><a href="../introduction/example-spam-detection.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Example: Spam Detection</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -196,14 +196,20 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../introduction/probability-distributions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Probability Distributions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../introduction/example-anomaly-detection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Example: Anomaly Detection</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Example: Anomaly Detection</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../introduction/example-spam-detection.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Example: Spam Detection</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Example: Spam Detection</span></span></a>
   </div>
 </li>
       </ul>
@@ -228,18 +234,19 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#training-the-model-computing-pmbtheta" id="toc-training-the-model-computing-pmbtheta" class="nav-link active" data-scroll-target="#training-the-model-computing-pmbtheta"><span class="header-section-number">3.1</span> Training the model: Computing <span class="math inline">\(\pmb{\theta}\)</span></a></li>
-  <li><a href="#making-predictions" id="toc-making-predictions" class="nav-link" data-scroll-target="#making-predictions"><span class="header-section-number">3.2</span> Making Predictions</a></li>
-  <li><a href="#avoiding-numerical-underflow" id="toc-avoiding-numerical-underflow" class="nav-link" data-scroll-target="#avoiding-numerical-underflow"><span class="header-section-number">3.3</span> Avoiding Numerical Underflow</a></li>
+  <li><a href="#training-the-model-computing-pmbtheta" id="toc-training-the-model-computing-pmbtheta" class="nav-link active" data-scroll-target="#training-the-model-computing-pmbtheta"><span class="header-section-number">4.1</span> Training the model: Computing <span class="math inline">\(\pmb{\theta}\)</span></a></li>
+  <li><a href="#making-predictions" id="toc-making-predictions" class="nav-link" data-scroll-target="#making-predictions"><span class="header-section-number">4.2</span> Making Predictions</a></li>
+  <li><a href="#avoiding-numerical-underflow" id="toc-avoiding-numerical-underflow" class="nav-link" data-scroll-target="#avoiding-numerical-underflow"><span class="header-section-number">4.3</span> Avoiding Numerical Underflow</a></li>
+  <li><a href="#relaxing-assumption-for-the-prior" id="toc-relaxing-assumption-for-the-prior" class="nav-link" data-scroll-target="#relaxing-assumption-for-the-prior"><span class="header-section-number">4.4</span> Relaxing assumption for the prior</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/MateusMolina/ml-safety-playbook/edit/main/introduction/example-spam-detection.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../introduction/intro-uncertainty.html">Introduction</a></li><li class="breadcrumb-item"><a href="../introduction/example-spam-detection.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Example: Spam Detection</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../introduction/intro-uncertainty.html">Introduction</a></li><li class="breadcrumb-item"><a href="../introduction/example-spam-detection.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Example: Spam Detection</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Example: Spam Detection</span></h1>
+<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Example: Spam Detection</span></h1>
 </div>
 
 
@@ -257,14 +264,14 @@ window.Quarto = {
 
 
 <div id="exm-spam-detection" class="theorem example">
-<p><span class="theorem-title"><strong>Example 3.1</strong></span> A spam detection system classifies incoming messages as spam or non-spam based on the presence of specific words. The system uses a fixed vocabulary and is trained on example messages labeled as spam or non-spam.</p>
+<p><span class="theorem-title"><strong>Example 4.1</strong></span> A spam detection system classifies incoming messages as spam or non-spam based on the presence of specific words. The system uses a fixed vocabulary and is trained on example messages labeled as spam or non-spam.</p>
 <div class="quarto-layout-panel" data-layout-ncol="2">
 <div class="quarto-layout-row">
 <div class="cell quarto-layout-cell" data-execution_count="1" style="flex-basis: 50.0%;justify-content: center;">
 <div id="tbl-spam-vocab" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="1">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-spam-vocab-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;3.1: Vocabulary
+Table&nbsp;4.1: Vocabulary
 </figcaption>
 <div aria-describedby="tbl-spam-vocab-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output cell-output-display cell-output-markdown" data-execution_count="1">
@@ -351,7 +358,7 @@ Table&nbsp;3.1: Vocabulary
 <div id="tbl-spam-data" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="2">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-spam-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;3.2: Spam dataset
+Table&nbsp;4.2: Spam dataset
 </figcaption>
 <div aria-describedby="tbl-spam-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output cell-output-display cell-output-markdown" data-execution_count="2">
@@ -418,45 +425,49 @@ Table&nbsp;3.2: Spam dataset
 </div>
 <p>This example is based on the exercise 3.22 from <span class="citation" data-cites="murphyMachineLearningProbabilistic2014">Murphy (<a href="../references.html#ref-murphyMachineLearningProbabilistic2014" role="doc-biblioref">2014</a>)</span>.</p>
 </div>
-<p>Our goal is to build a spam detection system capable of classifying the messages as spam or not spam. Let us formulate the task:</p>
+<p><strong>Goal.</strong> Our goal is to build a spam detection system capable of classifying the messages as spam or not spam. Let us formulate the task:</p>
 <p><span class="math display">\[
 p(y_i = c \vert \mathbf{x}_i, \pmb{\theta}) = ?
 \]</span></p>
-<p>Where <span class="math inline">\(p(y_i = c)\)</span> is the probability of the message <span class="math inline">\(i\)</span> being of class <span class="math inline">\(c\)</span> in <span class="math inline">\(\mathcal{C}\)</span>; <span class="math inline">\(\pmb{\theta}\)</span> is the matrix of probabilities of all <span class="math inline">\(\theta_{jc}\)</span>, where <span class="math inline">\(j\)</span> indexes the words in the vocabulary <span class="math inline">\(\mathcal{V}\)</span>; <span class="math inline">\(\mathbf{x}_i\)</span> is the vector of features we want to classify, i.e., the output of some kind of builder <span class="math inline">\(B\)</span> that decomposes the message from <a href="#tbl-spam-data" class="quarto-xref">Table&nbsp;<span>3.2</span></a> in terms of <span class="math inline">\(\mathcal{V}\)</span> from <a href="#tbl-spam-vocab" class="quarto-xref">Table&nbsp;<span>3.1</span></a>. Expressing the task in terms of <a href="intro-uncertainty.html#eq-bayes" class="quarto-xref">Equation&nbsp;<span>1.1</span></a>, we get:</p>
+<p>Where <span class="math inline">\(p(y_i = c)\)</span> is the probability of the message <span class="math inline">\(i\)</span> being of class <span class="math inline">\(c\)</span> in <span class="math inline">\(\mathcal{C}\)</span>; <span class="math inline">\(\pmb{\theta}\)</span> is the matrix of probabilities of all <span class="math inline">\(\theta_{jc}\)</span>, where <span class="math inline">\(j\)</span> indexes the words in the vocabulary <span class="math inline">\(\mathcal{V}\)</span>; <span class="math inline">\(\mathbf{x}_i\)</span> is the vector of features we want to classify, i.e., the output of some kind of builder <span class="math inline">\(B\)</span> that decomposes the message from <a href="#tbl-spam-data" class="quarto-xref">Table&nbsp;<span>4.2</span></a> in terms of <span class="math inline">\(\mathcal{V}\)</span> from <a href="#tbl-spam-vocab" class="quarto-xref">Table&nbsp;<span>4.1</span></a>. Expressing the task in terms of <a href="intro-uncertainty.html#eq-bayes" class="quarto-xref">Equation&nbsp;<span>1.1</span></a>, we get:</p>
 <p><span id="eq-exm-spam-task"><span class="math display">\[
 p(y_i = c \vert \mathbf{x}_i, \pmb{\theta}) \propto p(\mathbf{x}_i\vert y_i=c, \pmb{\theta})p(y_i=c\vert \pmb{\theta})
-\tag{3.1}\]</span></span></p>
-<p>Since we only have two classes, spam and non-spam, let us apply a builder <span class="math inline">\(B_\mathbb{I}: \mathcal{D} \to \{0,1\}^{|\mathcal{V}|}\)</span> that transforms the data set into binary feature vectors indicating the presence or absence of each word in the vocabulary. With this transformation, we can model each <span class="math inline">\(x_i\)</span> as a Bernoulli distribution. Assuming that <span class="math inline">\(x_{ij}\)</span> are conditionally independent given the classes <span class="math inline">\(C\)</span>, we can express the likelihood as: <span id="eq-exm-spam-likelihood"><span class="math display">\[
+\tag{4.1}\]</span></span></p>
+<p>In the equation, <span class="math inline">\(\pmb{\theta}\)</span> is seem as</p>
+<p>Since we only have two classes, spam and non-spam, let us apply a builder <span class="math inline">\(B_\mathbb{I}: \mathcal{D} \to \{0,1\}^{|\mathcal{V}|}\)</span> that transforms the data set into binary feature vectors indicating the presence or absence of each word in the vocabulary. With this transformation, we can model each <span class="math inline">\(x_i\)</span> as a joint distribution of Bernoulli distributions of the corresponding feature for each word in <span class="math inline">\(\mathcal{V}\)</span>, <span class="math display">\[x_i\vert y_i=c \sim \bigcap_j^{|\mathcal{V}|} ber(\theta_{jc}).\]</span> <strong>Assumption for the likelihood.</strong> Assuming that all <span class="math inline">\(x_{ij}\)</span> are conditionally independent given the classes <span class="math inline">\(C\)</span>, we can express the likelihood as: <span id="eq-exm-spam-likelihood"><span class="math display">\[
+\forall x_a, x_b \in \mathbf{x}_i, x_a \perp x_b \vert y_i=c \implies\\
 p(\mathbf{x}_i\vert y_i=c, \pmb{\theta}) = \prod_j \theta_{jc}^{x_{ij}}(1-\theta_{jc})^{1-x_{ij}}
-\tag{3.2}\]</span></span></p>
-<p>Let us for now use a uniform prior for the classes: <span id="eq-exm-spam-prior"><span class="math display">\[
+\tag{4.2}\]</span></span></p>
+<p><strong>Assumption for the prior.</strong> For now, let us use a uniform prior for the classes: <span id="eq-exm-spam-prior"><span class="math display">\[
 p(y_i=c\vert \pmb{\theta}) = \frac{1}{|\mathcal{C}|} = \hat{\pi}_c
-\tag{3.3}\]</span></span></p>
-<p>where <span class="math inline">\(|\mathcal{C}|\)</span> is the number of classes.</p>
-<section id="training-the-model-computing-pmbtheta" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="training-the-model-computing-pmbtheta"><span class="header-section-number">3.1</span> Training the model: Computing <span class="math inline">\(\pmb{\theta}\)</span></h2>
+\tag{4.3}\]</span></span></p>
+<p>where <span class="math inline">\(|\mathcal{C}|\)</span> is the number of classes. <a href="#eq-exm-spam-prior" class="quarto-xref">Equation&nbsp;<span>4.3</span></a> assumes that each class is equaly likely to show up in the population. However, this can be a too strong of an assumption for our example of sorting messages as spam and not-spam (think: are we equally likely to receive spam and non-spam messages?).</p>
+<section id="training-the-model-computing-pmbtheta" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="training-the-model-computing-pmbtheta"><span class="header-section-number">4.1</span> Training the model: Computing <span class="math inline">\(\pmb{\theta}\)</span></h2>
 <p>To compute the matrix of probabilities <span class="math inline">\(\pmb{\theta}\)</span>, we can use the maximum likelihood estimate (MLE) for each word <span class="math inline">\(j\)</span> in the vocabulary and each class <span class="math inline">\(c\)</span>:</p>
 <p><span id="eq-exm-spam-mle"><span class="math display">\[
 \hat{\theta}_{jc} = \frac{\sum_{i} x_{ij} \mathbb{I}(y_i=c)}{\sum_{i} \mathbb{I}(y_i=c)}
-\tag{3.4}\]</span></span></p>
+\tag{4.4}\]</span></span></p>
 <p>Where <span class="math inline">\(\mathbb{I}(\cdot)\)</span> is the indicator function that returns 1 if the condition is true and 0 otherwise.</p>
-<p>However, using the MLE directly suffers from the <strong>black swan problem</strong>: it assigns extreme probabilities (exactly 0 or 1) when a word never appears or always appears in messages of a particular class. This leads to several issues:</p>
+<div id="chl-black-swan" class="theorem">
+<p><span class="theorem-title"><strong>Challenge 4.1 (Black Swan)</strong></span> However, using the MLE directly suffers from the <strong>black swan problem</strong>: This is analogous to the classical black swan problem: just because we’ve never observed a black swan doesn’t mean the probability of seeing one should be exactly zero. It assigns extreme probabilities (exactly 0 or 1) when a word never appears or always appears in messages of a particular class. This leads to several issues:</p>
 <ol type="1">
 <li><strong>Zero probabilities</strong> (<span class="math inline">\(\theta_{jc} = 0\)</span>) cause numerical problems, e.g.&nbsp;when computing log-probabilities, since <span class="math inline">\(\log(0) = -\infty\)</span>.</li>
 <li><strong>Probabilities of 1</strong> (<span class="math inline">\(\theta_{jc} = 1\)</span>) make the model overly confident and brittle. If a word that always appeared in spam suddenly appears in a non-spam message, the likelihood becomes exactly 0, since we compute the product, completely ignoring all other evidence.</li>
 <li><strong>Poor generalization</strong>: The model becomes unable to handle unseen word-class combinations, even when they are plausible.</li>
 </ol>
-<p>This is analogous to the classical black swan problem: just because we’ve never observed a black swan doesn’t mean the probability of seeing one should be exactly zero. To address this, we use <strong>Laplace smoothing</strong> (also called add-one smoothing):</p>
+</div>
+<p><strong>Laplace Smoothing.</strong> To address <a href="#chl-black-swan" class="quarto-xref">Challenge&nbsp;4.1</a>, we can use <strong>Laplace smoothing</strong> (also called add-one smoothing):</p>
 <p><span id="eq-exm-spam-mle-smoothed"><span class="math display">\[
 \hat{\theta}_{jc} = \frac{\sum_{i} x_{ij} \mathbb{I}(y_i=c) + \alpha}{\sum_{i} \mathbb{I}(y_i=c) + \alpha |\mathcal{V}|}
-\tag{3.5}\]</span></span></p>
+\tag{4.5}\]</span></span></p>
 <p>where <span class="math inline">\(\alpha &gt; 0\)</span> is the smoothing parameter (typically <span class="math inline">\(\alpha=1\)</span>) and <span class="math inline">\(|\mathcal{V}|\)</span> is the size of the vocabulary. This ensures all probabilities are strictly in the interval <span class="math inline">\((0, 1)\)</span>, preventing both numerical instability and overconfident predictions.</p>
-<p>Let us compute the matrix <span class="math inline">\(\pmb{\hat{\theta}}\)</span> using the dataset from <a href="#tbl-spam-data" class="quarto-xref">Table&nbsp;<span>3.2</span></a>, considering that we have two classes: “spam” and “non-spam”, where <span class="math inline">\(c=1\)</span> for “spam” and <span class="math inline">\(c=0\)</span> for “non-spam”.</p>
+<p>Let us compute the matrix <span class="math inline">\(\pmb{\hat{\theta}}\)</span> using the dataset from <a href="#tbl-spam-data" class="quarto-xref">Table&nbsp;<span>4.2</span></a>, considering that we have two classes: “spam” and “non-spam”, where <span class="math inline">\(c=1\)</span> for “spam” and <span class="math inline">\(c=0\)</span> for “non-spam”.</p>
 <div class="cell" data-execution_count="3">
 <div id="tbl-spam-theta" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="3">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-spam-theta-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;3.3: Matrix of probabilities <span class="math inline">\(\pmb{\hat{\theta}}\)</span>
+Table&nbsp;4.3: Matrix of probabilities <span class="math inline">\(\pmb{\hat{\theta}}\)</span>
 </figcaption>
 <div aria-describedby="tbl-spam-theta-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output cell-output-display" data-execution_count="3">
@@ -602,14 +613,14 @@ Table&nbsp;3.3: Matrix of probabilities <span class="math inline">\(\pmb{\hat{\t
 </div>
 <p>The resulting matrix <span class="math inline">\(\pmb{\theta}\)</span> indicates the probability of each word in the vocabulary given the class (spam or non-spam). For example, the word “secret” has a high probability of appearing in spam messages, while “sports” is more likely to appear in non-spam messages.</p>
 </section>
-<section id="making-predictions" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="making-predictions"><span class="header-section-number">3.2</span> Making Predictions</h2>
-<p>To make predictions on new messages, we can use the learned parameters from <a href="#tbl-spam-theta" class="quarto-xref">Table&nbsp;<span>3.3</span></a> and apply <a href="#eq-exm-spam-task" class="quarto-xref">Equation&nbsp;<span>3.1</span></a>. For the existing messages in <a href="#tbl-spam-data" class="quarto-xref">Table&nbsp;<span>3.2</span></a>, we can compute the posterior probabilities for each class and classify the messages accordingly.</p>
+<section id="making-predictions" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="making-predictions"><span class="header-section-number">4.2</span> Making Predictions</h2>
+<p>To make predictions on new messages, we can use the learned parameters from <a href="#tbl-spam-theta" class="quarto-xref">Table&nbsp;<span>4.3</span></a> and apply <a href="#eq-exm-spam-task" class="quarto-xref">Equation&nbsp;<span>4.1</span></a>. For the existing messages in <a href="#tbl-spam-data" class="quarto-xref">Table&nbsp;<span>4.2</span></a>, we can compute the posterior probabilities for each class and classify the messages accordingly.</p>
 <div class="cell" data-execution_count="4">
 <div id="tbl-spam-predictions" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="4">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-spam-predictions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;3.4: Predictions on the spam dataset
+Table&nbsp;4.4: Predictions on the spam dataset
 </figcaption>
 <div aria-describedby="tbl-spam-predictions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output cell-output-display" data-execution_count="4">
@@ -713,23 +724,26 @@ Table&nbsp;3.4: Predictions on the spam dataset
 </figure>
 </div>
 </div>
-<p>From <a href="#tbl-spam-predictions" class="quarto-xref">Table&nbsp;<span>3.4</span></a>, we can identify a few issues with our current model. The most glaring one is that our posteriors are extremely low, which could be a sign of numerical underflow when multiplying many small probabilities together. This is a common issue in Naive Bayes classifiers, increasing with the size of vocabulary, since all probabilities of the likelihood <span class="math inline">\(\sum_x p(\mathbf{x}\vert y)\)</span> should add to <span class="math inline">\(1\)</span>. To mitigate this, we could consider using log for out computations, as shown in the next section.</p>
+<p>From <a href="#tbl-spam-predictions" class="quarto-xref">Table&nbsp;<span>4.4</span></a>, we can identify a few issues with our current model. The most glaring one is that our posteriors are extremely low, which could be a sign of numerical underflow when multiplying many small probabilities together. This is a common issue in Naive Bayes classifiers, increasing with the size of vocabulary, since all probabilities of the likelihood <span class="math inline">\(\sum_x p(\mathbf{x}\vert y)\)</span> should add to <span class="math inline">\(1\)</span>. To mitigate this, we could consider using log for out computations, as shown in the next section.</p>
+<div id="chl-numerical-underflow" class="theorem">
+<p><span class="theorem-title"><strong>Challenge 4.2 (Numerical Underflow)</strong></span> Numerical underflow occurs when small numbers are rounded to zero in a computer. In the context of our spam detection model, when we compute the likelihood <span class="math inline">\(p(\mathbf{x}_i\vert y_i=c, \pmb{\theta})\)</span> as a product of many small probabilities (especially with a large vocabulary), the result can become so small that it is effectively treated as zero by the computer. This leads to incorrect posterior probabilities and unreliable classifications.</p>
+</div>
 </section>
-<section id="avoiding-numerical-underflow" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="avoiding-numerical-underflow"><span class="header-section-number">3.3</span> Avoiding Numerical Underflow</h2>
+<section id="avoiding-numerical-underflow" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="avoiding-numerical-underflow"><span class="header-section-number">4.3</span> Avoiding Numerical Underflow</h2>
 <p>To avoid numerical underflow, we can compute the logarithm of the posterior probabilities instead of the probabilities themselves. This transforms the product of probabilities into a sum of logarithms, which is numerically more stable. The logarithm of the posterior probability can be expressed as:</p>
 <p><span id="eq-exm-spam-log-posterior"><span class="math display">\[
 \begin{align*}
 \log p(y_i = c \vert \mathbf{x}_i, \pmb{\theta}) &amp;\propto \log p(\mathbf{x}_i\vert y_i=c, \pmb{\theta}) + \log p(y_i=c\vert \pmb{\theta}) \\
 &amp;\propto \sum_j \left[ x_{ij} \log \theta_{jc} + (1-x_{ij}) \log (1-\theta_{jc}) \right] + \log \hat{\pi}_c
 \end{align*}
-\tag{3.6}\]</span></span></p>
+\tag{4.6}\]</span></span></p>
 <p>That means, we can maximize the log-posterior instead of the posterior itself and use it to classify messages. Let us recompute the predictions using log-probabilities.</p>
 <div class="cell" data-execution_count="5">
 <div id="tbl-spam-log-predictions" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="5">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-spam-log-predictions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;3.5: Predictions using log-probabilities
+Table&nbsp;4.5: Predictions using log-probabilities
 </figcaption>
 <div aria-describedby="tbl-spam-log-predictions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output cell-output-display" data-execution_count="5">
@@ -833,6 +847,10 @@ Table&nbsp;3.5: Predictions using log-probabilities
 </figure>
 </div>
 </div>
+</section>
+<section id="relaxing-assumption-for-the-prior" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="relaxing-assumption-for-the-prior"><span class="header-section-number">4.4</span> Relaxing assumption for the prior</h2>
+<p>In <a href="#eq-exm-spam-prior" class="quarto-xref">Equation&nbsp;<span>4.3</span></a>, we assumed a uniform prior for the classes. However, this may not reflect the true distribution of spam and non-spam messages in practice. To relax this assumption, we can estimate the class priors from the training data:</p>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
@@ -1246,7 +1264,7 @@ Murphy, Kevin P. 2014. <em>Machine <span>Learning</span> - <span>A Probabilistic
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="../introduction/example-anomaly-detection.html" class="pagination-link" aria-label="Example: Anomaly Detection">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Example: Anomaly Detection</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Example: Anomaly Detection</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
