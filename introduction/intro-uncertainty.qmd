@@ -4,7 +4,8 @@ title: "Introduction to Uncertainty"
 
 ## Learning goals
 
-1. Understand the Bayes Theorem as a foundational block for making sense of uncertainty.
+1. Foundation of probabilistic reasoning for understanding uncertainty.
+2. Understand the Bayes Theorem and its components: prior, likelihood, posterior.
 
 ## Bayesian Interpretation of Uncertainty
 
@@ -14,33 +15,42 @@ Instead of viewing probabilities in terms of the frequencies of random, repeatab
 
 Let us first formally define the Bayes equation.
 
-::: {#def-bayes}
+::: {#thm-bayes-rule}
 
-The probability of an event $x$ given knowledge of an event $y$ can be expressed in the following form:
+## Bayes Rule
+
+The probability of an event $y$ happening, conditioned on knowing that event $x$ happened can be expressed in the following form:
 $$
-p(y\vert x)=\frac{p(x\vert y)p(y)}{p(x)}
+\overbrace{p(y\vert x)}^\text{posterior}=\frac{\overbrace{p(x\vert y)}^\text{likelihood}\overbrace{p(y)}^\text{prior}}{\underbrace{p(x)}_\text{normalizing term}}.
 $$ {#eq-bayes}
 
 :::
 
 The events $x$ and $y$ can be understood as outcomes of the _random variables_ $X$ and $Y$, respectively. Random variables are functions that maps our event space $\Omega$ to event outcomes, e.g., $x$ and $y$. When we write $p(X=x)$ we are referring to the probability that the random variable function $X$ is evaluated to $x$. When the context is clear, we can abuse the notation and just write $p(x)$ or $p(y)$.
 
-@def-bayes is a consequence of two important probability rules: _sum rule_ and _product rule_. 
+@thm-bayes-rule is a consequence of two important probability rules: _sum rule_ and _product rule_.
 
 ### Probability rules: Sum Rule and Product Rule
 
 The _sum rule_ is also known as _Law of Total Probability_. @bishopPatternRecognitionMachine2006 expresses them as:
 
+::: {#thm-total-probability}
+## Sum rule/Law of Total Probability
 $$
 p(X) = \sum_Y p(X,Y)
 $$ {#eq-sum}
+
+:::
+
+::: {#thm-product-rule}
+## Product Rule/Definition of Conditional Probability
 $$
 p(X,Y)=p(Y\vert X)p(X)
 $$ {#eq-prob}
 
 Where $p(X,Y)$ is the _joint probability_ of random variables $X$ and $Y$, also commonly expressed as their intersection $p(X\cap Y)$.
+:::
 
-The _product rule_ (@eq-prob) is also the definition of conditional probability.
 
 ### Developing the Intuition For Understanding Uncertainty
 

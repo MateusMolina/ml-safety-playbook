@@ -12,6 +12,7 @@ book:
     - part: "Introduction"
       chapters:
         - introduction/intro-uncertainty.qmd
+        - introduction/probability-distributions.qmd
         - introduction/example-anomaly-detection.qmd
         - introduction/example-spam-detection.qmd
     - references.qmd
@@ -31,6 +32,8 @@ execute:
 custom-amsthm:
   - key: prm
     name: Problem
+  - key: chl
+    name: Challenge
 
 filters:
   - custom-amsthm-environments
