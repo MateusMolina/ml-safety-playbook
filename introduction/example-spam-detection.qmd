@@ -73,7 +73,7 @@ $$
 p(y_i = c \vert \mathbf{x}_i, \pmb{\Theta}) \propto p(\mathbf{x}_i\vert y_i=c, \pmb{\Theta})p(y_i=c\vert \pmb{\Theta})
 $$ {#eq-exm-spam-task}
 
-**Building the feature vector $\mathbf{x}$.** Since we only have two classes, spam and non-spam, let us apply a builder $B_\mathbb{I}: \mathcal{D} \to \{0,1\}^{|\mathcal{V}|}$ that transforms the data set into binary feature vectors indicating the presence or absence of each word in the vocabulary. With this transformation, we can model each $x_i$ as a joint distribution of Bernoulli distributions of the corresponding feature for each word in $\mathcal{V}$, $$x_i\vert y_i=c \sim \bigcap_j^{|\mathcal{V}|} ber(\theta_{jc}).$$ 
+**Building the feature vector $\mathbf{x}$.** Since we only have two classes, spam and non-spam, let us apply a builder $B_\mathbb{I}: \mathcal{D} \to \{0,1\}^{|\mathcal{V}|}$ that transforms the data set into binary feature vectors indicating the presence or absence of each word in the vocabulary. With this transformation, we can model each $x_i$ as a joint distribution of Bernoulli distributions of the corresponding feature for each word in $\mathcal{V}$, $$x_{ij}\vert y_i=c \sim ber(\theta_{jc}).$$ 
 **Assumption for the likelihood.** Assuming that all $x_{ij}$ are conditionally independent given the classes $C$, we can express the likelihood as:
 $$
 \forall x_a, x_b \in \mathbf{x}_i, x_a \perp x_b \vert y_i=c \implies\\
@@ -89,19 +89,19 @@ $$ {#eq-exm-spam-prior}
 
 where $|\mathcal{C}|$ is the number of classes. @eq-exm-spam-prior assumes that each class is equaly likely to show up in the population. However, this can be a too strong of an assumption for our example of sorting messages as spam and not-spam (think: are we equally likely to receive spam and non-spam messages?).
 
-## Training the model: Computing $\pmb{\Theta}$
+## Training the model: Computing $\pmb{\Theta}$ via MLE
 
 To use the equations above, we first need to compute our parameters $\pmb{\Theta}$. For that, we want to use our dataset from @tbl-spam-data represented as $\mathcal{D}$ to learn the parameters $\pmb{\Theta}$ of our model. Applying a similar bayesian treatment, we get:
 $$
 p(\pmb{\Theta}\vert \mathcal{D}) \propto p(\mathcal{D}\vert \pmb{\Theta})p(\pmb{\Theta})
 $$ {#eq-exm-spam-training-likelihood}
 
+We can use the maximum likelihood estimate (MLE) to compute the parameters in $\pmb{\Theta}$. Later on, we will discuss the limitations of this approach and how we can improve it.
+
 **Computing the training likelihood $p(\mathcal{D}\vert\pmb{\Theta})$.** Since $\mathcal{D}\subseteq \mathbf{X}\times \mathcal{Y}$, using @eq-prob we can represent the likelihood of each data point (message) $(\mathbf{x}_i,y_i)$ as:
 $$
 p(\mathbf{x}_i,y_i\vert \pmb{\Theta}) = p(y_i\vert \pmb{\pi})p(\mathbf{x}_i\vert y_i, \pmb{\theta})  
 $$ {#eq-exm-spam-training-likelihood-2}
-
-
 
 ::: {.callout-note appearance="simple"}
 
@@ -121,13 +121,10 @@ $$
 
 :::
 
-
-Assuming that all features are conditionally independent given the class, we can expand the term $p(\mathbf{x}_i\vert y_i, \pmb{\theta})$ in @eq-exm-spam-training-likelihood-2 as follows:
+By using the assumption in @eq-exm-spam-likelihood, we can expand the term $p(\mathbf{x}_i\vert y_i, \pmb{\theta})$ in @eq-exm-spam-training-likelihood-2 as follows:
 $$
-p(\mathbf{x}_i,y_i\vert \pmb{\theta}) = p(y_i\vert \pmb{\pi}) \prod_j p(x_{ij}\vert y_i, \theta_j) 
+p(\mathbf{x}_i,y_i\vert \pmb{\Theta}) = \prod_c p(y_i=c\vert \pi_c) \prod_j\prod_c p(x_{ij}\vert y_i=c, \theta_{jc}) 
 $$ {#eq-exm-spam-training-likelihood-3}
-
-<!-- hm. it's still confusing how pi appeared here -->
 
 
 To compute the matrix of probabilities $\pmb{\theta}$, we can use the maximum likelihood estimate (MLE) for each word $j$ in the vocabulary and each class $c$:
