@@ -79,7 +79,37 @@ ul.task-list li input[type="checkbox"] {
     </style>
   
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-sidebar floating quarto-light">
@@ -225,6 +255,34 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="multinomial-generalization-of-binomial" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="multinomial-generalization-of-binomial"><span class="header-section-number">2.3</span> Multinomial (generalization of Binomial)</h2>
+<div id="def-multinomial" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 2.1 (Multinomial Distribution)</strong></span> The <strong>multinomial distribution</strong> is a generalization of the binomial distribution. It models the probability of counts for each of <span class="math inline">\(k\)</span> different outcomes in <span class="math inline">\(n\)</span> independent trials, where each trial results in exactly one of the <span class="math inline">\(k\)</span> outcomes. Let <span class="math inline">\(\mathbf{x} = (x_1, x_2, \ldots, x_k) \in \mathbf{X}\)</span> be the vector of counts for each outcome and <span class="math inline">\(\mathbf{X}\)</span> the vector of random variables, we say that <span class="math display">\[\mathbf{X}\sim \text{Mu}_k(n,\pmb{\theta}).\]</span> The probability mass function (PMF) of the multinomial distribution is given by: <span id="eq-pmf-multinomial"><span class="math display">\[
+\begin{aligned}
+p(\mathbf{X}=\mathbf{x}) &amp;= \binom{n}{x_1, x_2, \ldots, x_k} \theta_1^{x_1} \theta_2^{x_2} \ldots \theta_k^{x_k}\\
+&amp;= \binom{n}{x_1, x_2, \ldots, x_k} \prod_{i=1}^{k} \theta_i^{x_i}
+\end{aligned}
+\tag{2.1}\]</span></span> where:</p>
+<ul>
+<li><span class="math inline">\(n\)</span> is the total number of trials,</li>
+<li><span class="math inline">\(x_i\)</span> is the count of occurrences of outcome <span class="math inline">\(i\)</span> (with <span class="math inline">\(\sum_{i=1}^{k} x_i = n\)</span>),</li>
+<li><span class="math inline">\(p_i\)</span> is the probability of outcome <span class="math inline">\(i\)</span> (with <span class="math inline">\(\sum_{i=1}^{k} \theta_i = 1\)</span>).</li>
+<li>The term <span class="math display">\[\binom{n}{x_1, x_2, \ldots, x_k} \triangleq \frac{n!}{x_1! x_2! \ldots x_k!}\]</span> is the multinomial coefficient, which counts the number of ways to arrange the counts of the different outcomes.</li>
+</ul>
+</div>
+<div id="exm-die-multinomial" class="theorem example">
+<p><span class="theorem-title"><strong>Example 2.1 (5 ones and 5 sixes in 10 rolls of a fair die)</strong></span> Suppose we roll a fair six-sided die 10 times. We want to find the probability of getting 5 ones and 5 sixes: 1 appears 5 times, 2 appears 0 times, 3 appears 0 times, 4 appears 0 times, 5 appears 0 times, and 6 appears 5 times. Let <span class="math inline">\(\mathbf{x} = (5, 0, 0, 0, 0, 5)\)</span> be the vector of counts for each face. Since the die is fair, the probabilities for each face are equal: <span class="math display">\[\pmb{\theta} = \left(\frac{1}{6}, \frac{1}{6}, \frac{1}{6}, \frac{1}{6}, \frac{1}{6}, \frac{1}{6}\right).\]</span> We can say that <span class="math display">\[\mathbf{X}\sim \text{Mu}_6(10,\pmb{\theta}).\]</span> By applying <a href="#eq-pmf-multinomial" class="quarto-xref">Equation&nbsp;<span>2.1</span></a>, we can calculate the probability of observing the counts in <span class="math inline">\(\mathbf{x}\)</span>: <span class="math display">\[
+\begin{aligned}
+p(\mathbf{X}=\mathbf{x}) &amp;= \binom{10}{5, 0, 0, 0, 0, 5} \left(\frac{1}{6}\right)^5 \left(\frac{1}{6}\right)^0 \left(\frac{1}{6}\right)^0 \left(\frac{1}{6}\right)^0 \left(\frac{1}{6}\right)^0 \left(\frac{1}{6}\right)^5\\
+&amp;= \frac{10!}{5! 0! 0! 0! 0! 5!} \left(\frac{1}{6}\right)^{10} \approx 4.17\times 10^{-6}\\
+\end{aligned}
+\]</span></p>
+<p>You can expect to be this unlucky about once every 240,000 times you repeat this experiment!</p>
+</div>
+<p>A special case of the multinomial distribution is the categorical distribution, which models the outcome of a single trial with <span class="math inline">\(k\)</span> possible outcomes.</p>
+<div id="def-categorical" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 2.2 (Categorical Distribution)</strong></span> The <strong>categorical distribution</strong> is a special case of the multinomial distribution where there is only one trial (<span class="math inline">\(n=1\)</span>). It models the probability of each of <span class="math inline">\(k\)</span> different outcomes in a single trial. Let <span class="math inline">\(X\)</span> be a random variable representing the outcome of the trial, we say that <span class="math display">\[X\sim \text{Cat}_k(\pmb{\theta}) \triangleq \text{Mu}_k(1,\pmb{\theta}).\]</span></p>
+<p>Note that since we have just one experiment, the vector of outcomes must contain exactly one non-zero element equal to one. For example, <span class="math inline">\(\mathbf{x}=(1,0,\ldots,0)\)</span> indicates that outcome 1 occurred, <span class="math inline">\(\mathbf{x}=(0,1,0,\ldots,0)\)</span> indicates that outcome 2 occurred, and so on.</p>
+</div>
 </section>
 <section id="gaussian-normal-distribution" class="level2" data-number="2.4">
 <h2 data-number="2.4" class="anchored" data-anchor-id="gaussian-normal-distribution"><span class="header-section-number">2.4</span> Gaussian: (Normal) Distribution</h2>

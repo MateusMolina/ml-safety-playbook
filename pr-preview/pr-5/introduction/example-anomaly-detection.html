@@ -129,6 +129,7 @@ window.Quarto = {
 };
 </script>
 
+<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-sidebar floating quarto-light">
@@ -273,11 +274,11 @@ p(d)=0.02
 p(f\vert d)  = 0.9 \text{, }
 p(f\vert nd) = 0.15
 \]</span></p>
-<p>From <a href="intro-uncertainty.html#eq-prob" class="quarto-xref">Equation&nbsp;<span>1.3</span></a> and <a href="intro-uncertainty.html#eq-sum" class="quarto-xref">Equation&nbsp;<span>1.2</span></a>, we can compute <span class="math inline">\(p(f)\)</span>:</p>
+<p>From <a href="intro-uncertainty.html#eq-prob" class="quarto-xref">Equation&nbsp;<span>1.2</span></a> and <a href="intro-uncertainty.html#eq-sum" class="quarto-xref">Equation&nbsp;<span>1.1</span></a>, we can compute <span class="math inline">\(p(f)\)</span>:</p>
 <p><span class="math display">\[
 p(f)=p(f\vert d)p(d) + p(f\vert nd)p(nd)
 \]</span></p>
-<p>Bayes’ rule lets us update the belief about a part being defective as soon as the sensor fires. Applying <a href="intro-uncertainty.html#eq-bayes" class="quarto-xref">Equation&nbsp;<span>1.1</span></a> and since <span class="math inline">\(Y\)</span> can only assume one of the values in the set <span class="math inline">\(\{d,nd\}\)</span>, i.e., <span class="math inline">\(p(nd)=1-p(d)\)</span>, we have the following equation in function of the variables we already know:</p>
+<p>Bayes’ rule lets us update the belief about a part being defective as soon as the sensor fires. Applying <a href="intro-uncertainty.html#eq-bayes" class="quarto-xref">Equation&nbsp;<span>1.3</span></a> and since <span class="math inline">\(Y\)</span> can only assume one of the values in the set <span class="math inline">\(\{d,nd\}\)</span>, i.e., <span class="math inline">\(p(nd)=1-p(d)\)</span>, we have the following equation in function of the variables we already know:</p>
 <p><span class="math display">\[
 p(d\vert f)=\frac{p(f\vert d)p(d)}{p(f)}=\frac{p(f\vert d)p(d)}{p(f\vert d)p(d) + p(f\vert nd)(1-p(d))}
 \]</span></p>
@@ -290,7 +291,7 @@ p(d\vert f)=\frac{p(f\vert d)p(d)}{p(f)}=\frac{p(f\vert d)p(d)}{p(f\vert d)p(d) 
 p(\theta_{f,d} \vert \ \mathcal{D}_f)=?
 \]</span></p>
 <p>Where <span class="math inline">\(\theta_{f,d}\)</span> is the probability of the part being defective given the sensor reading, <span class="math inline">\(\mathcal{D}_f=\{D_1, D_2, \dots, D_i\}\)</span> is the set of observations of <span class="math inline">\(D\)</span> outcomes when <span class="math inline">\(F=f\)</span>. Interestingly, <span class="math inline">\(\theta_{f,d}\)</span> is both a probability and a random variable itself, since we are uncertain about its value.</p>
-<p>We can once again express our task in terms of the bayesian equation (<a href="intro-uncertainty.html#eq-bayes" class="quarto-xref">Equation&nbsp;<span>1.1</span></a>), but now making use of proportionality since, for the moment, we are not interested in the normalizing constant <span class="math inline">\(p(\mathcal{D}_f)\)</span>: <span id="eq-exm-update"><span class="math display">\[
+<p>We can once again express our task in terms of the bayesian equation (<a href="intro-uncertainty.html#eq-bayes" class="quarto-xref">Equation&nbsp;<span>1.3</span></a>), but now making use of proportionality since, for the moment, we are not interested in the normalizing constant <span class="math inline">\(p(\mathcal{D}_f)\)</span>: <span id="eq-exm-update"><span class="math display">\[
 \begin{align*}
 p(\theta_{f,d} \vert \ \mathcal{D}_f)&amp;\propto p(\mathcal{D}_f\vert \theta_{f,d})p(\theta_{f,d}) \\
 &amp;\propto p(\mathcal{D}_f\vert \theta_{f,d})(\theta_{f,d})
@@ -349,7 +350,7 @@ p(\theta_{f,d} \vert \ \mathcal{D}_f)&amp;\propto Ber(\theta_{f,d})Beta(a, b) \\
 </div>
 </div>
 <p>Our error bar shrinks as we observe more data, reflecting our increased confidence in the estimate. The mode converges towards the true latent defect probability of flagged events, <span class="math inline">\(\theta_{f,d}^\star=0.6\)</span>, demonstrating how Bayesian updating refines our beliefs with accumulating evidence.</p>
-<div id="algo-beta-bernoulli-update" class="pseudocode-container quarto-float" data-comment-delimiter="//" data-line-number-punc=":" data-line-number="true" data-indent-size="1.2em" data-pseudocode-number="1" data-no-end="false" data-caption-prefix="Algorithm">
+<div id="algo-beta-bernoulli-update" class="pseudocode-container quarto-float" data-line-number-punc=":" data-caption-prefix="Algorithm" data-indent-size="1.2em" data-comment-delimiter="//" data-line-number="true" data-pseudocode-number="1" data-no-end="false">
 <div class="pseudocode">
 \begin{algorithm} \caption{Sequential Beta-Bernoulli Update for $\theta_{f,d}$}\begin{algorithmic} \INPUT $a_0 \geq 1, b_0 \geq 1$, prior Beta hyperparameters \INPUT $\{d_i\}_{i=1}^T$, sequence of flagged defect observations \OUTPUT $\{\hat{\theta}_{f,d}(t)\}_{t=1}^T$, $\{\sigma(t)\}_{t=1}^T$ \Procedure{BetaBernoulliUpdate}{$a_0, b_0, \{d_i\}_{i=1}^T$} \State $a \leftarrow a_0$ \Comment{initialize posterior parameters} \State $b \leftarrow b_0$ \For{$t = 1$ \To $T$} \State $d \leftarrow d_i$ \Comment{observe whether part is defective} \If{$d = \texttt{defect}$} \State $a \leftarrow a + 1$ \Comment{increment success count} \Else \State $b \leftarrow b + 1$ \Comment{increment failure count} \EndIf \State $\hat{\theta}_{f,d}(t) \leftarrow \dfrac{a - 1}{a + b - 2}$ \Comment{MAP estimate (mode)} \State $\sigma^2(t) \leftarrow \dfrac{ab}{(a+b)^2(a+b+1)}$ \Comment{posterior variance} \State $\sigma(t) \leftarrow \sqrt{\sigma^2(t)}$ \EndFor \State \textbf{return} $\{\hat{\theta}_{f,d}(t)\}_{t=1}^T, \{\sigma(t)\}_{t=1}^T$ \EndProcedure \end{algorithmic} \end{algorithm}
 </div>
