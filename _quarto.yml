@@ -17,6 +17,8 @@ book:
         - introduction/example-spam-detection.qmd
     - references.qmd
     - part: "Concepts"
+  appendices:
+    - appendix/propositions-theorems.qmd
 bibliography: references.bib
 
 format:

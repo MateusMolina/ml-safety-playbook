@@ -1,0 +1,40 @@
+---
+title: "Propositions and Theorems"
+---
+
+::: {#prp-categorical-indicators}
+
+## One-Hot Indicator Equivalence for Categorical Conditionals
+
+Let $Y$ be a categorical random variable $Y \sim \text{cat}_k(\pmb{\pi})$, taking values in $\{1,\dots,C\}$ with class probabilities $\pi_c>0$, $\sum_{c=1}^C\pi_c=1, \forall \pi_c \in \pmb{\pi}$. Let a random variable $X=(X_1,\dots,X_J)$ and assume conditional independence of components given $Y$ so that for each $c$,
+$$
+p(X\mid Y=c)=\prod_{j=1}^J p(X_j\mid Y=c).
+$$
+
+Define the one-hot indicator vector
+$$
+\mathbf{Y}=(Y_1,\dots,Y_C),\qquad Y_c=\mathbb{1}\{Y=c\},\qquad \sum_{c=1}^C Y_c=1.
+$$
+Then the two expressions
+$$
+	\text{(I)}\qquad p(X,Y)=p(Y)\prod_{j=1}^J p(X_j\mid Y),
+\qquad
+	\text{(II)}\qquad p(X,\mathbf{Y})=\prod_{c=1}^C\Bigl[\pi_c\prod_{j=1}^J p(X_j\mid \mathbf{Y}=c)\Bigr]^{Y_c}
+$$
+are equivalent (they define the same joint probability function).
+
+:::
+
+::: {.proof}
+Let the realized class be $c^\ast$, so $Y=c^\ast$ and $Y_{c^\ast}=1$ while $Y_c=0$ for $c\neq c^\ast$. Evaluate (II) at that realization:
+$$
+\prod_{c=1}^C\Bigl[\pi_c\prod_{j=1}^J p(X_j\mid Y=c)\Bigr]^{Y_c}
+= \Bigl[\pi_{c^\ast}\prod_{j=1}^J p(X_j\mid Y=c^\ast)\Bigr]^{1}
+\prod_{c\neq c^\ast}\bigl[\cdots\bigr]^{0}.
+$$
+Factors raised to the zero power equal $1$, so the product reduces to
+$$
+\pi_{c^\ast}\prod_{j=1}^J p(X_j\mid Y=c^\ast),
+$$
+which equals (I) evaluated at $Y=c^\ast$. Since the above holds for every possible realized class $c^\ast$, (I) and (II) coincide as functions of $(X,Y)$.
+:::

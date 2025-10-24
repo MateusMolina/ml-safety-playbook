@@ -126,6 +126,38 @@ $$
 p(\mathbf{x}_i,y_i\vert \pmb{\Theta}) = \prod_c p(y_i=c\vert \pi_c) \prod_j\prod_c p(x_{ij}\vert y_i=c, \theta_{jc}) 
 $$ {#eq-exm-spam-training-likelihood-3}
 
+By using @prp-categorical-indicators, we can rewrite the equation above as:
+
+$$
+p(\mathbf{x}_i,y_i\vert \pmb{\Theta}) = \prod_c \pi_c^{\mathbb{I}(y_i=c)} \prod_j\prod_c \theta_{jc}^{\mathbb{I}(y_i=c)}(1-\theta_{jc})^{1-\mathbb{I}(y_i=c)}
+$$ {#eq-exm-spam-training-likelihood-4} 
+
+Returning to @eq-exm-spam-training-likelihood, assuming independence between data points, we can express the full likelihood of the dataset $\mathcal{D}$ as:
+
+$$
+p(\mathcal{D}\vert \pmb{\Theta}) = \prod_{i} p(\mathbf{x}_i,y_i\vert \pmb{\Theta})
+$$ {#eq-exm-spam-training-likelihood-5}
+
+Plugging @eq-exm-spam-training-likelihood-4 into @eq-exm-spam-training-likelihood-5, and taking the logarithm to simplify the product into a sum, we get:
+$$
+\log p(\mathcal{D}\vert \pmb{\Theta}) = \sum_{i} \sum_c \mathbb{I}(y_i=c) \log \pi_c + \sum_{i} \sum_j \sum_c [ \mathbb{I}(y_i=c) \log \theta_{jc} +(1-\mathbb{I}(y_i=c)) \log (1-\theta_{jc})]
+$$ {#eq-exm-spam-training-log-likelihood}
+
+**Computing the MLE for $\theta_{jc}$.** To compute the MLE for $\theta_{jc}$, we need to maximize the log-likelihood from @eq-exm-spam-training-log-likelihood with respect to the parameters $\theta_{jc}$.
+
+To do this, we can take the derivative of the log-likelihood with respect to $\theta_{jc}$, set it to zero, and solve for $\theta_{jc}$. This gives us the following equation:
+
+$$
+\frac{\partial}{\partial \theta_{jc}} \log p(\mathcal{D}\vert \pmb{\Theta}) = \sum_{i} \sum_c \mathbb{I}(y_i=c) \frac{1}{\theta_{jc}} - \sum_{i} \sum_c (1-\mathbb{I}(y_i=c)) \frac{1}{1-\theta_{jc}} = 0
+$$
+
+Which leads to the MLE for $\theta_{jc}$ as follows:
+
+$$
+\begin{aligned}
+\hat{\theta}_{jc} &= \frac{\sum_{i} x_{ij} \mathbb{I}(y_i=c)}{\sum_{i} \mathbb{I}(y_i=c)}
+\end{aligned}
+$$
 
 To compute the matrix of probabilities $\pmb{\theta}$, we can use the maximum likelihood estimate (MLE) for each word $j$ in the vocabulary and each class $c$:
 
