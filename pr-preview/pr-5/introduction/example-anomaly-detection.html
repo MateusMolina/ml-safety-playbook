@@ -222,6 +222,23 @@ window.Quarto = {
       <span class="sidebar-item-text sidebar-link text-start">
  <span class="menu-text">Concepts</span></span>
   </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/propositions-theorems.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Propositions and Theorems</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
     </ul>
     </div>
 </nav>
@@ -350,7 +367,7 @@ p(\theta_{f,d} \vert \ \mathcal{D}_f)&amp;\propto Ber(\theta_{f,d})Beta(a, b) \\
 </div>
 </div>
 <p>Our error bar shrinks as we observe more data, reflecting our increased confidence in the estimate. The mode converges towards the true latent defect probability of flagged events, <span class="math inline">\(\theta_{f,d}^\star=0.6\)</span>, demonstrating how Bayesian updating refines our beliefs with accumulating evidence.</p>
-<div id="algo-beta-bernoulli-update" class="pseudocode-container quarto-float" data-comment-delimiter="//" data-indent-size="1.2em" data-line-number-punc=":" data-line-number="true" data-caption-prefix="Algorithm" data-no-end="false" data-pseudocode-number="1">
+<div id="algo-beta-bernoulli-update" class="pseudocode-container quarto-float" data-indent-size="1.2em" data-line-number-punc=":" data-line-number="true" data-comment-delimiter="//" data-no-end="false" data-pseudocode-number="1" data-caption-prefix="Algorithm">
 <div class="pseudocode">
 \begin{algorithm} \caption{Sequential Beta-Bernoulli Update for $\theta_{f,d}$}\begin{algorithmic} \INPUT $a_0 \geq 1, b_0 \geq 1$, prior Beta hyperparameters \INPUT $\{d_i\}_{i=1}^T$, sequence of flagged defect observations \OUTPUT $\{\hat{\theta}_{f,d}(t)\}_{t=1}^T$, $\{\sigma(t)\}_{t=1}^T$ \Procedure{BetaBernoulliUpdate}{$a_0, b_0, \{d_i\}_{i=1}^T$} \State $a \leftarrow a_0$ \Comment{initialize posterior parameters} \State $b \leftarrow b_0$ \For{$t = 1$ \To $T$} \State $d \leftarrow d_i$ \Comment{observe whether part is defective} \If{$d = \texttt{defect}$} \State $a \leftarrow a + 1$ \Comment{increment success count} \Else \State $b \leftarrow b + 1$ \Comment{increment failure count} \EndIf \State $\hat{\theta}_{f,d}(t) \leftarrow \dfrac{a - 1}{a + b - 2}$ \Comment{MAP estimate (mode)} \State $\sigma^2(t) \leftarrow \dfrac{ab}{(a+b)^2(a+b+1)}$ \Comment{posterior variance} \State $\sigma(t) \leftarrow \sqrt{\sigma^2(t)}$ \EndFor \State \textbf{return} $\{\hat{\theta}_{f,d}(t)\}_{t=1}^T, \{\sigma(t)\}_{t=1}^T$ \EndProcedure \end{algorithmic} \end{algorithm}
 </div>
