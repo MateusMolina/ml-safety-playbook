@@ -19,6 +19,7 @@ book:
     - part: "Concepts"
   appendices:
     - appendix/propositions-theorems.qmd
+    - appendix/notation.qmd
 bibliography: references.bib
 
 format:

@@ -2,11 +2,87 @@
 title: Probability Distributions
 ---
 
-## Bernoulli
+```{dot}
+digraph ProbabilityDistributions {
+    rankdir=LR;
 
-## Binomial
+    node [shape=box, style=rounded, fontsize=11];
 
-## Multinomial (generalization of Binomial)
+    {rank=same; Uni[label="Univariate"]; Multi[label="Multivariate"];}
+
+    // Univariate distributions
+    Bern [label="Bernoulli", style="rounded,dashed"];         // discrete
+    Bin [label="Binomial", style="rounded,dashed"];           // discrete
+    Pois [label="Poisson", style="rounded,dashed"];           // discrete
+    Gauss [label="Gaussian (Normal)", style="rounded,solid"]; // continuous
+    Exp [label="Exponential", style="rounded,solid"];         // continuous
+    Weib [label="Weibull", style="rounded,solid"];            // continuous
+    Beta [label="Beta", style="rounded,solid"];               // continuous
+
+    Uni-> {Bern Bin Pois Gauss Exp Weib Beta};
+
+    // Multivariate distributions
+    MultiNom [label="Multinomial", style="rounded,dashed"];         // discrete
+    MultiGauss [label="Multivariate Gaussian", style="rounded,solid"]; // continuous
+    Dirich [label="Dirichlet", style="rounded,solid"];              // continuous
+
+    Multi -> {MultiNom MultiGauss Dirich};
+
+    // Conceptual generalization edges
+    Bern -> Bin [style=dotted, label="generalizes"];
+    Bin -> MultiNom [style=dotted, label="extends"];
+    Gauss -> MultiGauss [style=dotted, label="extends"];
+}
+digraph ProbabilityDistributions {
+    rankdir=TB;
+    graph [fontsize=12, labelloc="t", label="Hierarchy of Probability Distributions"];
+
+    node [shape=box, style=rounded, fontsize=11];
+
+
+    // Level 1: Dimensionality
+    Uni [label="Univariate"];
+    Multi [label="Multivariate"];
+
+    // Univariate distributions
+    Bern [label="Bernoulli", style="rounded,dashed"];         // discrete
+    Bin [label="Binomial", style="rounded,dashed"];           // discrete
+    Pois [label="Poisson", style="rounded,dashed"];           // discrete
+    Gauss [label="Gaussian (Normal)", style="rounded,solid"]; // continuous
+    Exp [label="Exponential", style="rounded,solid"];         // continuous
+    Weib [label="Weibull", style="rounded,solid"];            // continuous
+    Beta [label="Beta", style="rounded,solid"];               // continuous
+
+    Uni -> {Bern Bin Pois Gauss Exp Weib Beta};
+
+    // Multivariate distributions
+    MultiNom [label="Multinomial", style="rounded,dashed"];         // discrete
+    MultiGauss [label="Multivariate Gaussian", style="rounded,solid"]; // continuous
+    Dirich [label="Dirichlet", style="rounded,solid"];              // continuous
+
+    Multi -> {MultiNom MultiGauss Dirich};
+
+    // Conceptual generalization edges
+    Bern -> Bin [style=dotted, label="generalizes"];
+    Bin -> MultiNom [style=dotted, label="extends to multivariate"];
+    Gauss -> MultiGauss [style=dotted, label="extends to multivariate"];
+}
+
+
+```
+
+
+## Univariate
+
+### Bernoulli
+
+### Binomial
+
+### Gaussian: (Normal) Distribution
+
+## Multivariate
+
+### Multinomial (generalization of Binomial)
 
 ::: {#def-multinomial}
 
@@ -40,7 +116,7 @@ p(\mathbf{X}=\mathbf{x}) &= \binom{10}{5, 0, 0, 0, 0, 5} \left(\frac{1}{6}\right
 \end{aligned}
 $$
 
-You can expect to be this unlucky about once every 240,000 times you repeat this experiment!
+You can expect to be this lucky about once every 240,000 times you repeat this experiment!
 :::
 
 A special case of the multinomial distribution is the categorical distribution, which models the outcome of a single trial with $k$ possible outcomes.
@@ -53,8 +129,6 @@ The **categorical distribution** is a special case of the multinomial distributi
 
 Note that since we have just one experiment, the vector of outcomes must contain exactly one non-zero element equal to one. For example, $\mathbf{x}=(1,0,\ldots,0)$ indicates that outcome 1 occurred, $\mathbf{x}=(0,1,0,\ldots,0)$ indicates that outcome 2 occurred, and so on.
 :::
-
-## Gaussian: (Normal) Distribution
 
 ## Conjugate Priors
 

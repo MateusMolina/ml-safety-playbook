@@ -1,0 +1,7 @@
+---
+title: Notation
+---
+
+We use $P$ to denote probability mass functions (pmfs) for discrete random variables and $p$ to denote probability density functions (pdfs) for continuous random variables. For cumulative distribution functions (cdfs), we use $F$ for both discrete and continuous random variables when there is no risk of confusion.
+
+We use uppercase letters (e.g., $X$, $Y$) to denote random variables and lowercase letters (e.g., $x$, $y$) to denote their realizations. Boldface letters (e.g., $\mathbf{X}$, $\mathbf{y}$) denote vectors or matrices.
