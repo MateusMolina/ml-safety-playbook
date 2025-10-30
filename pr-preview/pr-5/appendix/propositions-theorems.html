@@ -30,6 +30,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
+<link href="../appendix/notation.html" rel="next">
 <link href="../references.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -216,6 +217,12 @@ window.Quarto = {
  <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Propositions and Theorems</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendix/notation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Notation</span></span></a>
+  </div>
+</li>
       </ul>
   </li>
     </ul>
@@ -249,26 +256,34 @@ window.Quarto = {
 
 
 <div id="prp-categorical-indicators" class="theorem proposition">
-<p><span class="theorem-title"><strong>Proposition A.1 (One-Hot Indicator Equivalence for Categorical Conditionals)</strong></span> Let <span class="math inline">\(Y\)</span> be a categorical random variable <span class="math inline">\(Y \sim \text{cat}_k(\pmb{\pi})\)</span>, taking values in <span class="math inline">\(\{1,\dots,C\}\)</span> with class probabilities <span class="math inline">\(\pi_c&gt;0\)</span>, <span class="math inline">\(\sum_{c=1}^C\pi_c=1, \forall \pi_c \in \pmb{\pi}\)</span>. Let a random variable <span class="math inline">\(X=(X_1,\dots,X_J)\)</span> and assume conditional independence of components given <span class="math inline">\(Y\)</span> so that for each <span class="math inline">\(c\)</span>, <span class="math display">\[
-p(X\mid Y=c)=\prod_{j=1}^J p(X_j\mid Y=c).
+<p><span class="theorem-title"><strong>Proposition A.1 (One-Hot Indicator Equivalence for Categorical Distributions)</strong></span> Let <span class="math inline">\(Y\)</span> be a categorical random variable <span class="math inline">\(Y \sim \text{cat}(Y\vert \pmb{\pi})\)</span>, taking values in <span class="math inline">\(C=\{1,\dots,C\}\)</span> with class probabilities <span class="math display">\[\pi_c&gt;0 \quad \sum_{c=1}^C\pi_c=1 \quad \pi_c=P(Y=c) \quad \forall \pi_c \in \pmb{\pi}.\]</span></p>
+<p>Then the pmf of <span class="math inline">\(Y\)</span> can be equivalently expressed using one-hot indicators as:</p>
+<p><span class="math display">\[
+P(Y\mid \pmb{\pi})=\prod_{c}^C \pi_c^{\mathbb{1}\{Y=c\}},
 \]</span></p>
-<p>Define the one-hot indicator vector <span class="math display">\[
-\mathbf{Y}=(Y_1,\dots,Y_C),\qquad Y_c=\mathbb{1}\{Y=c\},\qquad \sum_{c=1}^C Y_c=1.
-\]</span> Then the two expressions <span class="math display">\[
-    \text{(I)}\qquad p(X,Y)=p(Y)\prod_{j=1}^J p(X_j\mid Y),
-\qquad
-    \text{(II)}\qquad p(X,\mathbf{Y})=\prod_{c=1}^C\Bigl[\pi_c\prod_{j=1}^J p(X_j\mid \mathbf{Y}=c)\Bigr]^{Y_c}
-\]</span> are equivalent (they define the same joint probability function).</p>
+<p>which can be further simplified by substituting <span class="math inline">\(\mathbb{1}\{Y=c\}\triangleq y_{c}\)</span>:</p>
+<p><span class="math display">\[
+P(Y\mid \pmb{\pi})=\prod_{c}^C \pi_c^{y_{c}}.
+\]</span></p>
 </div>
 <div class="proof">
-<p><span class="proof-title"><em>Proof</em>. </span>Let the realized class be <span class="math inline">\(c^\ast\)</span>, so <span class="math inline">\(Y=c^\ast\)</span> and <span class="math inline">\(Y_{c^\ast}=1\)</span> while <span class="math inline">\(Y_c=0\)</span> for <span class="math inline">\(c\neq c^\ast\)</span>. Evaluate (II) at that realization: <span class="math display">\[
-\prod_{c=1}^C\Bigl[\pi_c\prod_{j=1}^J p(X_j\mid Y=c)\Bigr]^{Y_c}
-= \Bigl[\pi_{c^\ast}\prod_{j=1}^J p(X_j\mid Y=c^\ast)\Bigr]^{1}
-\prod_{c\neq c^\ast}\bigl[\cdots\bigr]^{0}.
-\]</span> Factors raised to the zero power equal <span class="math inline">\(1\)</span>, so the product reduces to <span class="math display">\[
-\pi_{c^\ast}\prod_{j=1}^J p(X_j\mid Y=c^\ast),
-\]</span> which equals (I) evaluated at <span class="math inline">\(Y=c^\ast\)</span>. Since the above holds for every possible realized class <span class="math inline">\(c^\ast\)</span>, (I) and (II) coincide as functions of <span class="math inline">\((X,Y)\)</span>.</p>
+<p><span class="proof-title"><em>Proof</em>. </span>By definition of the categorical distribution, we have that only a single class <span class="math inline">\(c^*\)</span> is active, i.e., <span class="math inline">\(\mathbb{1}\{Y=c^*\}=1\)</span> and <span class="math inline">\(\mathbb{1}\{Y=c\}=0\)</span> for all <span class="math inline">\(c \neq c^*\)</span>. Therefore, the product simplifies to:</p>
+<p><span class="math display">\[
+\begin{align*}
+\prod_{c=1}^C P(Y=c)^{\mathbb{1}\{Y=c\}} &amp;= P(Y=c^*)^{\mathbb{1}\{Y=c^*\}} \cdot \prod_{c \neq c^*} P(Y=c)^{\mathbb{1}\{Y=c\}} \\
+&amp;= P(Y=c^*)^{1} \cdot \prod_{c \neq c^*} P(Y=c)^{0} \\
+&amp;= P(Y=c^*)
+\end{align*}
+\]</span></p>
+<p>When we evaluate the pmf <span class="math inline">\(P(Y\mid \pmb{\pi})\)</span> at the realized value <span class="math inline">\(Y=c^*\)</span>, we have that <span class="math inline">\(P(Y\mid \pmb{\pi}) = P(Y=c^*)\)</span>, which confirms the equivalence.</p>
 </div>
+<div id="cor-categorical-one-hot-indicator-conditional" class="theorem corollary">
+<p><span class="theorem-title"><strong>Corollary A.1 (One-Hot Indicator Equivalence for Conditional pmfs)</strong></span> Let <span class="math inline">\(X\)</span> be any r.v. and <span class="math inline">\(Y\)</span> be a categorical random variable <span class="math inline">\(Y \sim \text{cat}(Y \mid \pmb{\pi})\)</span>, taking values in <span class="math inline">\(C=\{1,\dots,C\}\)</span>. Then the conditional pmf of <span class="math inline">\(Y\)</span> given <span class="math inline">\(X\)</span> can be equivalently expressed using one-hot indicators as:</p>
+<p><span class="math display">\[
+P(X\mid Y, \pmb{\pi})=\prod_{c}^C P(X\mid Y=c) ^{\mathbb{1}\{Y=c\}}.
+\]</span></p>
+</div>
+<p>The proof follows directly from <a href="#prp-categorical-indicators" class="quarto-xref">Proposition&nbsp;<span>A.1</span></a>, since only a single class <span class="math inline">\(c^*\)</span> is active for <span class="math inline">\(Y\)</span>.</p>
 
 
 
@@ -680,6 +695,9 @@ p(X\mid Y=c)=\prod_{j=1}^J p(X_j\mid Y=c).
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="../appendix/notation.html" class="pagination-link" aria-label="Notation">
+        <span class="nav-page-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Notation</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->
