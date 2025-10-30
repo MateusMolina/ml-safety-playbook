@@ -237,13 +237,13 @@ window.Quarto = {
   <ul>
   <li><a href="#univariate" id="toc-univariate" class="nav-link active" data-scroll-target="#univariate"><span class="header-section-number">2.1</span> Univariate</a>
   <ul class="collapse">
-  <li><a href="#bernoulli" id="toc-bernoulli" class="nav-link" data-scroll-target="#bernoulli"><span class="header-section-number">2.1.1</span> Bernoulli</a></li>
-  <li><a href="#binomial" id="toc-binomial" class="nav-link" data-scroll-target="#binomial"><span class="header-section-number">2.1.2</span> Binomial</a></li>
-  <li><a href="#gaussian-normal-distribution" id="toc-gaussian-normal-distribution" class="nav-link" data-scroll-target="#gaussian-normal-distribution"><span class="header-section-number">2.1.3</span> Gaussian: (Normal) Distribution</a></li>
+  <li><a href="#discrete" id="toc-discrete" class="nav-link" data-scroll-target="#discrete"><span class="header-section-number">2.1.1</span> Discrete</a></li>
+  <li><a href="#continuous" id="toc-continuous" class="nav-link" data-scroll-target="#continuous"><span class="header-section-number">2.1.2</span> Continuous</a></li>
   </ul></li>
   <li><a href="#multivariate" id="toc-multivariate" class="nav-link" data-scroll-target="#multivariate"><span class="header-section-number">2.2</span> Multivariate</a>
   <ul class="collapse">
-  <li><a href="#multinomial-generalization-of-binomial" id="toc-multinomial-generalization-of-binomial" class="nav-link" data-scroll-target="#multinomial-generalization-of-binomial"><span class="header-section-number">2.2.1</span> Multinomial (generalization of Binomial)</a></li>
+  <li><a href="#discrete-1" id="toc-discrete-1" class="nav-link" data-scroll-target="#discrete-1"><span class="header-section-number">2.2.1</span> Discrete</a></li>
+  <li><a href="#continuous-1" id="toc-continuous-1" class="nav-link" data-scroll-target="#continuous-1"><span class="header-section-number">2.2.2</span> Continuous</a></li>
   </ul></li>
   <li><a href="#conjugate-priors" id="toc-conjugate-priors" class="nav-link" data-scroll-target="#conjugate-priors"><span class="header-section-number">2.3</span> Conjugate Priors</a>
   <ul class="collapse">
@@ -276,195 +276,43 @@ window.Quarto = {
 </header>
 
 
-<div class="cell" data-layout-align="default">
-<div class="cell-output-display">
-<div>
-<p></p><figure class="figure"><p></p>
-<div>
-<svg width="672" height="480" viewbox="0.00 0.00 577.55 482.00" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="; max-width: none; max-height: none">
-<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 478)">
-<title>ProbabilityDistributions</title>
-<polygon fill="white" stroke="transparent" points="-4,4 -4,-478 573.55,-478 573.55,4 -4,4"></polygon>
-<!-- Uni -->
-<g id="node1" class="node">
-<title>Uni</title>
-<path fill="none" stroke="black" d="M54.61,-198C54.61,-198 15.76,-198 15.76,-198 9.76,-198 3.76,-192 3.76,-186 3.76,-186 3.76,-174 3.76,-174 3.76,-168 9.76,-162 15.76,-162 15.76,-162 54.61,-162 54.61,-162 60.61,-162 66.61,-168 66.61,-174 66.61,-174 66.61,-186 66.61,-186 66.61,-192 60.61,-198 54.61,-198"></path>
-<text text-anchor="middle" x="35.19" y="-176.7" font-family="Times,serif" font-size="11.00">Univariate</text>
-</g>
-<!-- Bern -->
-<g id="node3" class="node">
-<title>Bern</title>
-<path fill="none" stroke="black" stroke-dasharray="5,2" d="M173.93,-144C173.93,-144 140.82,-144 140.82,-144 134.82,-144 128.82,-138 128.82,-132 128.82,-132 128.82,-120 128.82,-120 128.82,-114 134.82,-108 140.82,-108 140.82,-108 173.93,-108 173.93,-108 179.93,-108 185.93,-114 185.93,-120 185.93,-120 185.93,-132 185.93,-132 185.93,-138 179.93,-144 173.93,-144"></path>
-<text text-anchor="middle" x="157.37" y="-122.7" font-family="Times,serif" font-size="11.00">Bernoulli</text>
-</g>
-<!-- Uni&#45;&gt;Bern -->
-<g id="edge1" class="edge">
-<title>Uni-&gt;Bern</title>
-<path fill="none" stroke="black" d="M66.51,-166.37C82.44,-159.22 102.1,-150.38 118.97,-142.81"></path>
-<polygon fill="black" stroke="black" points="120.84,-145.8 128.53,-138.51 117.97,-139.42 120.84,-145.8"></polygon>
-</g>
-<!-- Bin -->
-<g id="node4" class="node">
-<title>Bin</title>
-<path fill="none" stroke="black" stroke-dasharray="5,2" d="M379.5,-244C379.5,-244 346.61,-244 346.61,-244 340.61,-244 334.61,-238 334.61,-232 334.61,-232 334.61,-220 334.61,-220 334.61,-214 340.61,-208 346.61,-208 346.61,-208 379.5,-208 379.5,-208 385.5,-208 391.5,-214 391.5,-220 391.5,-220 391.5,-232 391.5,-232 391.5,-238 385.5,-244 379.5,-244"></path>
-<text text-anchor="middle" x="363.06" y="-222.7" font-family="Times,serif" font-size="11.00">Binomial</text>
-</g>
-<!-- Uni&#45;&gt;Bin -->
-<g id="edge2" class="edge">
-<title>Uni-&gt;Bin</title>
-<path fill="none" stroke="black" d="M66.43,-193.68C78.86,-198.71 93.56,-203.93 107.37,-207 183.14,-223.82 274.37,-226.52 324.49,-226.55"></path>
-<polygon fill="black" stroke="black" points="324.56,-230.05 334.54,-226.52 324.53,-223.05 324.56,-230.05"></polygon>
-</g>
-<!-- Pois -->
-<g id="node5" class="node">
-<title>Pois</title>
-<path fill="none" stroke="black" stroke-dasharray="5,2" d="M172.37,-36C172.37,-36 142.37,-36 142.37,-36 136.37,-36 130.37,-30 130.37,-24 130.37,-24 130.37,-12 130.37,-12 130.37,-6 136.37,0 142.37,0 142.37,0 172.37,0 172.37,0 178.37,0 184.37,-6 184.37,-12 184.37,-12 184.37,-24 184.37,-24 184.37,-30 178.37,-36 172.37,-36"></path>
-<text text-anchor="middle" x="157.37" y="-14.7" font-family="Times,serif" font-size="11.00">Poisson</text>
-</g>
-<!-- Uni&#45;&gt;Pois -->
-<g id="edge3" class="edge">
-<title>Uni-&gt;Pois</title>
-<path fill="none" stroke="black" d="M41.96,-161.77C51.62,-133.72 73.4,-79.6 107.37,-45 111.51,-40.78 116.45,-37.04 121.58,-33.79"></path>
-<polygon fill="black" stroke="black" points="123.36,-36.81 130.28,-28.79 119.86,-30.74 123.36,-36.81"></polygon>
-</g>
-<!-- Gauss -->
-<g id="node6" class="node">
-<title>Gauss</title>
-<path fill="none" stroke="black" d="M195.38,-344C195.38,-344 119.37,-344 119.37,-344 113.37,-344 107.37,-338 107.37,-332 107.37,-332 107.37,-320 107.37,-320 107.37,-314 113.37,-308 119.37,-308 119.37,-308 195.38,-308 195.38,-308 201.38,-308 207.38,-314 207.38,-320 207.38,-320 207.38,-332 207.38,-332 207.38,-338 201.38,-344 195.38,-344"></path>
-<text text-anchor="middle" x="157.37" y="-322.7" font-family="Times,serif" font-size="11.00">Gaussian (Normal)</text>
-</g>
-<!-- Uni&#45;&gt;Gauss -->
-<g id="edge4" class="edge">
-<title>Uni-&gt;Gauss</title>
-<path fill="none" stroke="black" d="M43.4,-198.12C54.17,-223.33 76.54,-269.24 107.37,-299 108.32,-299.91 109.3,-300.8 110.31,-301.67"></path>
-<polygon fill="black" stroke="black" points="108.45,-304.66 118.54,-307.9 112.68,-299.08 108.45,-304.66"></polygon>
-</g>
-<!-- Exp -->
-<g id="node7" class="node">
-<title>Exp</title>
-<path fill="none" stroke="black" d="M180.03,-290C180.03,-290 134.72,-290 134.72,-290 128.72,-290 122.72,-284 122.72,-278 122.72,-278 122.72,-266 122.72,-266 122.72,-260 128.72,-254 134.72,-254 134.72,-254 180.03,-254 180.03,-254 186.03,-254 192.03,-260 192.03,-266 192.03,-266 192.03,-278 192.03,-278 192.03,-284 186.03,-290 180.03,-290"></path>
-<text text-anchor="middle" x="157.37" y="-268.7" font-family="Times,serif" font-size="11.00">Exponential</text>
-</g>
-<!-- Uni&#45;&gt;Exp -->
-<g id="edge5" class="edge">
-<title>Uni-&gt;Exp</title>
-<path fill="none" stroke="black" d="M48.71,-198.06C58.39,-211.01 72.73,-228.18 88.37,-240 95.94,-245.72 104.69,-250.77 113.35,-255.08"></path>
-<polygon fill="black" stroke="black" points="112.1,-258.36 122.64,-259.45 115.08,-252.02 112.1,-258.36"></polygon>
-</g>
-<!-- Weib -->
-<g id="node8" class="node">
-<title>Weib</title>
-<path fill="none" stroke="black" d="M172.37,-198C172.37,-198 142.37,-198 142.37,-198 136.37,-198 130.37,-192 130.37,-186 130.37,-186 130.37,-174 130.37,-174 130.37,-168 136.37,-162 142.37,-162 142.37,-162 172.37,-162 172.37,-162 178.37,-162 184.37,-168 184.37,-174 184.37,-174 184.37,-186 184.37,-186 184.37,-192 178.37,-198 172.37,-198"></path>
-<text text-anchor="middle" x="157.37" y="-176.7" font-family="Times,serif" font-size="11.00">Weibull</text>
-</g>
-<!-- Uni&#45;&gt;Weib -->
-<g id="edge6" class="edge">
-<title>Uni-&gt;Weib</title>
-<path fill="none" stroke="black" d="M66.51,-180C82.75,-180 102.87,-180 119.96,-180"></path>
-<polygon fill="black" stroke="black" points="120.14,-183.5 130.14,-180 120.14,-176.5 120.14,-183.5"></polygon>
-</g>
-<!-- Beta -->
-<g id="node9" class="node">
-<title>Beta</title>
-<path fill="none" stroke="black" d="M172.37,-90C172.37,-90 142.37,-90 142.37,-90 136.37,-90 130.37,-84 130.37,-78 130.37,-78 130.37,-66 130.37,-66 130.37,-60 136.37,-54 142.37,-54 142.37,-54 172.37,-54 172.37,-54 178.37,-54 184.37,-60 184.37,-66 184.37,-66 184.37,-78 184.37,-78 184.37,-84 178.37,-90 172.37,-90"></path>
-<text text-anchor="middle" x="157.37" y="-68.7" font-family="Times,serif" font-size="11.00">Beta</text>
-</g>
-<!-- Uni&#45;&gt;Beta -->
-<g id="edge7" class="edge">
-<title>Uni-&gt;Beta</title>
-<path fill="none" stroke="black" d="M49.11,-161.95C62.32,-144.37 84.16,-117.64 107.37,-99 111.68,-95.54 116.49,-92.29 121.37,-89.31"></path>
-<polygon fill="black" stroke="black" points="123.2,-92.3 130.13,-84.29 119.72,-86.23 123.2,-92.3"></polygon>
-</g>
-<!-- Multi -->
-<g id="node2" class="node">
-<title>Multi</title>
-<path fill="none" stroke="black" d="M58.56,-428C58.56,-428 11.81,-428 11.81,-428 5.81,-428 -0.19,-422 -0.19,-416 -0.19,-416 -0.19,-404 -0.19,-404 -0.19,-398 5.81,-392 11.81,-392 11.81,-392 58.56,-392 58.56,-392 64.56,-392 70.56,-398 70.56,-404 70.56,-404 70.56,-416 70.56,-416 70.56,-422 64.56,-428 58.56,-428"></path>
-<text text-anchor="middle" x="35.19" y="-406.7" font-family="Times,serif" font-size="11.00">Multivariate</text>
-</g>
-<!-- MultiNom -->
-<g id="node10" class="node">
-<title>MultiNom</title>
-<path fill="none" stroke="black" stroke-dasharray="5,2" d="M557.55,-336C557.55,-336 510.55,-336 510.55,-336 504.55,-336 498.55,-330 498.55,-324 498.55,-324 498.55,-312 498.55,-312 498.55,-306 504.55,-300 510.55,-300 510.55,-300 557.55,-300 557.55,-300 563.55,-300 569.55,-306 569.55,-312 569.55,-312 569.55,-324 569.55,-324 569.55,-330 563.55,-336 557.55,-336"></path>
-<text text-anchor="middle" x="534.05" y="-314.7" font-family="Times,serif" font-size="11.00">Multinomial</text>
-</g>
-<!-- Multi&#45;&gt;MultiNom -->
-<g id="edge8" class="edge">
-<title>Multi-&gt;MultiNom</title>
-<path fill="none" stroke="black" d="M70.6,-411.19C138.74,-412.61 295.03,-411.2 419.78,-375 446.42,-367.27 474.28,-353.34 495.7,-341.19"></path>
-<polygon fill="black" stroke="black" points="497.56,-344.15 504.46,-336.11 494.05,-338.1 497.56,-344.15"></polygon>
-</g>
-<!-- MultiGauss -->
-<g id="node11" class="node">
-<title>MultiGauss</title>
-<path fill="none" stroke="black" d="M408.01,-366C408.01,-366 318.11,-366 318.11,-366 312.11,-366 306.11,-360 306.11,-354 306.11,-354 306.11,-342 306.11,-342 306.11,-336 312.11,-330 318.11,-330 318.11,-330 408.01,-330 408.01,-330 414.01,-330 420.01,-336 420.01,-342 420.01,-342 420.01,-354 420.01,-354 420.01,-360 414.01,-366 408.01,-366"></path>
-<text text-anchor="middle" x="363.06" y="-344.7" font-family="Times,serif" font-size="11.00">Multivariate Gaussian</text>
-</g>
-<!-- Multi&#45;&gt;MultiGauss -->
-<g id="edge9" class="edge">
-<title>Multi-&gt;MultiGauss</title>
-<path fill="none" stroke="black" d="M70.61,-400.3C76.51,-398.77 82.6,-397.28 88.37,-396 158.87,-380.39 240.5,-366.63 296.13,-357.88"></path>
-<polygon fill="black" stroke="black" points="296.87,-361.31 306.21,-356.31 295.79,-354.4 296.87,-361.31"></polygon>
-</g>
-<!-- Dirich -->
-<g id="node12" class="node">
-<title>Dirich</title>
-<path fill="none" stroke="black" d="M172.97,-474C172.97,-474 141.78,-474 141.78,-474 135.78,-474 129.78,-468 129.78,-462 129.78,-462 129.78,-450 129.78,-450 129.78,-444 135.78,-438 141.78,-438 141.78,-438 172.97,-438 172.97,-438 178.97,-438 184.97,-444 184.97,-450 184.97,-450 184.97,-462 184.97,-462 184.97,-468 178.97,-474 172.97,-474"></path>
-<text text-anchor="middle" x="157.37" y="-452.7" font-family="Times,serif" font-size="11.00">Dirichlet</text>
-</g>
-<!-- Multi&#45;&gt;Dirich -->
-<g id="edge10" class="edge">
-<title>Multi-&gt;Dirich</title>
-<path fill="none" stroke="black" d="M70.63,-423.18C86.14,-429.12 104.45,-436.13 120.17,-442.14"></path>
-<polygon fill="black" stroke="black" points="118.98,-445.43 129.57,-445.74 121.48,-438.9 118.98,-445.43"></polygon>
-</g>
-<!-- Bern&#45;&gt;Bin -->
-<g id="edge11" class="edge">
-<title>Bern-&gt;Bin</title>
-<path fill="none" stroke="black" stroke-dasharray="1,5" d="M186.27,-139.69C222.38,-157.42 285.4,-188.36 325.36,-207.98"></path>
-<polygon fill="black" stroke="black" points="323.98,-211.21 334.5,-212.47 327.07,-204.92 323.98,-211.21"></polygon>
-<text text-anchor="middle" x="256.85" y="-191.2" font-family="Times,serif" font-size="14.00">generalizes</text>
-</g>
-<!-- Bin&#45;&gt;MultiNom -->
-<g id="edge12" class="edge">
-<title>Bin-&gt;MultiNom</title>
-<path fill="none" stroke="black" stroke-dasharray="1,5" d="M391.59,-240.99C418.48,-255.63 459.8,-278.12 490.85,-295.03"></path>
-<polygon fill="black" stroke="black" points="489.26,-298.15 499.72,-299.86 492.61,-292 489.26,-298.15"></polygon>
-<text text-anchor="middle" x="459.17" y="-292.2" font-family="Times,serif" font-size="14.00">extends</text>
-</g>
-<!-- Gauss&#45;&gt;MultiGauss -->
-<g id="edge13" class="edge">
-<title>Gauss-&gt;MultiGauss</title>
-<path fill="none" stroke="black" stroke-dasharray="1,5" d="M207.42,-331.3C234.06,-334.18 267.36,-337.77 296.23,-340.89"></path>
-<polygon fill="black" stroke="black" points="295.93,-344.38 306.24,-341.97 296.68,-337.42 295.93,-344.38"></polygon>
-<text text-anchor="middle" x="256.85" y="-343.2" font-family="Times,serif" font-size="14.00">extends</text>
-</g>
-</g>
-</svg>
-</div>
-<p></p></figure><p></p>
-</div>
-</div>
-</div>
 <section id="univariate" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="univariate"><span class="header-section-number">2.1</span> Univariate</h2>
-<section id="bernoulli" class="level3" data-number="2.1.1">
-<h3 data-number="2.1.1" class="anchored" data-anchor-id="bernoulli"><span class="header-section-number">2.1.1</span> Bernoulli</h3>
+<section id="discrete" class="level3" data-number="2.1.1">
+<h3 data-number="2.1.1" class="anchored" data-anchor-id="discrete"><span class="header-section-number">2.1.1</span> Discrete</h3>
+<section id="bernoulli" class="level4" data-number="2.1.1.1">
+<h4 data-number="2.1.1.1" class="anchored" data-anchor-id="bernoulli"><span class="header-section-number">2.1.1.1</span> Bernoulli</h4>
 </section>
-<section id="binomial" class="level3" data-number="2.1.2">
-<h3 data-number="2.1.2" class="anchored" data-anchor-id="binomial"><span class="header-section-number">2.1.2</span> Binomial</h3>
+<section id="binomial" class="level4" data-number="2.1.1.2">
+<h4 data-number="2.1.1.2" class="anchored" data-anchor-id="binomial"><span class="header-section-number">2.1.1.2</span> Binomial</h4>
 </section>
-<section id="gaussian-normal-distribution" class="level3" data-number="2.1.3">
-<h3 data-number="2.1.3" class="anchored" data-anchor-id="gaussian-normal-distribution"><span class="header-section-number">2.1.3</span> Gaussian: (Normal) Distribution</h3>
+</section>
+<section id="continuous" class="level3" data-number="2.1.2">
+<h3 data-number="2.1.2" class="anchored" data-anchor-id="continuous"><span class="header-section-number">2.1.2</span> Continuous</h3>
+<section id="gaussian-normal-distribution" class="level4" data-number="2.1.2.1">
+<h4 data-number="2.1.2.1" class="anchored" data-anchor-id="gaussian-normal-distribution"><span class="header-section-number">2.1.2.1</span> Gaussian: (Normal) Distribution</h4>
+</section>
+<section id="beta" class="level4" data-number="2.1.2.2">
+<h4 data-number="2.1.2.2" class="anchored" data-anchor-id="beta"><span class="header-section-number">2.1.2.2</span> Beta</h4>
+</section>
+<section id="poisson" class="level4" data-number="2.1.2.3">
+<h4 data-number="2.1.2.3" class="anchored" data-anchor-id="poisson"><span class="header-section-number">2.1.2.3</span> Poisson</h4>
+</section>
+<section id="weibull" class="level4" data-number="2.1.2.4">
+<h4 data-number="2.1.2.4" class="anchored" data-anchor-id="weibull"><span class="header-section-number">2.1.2.4</span> Weibull</h4>
+</section>
 </section>
 </section>
 <section id="multivariate" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="multivariate"><span class="header-section-number">2.2</span> Multivariate</h2>
-<section id="multinomial-generalization-of-binomial" class="level3" data-number="2.2.1">
-<h3 data-number="2.2.1" class="anchored" data-anchor-id="multinomial-generalization-of-binomial"><span class="header-section-number">2.2.1</span> Multinomial (generalization of Binomial)</h3>
+<section id="discrete-1" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="discrete-1"><span class="header-section-number">2.2.1</span> Discrete</h3>
+<section id="multinomial-generalization-of-binomial" class="level4" data-number="2.2.1.1">
+<h4 data-number="2.2.1.1" class="anchored" data-anchor-id="multinomial-generalization-of-binomial"><span class="header-section-number">2.2.1.1</span> Multinomial (generalization of Binomial)</h4>
 <div id="def-multinomial" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 2.1 (Multinomial Distribution)</strong></span> The <strong>multinomial distribution</strong> is a generalization of the binomial distribution. It models the probability of counts for each of <span class="math inline">\(k\)</span> different outcomes in <span class="math inline">\(n\)</span> independent trials, where each trial results in exactly one of the <span class="math inline">\(k\)</span> outcomes. Let <span class="math inline">\(\mathbf{x} = (x_1, x_2, \ldots, x_k) \in \mathbf{X}\)</span> be the vector of counts for each outcome and <span class="math inline">\(\mathbf{X}\)</span> the vector of random variables, we say that <span class="math display">\[\mathbf{X}\sim \text{Mu}_k(n,\pmb{\theta}).\]</span> The probability mass function (PMF) of the multinomial distribution is given by: <span id="eq-pmf-multinomial"><span class="math display">\[
+<p><span class="theorem-title"><strong>Definition 2.1 (Multinomial Distribution)</strong></span> The <strong>multinomial distribution</strong> is a generalization of the binomial distribution. It models the probability of counts for each of <span class="math inline">\(k\)</span> different outcomes in <span class="math inline">\(n\)</span> independent trials, where each trial results in exactly one of the <span class="math inline">\(k\)</span> outcomes. Let <span class="math inline">\(\mathbf{x} = (x_1, x_2, \ldots, x_k) \in \mathbf{X}\)</span> be the vector of counts for each outcome and <span class="math inline">\(\mathbf{X}\)</span> the vector of random variables, we say that <span class="math display">\[\mathbf{X}\sim \text{Mu}_k(\mathbf{X} \mid n,\pmb{\theta}).\]</span> The probability mass function (PMF) of the multinomial distribution is given by: <span id="eq-pmf-multinomial"><span class="math display">\[
 \begin{aligned}
-p(\mathbf{X}=\mathbf{x}) &amp;= \binom{n}{x_1, x_2, \ldots, x_k} \theta_1^{x_1} \theta_2^{x_2} \ldots \theta_k^{x_k}\\
+P(\mathbf{X}=\mathbf{x}) &amp;= \binom{n}{x_1, x_2, \ldots, x_k} \theta_1^{x_1} \theta_2^{x_2} \ldots \theta_k^{x_k}\\
 &amp;= \binom{n}{x_1, x_2, \ldots, x_k} \prod_{i=1}^{k} \theta_i^{x_i}
 \end{aligned}
 \tag{2.1}\]</span></span> where:</p>
@@ -476,7 +324,7 @@ p(\mathbf{X}=\mathbf{x}) &amp;= \binom{n}{x_1, x_2, \ldots, x_k} \theta_1^{x_1} 
 </ul>
 </div>
 <div id="exm-die-multinomial" class="theorem example">
-<p><span class="theorem-title"><strong>Example 2.1 (5 ones and 5 sixes in 10 rolls of a fair die)</strong></span> Suppose we roll a fair six-sided die 10 times. We want to find the probability of getting 5 ones and 5 sixes: 1 appears 5 times, 2 appears 0 times, 3 appears 0 times, 4 appears 0 times, 5 appears 0 times, and 6 appears 5 times. Let <span class="math inline">\(\mathbf{x} = (5, 0, 0, 0, 0, 5)\)</span> be the vector of counts for each face. Since the die is fair, the probabilities for each face are equal: <span class="math display">\[\pmb{\theta} = \left(\frac{1}{6}, \frac{1}{6}, \frac{1}{6}, \frac{1}{6}, \frac{1}{6}, \frac{1}{6}\right).\]</span> We can say that <span class="math display">\[\mathbf{X}\sim \text{Mu}_6(10,\pmb{\theta}).\]</span> By applying <a href="#eq-pmf-multinomial" class="quarto-xref">Equation&nbsp;<span>2.1</span></a>, we can calculate the probability of observing the counts in <span class="math inline">\(\mathbf{x}\)</span>: <span class="math display">\[
+<p><span class="theorem-title"><strong>Example 2.1 (5 ones and 5 sixes in 10 rolls of a fair die)</strong></span> Suppose we roll a fair six-sided die 10 times. We want to find the probability of getting 5 ones and 5 sixes: 1 appears 5 times, 2 appears 0 times, 3 appears 0 times, 4 appears 0 times, 5 appears 0 times, and 6 appears 5 times. Let <span class="math inline">\(\mathbf{x} = (5, 0, 0, 0, 0, 5)\)</span> be the vector of counts for each face. Since the die is fair, the probabilities for each face are equal: <span class="math display">\[\pmb{\theta} = \left(\frac{1}{6}, \frac{1}{6}, \frac{1}{6}, \frac{1}{6}, \frac{1}{6}, \frac{1}{6}\right).\]</span> We can say that <span class="math display">\[\mathbf{X}\sim \text{Mu}_6(\mathbf{X} \mid 10,\pmb{\theta}).\]</span> By applying <a href="#eq-pmf-multinomial" class="quarto-xref">Equation&nbsp;<span>2.1</span></a>, we can calculate the probability of observing the counts in <span class="math inline">\(\mathbf{x}\)</span>: <span class="math display">\[
 \begin{aligned}
 p(\mathbf{X}=\mathbf{x}) &amp;= \binom{10}{5, 0, 0, 0, 0, 5} \left(\frac{1}{6}\right)^5 \left(\frac{1}{6}\right)^0 \left(\frac{1}{6}\right)^0 \left(\frac{1}{6}\right)^0 \left(\frac{1}{6}\right)^0 \left(\frac{1}{6}\right)^5\\
 &amp;= \frac{10!}{5! 0! 0! 0! 0! 5!} \left(\frac{1}{6}\right)^{10} \approx 4.17\times 10^{-6}\\
@@ -486,9 +334,25 @@ p(\mathbf{X}=\mathbf{x}) &amp;= \binom{10}{5, 0, 0, 0, 0, 5} \left(\frac{1}{6}\r
 </div>
 <p>A special case of the multinomial distribution is the categorical distribution, which models the outcome of a single trial with <span class="math inline">\(k\)</span> possible outcomes.</p>
 <div id="def-categorical" class="theorem definition">
-<p><span class="theorem-title"><strong>Definition 2.2 (Categorical Distribution)</strong></span> The <strong>categorical distribution</strong> is a special case of the multinomial distribution where there is only one trial (<span class="math inline">\(n=1\)</span>). It models the probability of each of <span class="math inline">\(k\)</span> different outcomes in a single trial. Let <span class="math inline">\(X\)</span> be a random variable representing the outcome of the trial, we say that <span class="math display">\[X\sim \text{Cat}_k(\pmb{\theta}) \triangleq \text{Mu}_k(1,\pmb{\theta}).\]</span></p>
-<p>Note that since we have just one experiment, the vector of outcomes must contain exactly one non-zero element equal to one. For example, <span class="math inline">\(\mathbf{x}=(1,0,\ldots,0)\)</span> indicates that outcome 1 occurred, <span class="math inline">\(\mathbf{x}=(0,1,0,\ldots,0)\)</span> indicates that outcome 2 occurred, and so on.</p>
+<p><span class="theorem-title"><strong>Definition 2.2 (Categorical Distribution)</strong></span> The <strong>categorical distribution</strong> is a special case of the multinomial distribution where there is only one trial (<span class="math inline">\(n=1\)</span>). It models the probability of each of <span class="math inline">\(k\)</span> different outcomes in a single trial. Let <span class="math inline">\(X\)</span> be a random variable representing the outcome of the trial, we say that <span class="math display">\[\mathbf{X}\sim \text{Cat}(\pmb{\theta}) \triangleq \text{Mu}_k(\pmb{\mathbf{X}}\mid 1,\pmb{\theta}).\]</span></p>
+<p>Note that since we have just one experiment, the vector of outcomes must contain exactly one non-zero element equal to one. For example, <span class="math inline">\(\mathbf{x}=(1,0,\ldots,0)\)</span> indicates that outcome 1 occurred, <span class="math inline">\(\mathbf{x}=(0,1,0,\ldots,0)\)</span> indicates that outcome 2 occurred, and so on. It’s common to say that a single r.v. and not a vector of them is modelled as a categorical distribution; since only one class is true at any given sample, we can use following notation for a r.v. <span class="math inline">\(Y\)</span>:</p>
+<p><span class="math display">\[
+Y\sim\text{Cat}(\pmb{\theta}) \implies \mathbf{Y}^\star\sim\text{Cat}(\pmb{\theta}), \quad y=c \iff c\in\mathbf{y}^\star, c = 1
+\]</span></p>
 </div>
+<div id="prp-categorical-mle" class="theorem proposition">
+<p><span class="theorem-title"><strong>Proposition 2.1 (MLE for the Categorical Distribution)</strong></span> The MLE for a r.v. <span class="math inline">\(X\sim\text{Cat}(\pmb{\theta})\)</span>, and set of samples from <span class="math inline">\(X\)</span>, <span class="math inline">\(S\)</span>, is given by: <span class="math display">\[
+\hat{\theta}=\frac{N_c}{N}
+\]</span></p>
+</div>
+<p>Where <span class="math inline">\(N\)</span> is the number of samples from <span class="math inline">\(X\)</span> <span class="math inline">\(\in S\)</span>, and <span class="math inline">\(N_c\)</span> is the number of times <span class="math inline">\(X=c\)</span> in <span class="math inline">\(S\)</span>.</p>
+</section>
+</section>
+<section id="continuous-1" class="level3" data-number="2.2.2">
+<h3 data-number="2.2.2" class="anchored" data-anchor-id="continuous-1"><span class="header-section-number">2.2.2</span> Continuous</h3>
+<section id="dirichlet" class="level4" data-number="2.2.2.1">
+<h4 data-number="2.2.2.1" class="anchored" data-anchor-id="dirichlet"><span class="header-section-number">2.2.2.1</span> Dirichlet</h4>
+</section>
 </section>
 </section>
 <section id="conjugate-priors" class="level2" data-number="2.3">
