@@ -2,95 +2,37 @@
 title: Probability Distributions
 ---
 
-```{dot}
-digraph ProbabilityDistributions {
-    rankdir=LR;
-
-    node [shape=box, style=rounded, fontsize=11];
-
-    {rank=same; Uni[label="Univariate"]; Multi[label="Multivariate"];}
-
-    // Univariate distributions
-    Bern [label="Bernoulli", style="rounded,dashed"];         // discrete
-    Bin [label="Binomial", style="rounded,dashed"];           // discrete
-    Pois [label="Poisson", style="rounded,dashed"];           // discrete
-    Gauss [label="Gaussian (Normal)", style="rounded,solid"]; // continuous
-    Exp [label="Exponential", style="rounded,solid"];         // continuous
-    Weib [label="Weibull", style="rounded,solid"];            // continuous
-    Beta [label="Beta", style="rounded,solid"];               // continuous
-
-    Uni-> {Bern Bin Pois Gauss Exp Weib Beta};
-
-    // Multivariate distributions
-    MultiNom [label="Multinomial", style="rounded,dashed"];         // discrete
-    MultiGauss [label="Multivariate Gaussian", style="rounded,solid"]; // continuous
-    Dirich [label="Dirichlet", style="rounded,solid"];              // continuous
-
-    Multi -> {MultiNom MultiGauss Dirich};
-
-    // Conceptual generalization edges
-    Bern -> Bin [style=dotted, label="generalizes"];
-    Bin -> MultiNom [style=dotted, label="extends"];
-    Gauss -> MultiGauss [style=dotted, label="extends"];
-}
-digraph ProbabilityDistributions {
-    rankdir=TB;
-    graph [fontsize=12, labelloc="t", label="Hierarchy of Probability Distributions"];
-
-    node [shape=box, style=rounded, fontsize=11];
-
-
-    // Level 1: Dimensionality
-    Uni [label="Univariate"];
-    Multi [label="Multivariate"];
-
-    // Univariate distributions
-    Bern [label="Bernoulli", style="rounded,dashed"];         // discrete
-    Bin [label="Binomial", style="rounded,dashed"];           // discrete
-    Pois [label="Poisson", style="rounded,dashed"];           // discrete
-    Gauss [label="Gaussian (Normal)", style="rounded,solid"]; // continuous
-    Exp [label="Exponential", style="rounded,solid"];         // continuous
-    Weib [label="Weibull", style="rounded,solid"];            // continuous
-    Beta [label="Beta", style="rounded,solid"];               // continuous
-
-    Uni -> {Bern Bin Pois Gauss Exp Weib Beta};
-
-    // Multivariate distributions
-    MultiNom [label="Multinomial", style="rounded,dashed"];         // discrete
-    MultiGauss [label="Multivariate Gaussian", style="rounded,solid"]; // continuous
-    Dirich [label="Dirichlet", style="rounded,solid"];              // continuous
-
-    Multi -> {MultiNom MultiGauss Dirich};
-
-    // Conceptual generalization edges
-    Bern -> Bin [style=dotted, label="generalizes"];
-    Bin -> MultiNom [style=dotted, label="extends to multivariate"];
-    Gauss -> MultiGauss [style=dotted, label="extends to multivariate"];
-}
-
-
-```
-
-
 ## Univariate
 
-### Bernoulli
+### Discrete
 
-### Binomial
+#### Bernoulli
 
-### Gaussian: (Normal) Distribution
+#### Binomial
+
+### Continuous
+
+#### Gaussian: (Normal) Distribution
+
+#### Beta
+
+#### Poisson
+
+#### Weibull
 
 ## Multivariate
 
-### Multinomial (generalization of Binomial)
+### Discrete
+
+#### Multinomial (generalization of Binomial)
 
 ::: {#def-multinomial}
 
 ## Multinomial Distribution
-The **multinomial distribution** is a generalization of the binomial distribution. It models the probability of counts for each of $k$ different outcomes in $n$ independent trials, where each trial results in exactly one of the $k$ outcomes. Let $\mathbf{x} = (x_1, x_2, \ldots, x_k) \in \mathbf{X}$ be the vector of counts for each outcome and $\mathbf{X}$ the vector of random variables, we say that $$\mathbf{X}\sim \text{Mu}_k(n,\pmb{\theta}).$$ The probability mass function (PMF) of the multinomial distribution is given by:
+The **multinomial distribution** is a generalization of the binomial distribution. It models the probability of counts for each of $k$ different outcomes in $n$ independent trials, where each trial results in exactly one of the $k$ outcomes. Let $\mathbf{x} = (x_1, x_2, \ldots, x_k) \in \mathbf{X}$ be the vector of counts for each outcome and $\mathbf{X}$ the vector of random variables, we say that $$\mathbf{X}\sim \text{Mu}_k(\mathbf{X} \mid n,\pmb{\theta}).$$ The probability mass function (PMF) of the multinomial distribution is given by:
 $$
 \begin{aligned}
-p(\mathbf{X}=\mathbf{x}) &= \binom{n}{x_1, x_2, \ldots, x_k} \theta_1^{x_1} \theta_2^{x_2} \ldots \theta_k^{x_k}\\
+P(\mathbf{X}=\mathbf{x}) &= \binom{n}{x_1, x_2, \ldots, x_k} \theta_1^{x_1} \theta_2^{x_2} \ldots \theta_k^{x_k}\\
 &= \binom{n}{x_1, x_2, \ldots, x_k} \prod_{i=1}^{k} \theta_i^{x_i}
 \end{aligned}
 $$ {#eq-pmf-multinomial}
@@ -108,7 +50,7 @@ where:
 ## 5 ones and 5 sixes in 10 rolls of a fair die
 Suppose we roll a fair six-sided die 10 times. We want to find the probability of getting 5 ones and 5 sixes: 1 appears 5 times, 2 appears 0 times, 3 appears 0 times, 4 appears 0 times, 5 appears 0 times, and 6 appears 5 times.
 Let $\mathbf{x} = (5, 0, 0, 0, 0, 5)$ be the vector of counts for each face. Since the die is fair, the probabilities for each face are equal: $$\pmb{\theta} = \left(\frac{1}{6}, \frac{1}{6}, \frac{1}{6}, \frac{1}{6}, \frac{1}{6}, \frac{1}{6}\right).$$
-We can say that $$\mathbf{X}\sim \text{Mu}_6(10,\pmb{\theta}).$$ By applying @eq-pmf-multinomial, we can calculate the probability of observing the counts in $\mathbf{x}$:
+We can say that $$\mathbf{X}\sim \text{Mu}_6(\mathbf{X} \mid 10,\pmb{\theta}).$$ By applying @eq-pmf-multinomial, we can calculate the probability of observing the counts in $\mathbf{x}$:
 $$
 \begin{aligned}
 p(\mathbf{X}=\mathbf{x}) &= \binom{10}{5, 0, 0, 0, 0, 5} \left(\frac{1}{6}\right)^5 \left(\frac{1}{6}\right)^0 \left(\frac{1}{6}\right)^0 \left(\frac{1}{6}\right)^0 \left(\frac{1}{6}\right)^0 \left(\frac{1}{6}\right)^5\\
@@ -125,10 +67,31 @@ A special case of the multinomial distribution is the categorical distribution, 
 
 ## Categorical Distribution
 
-The **categorical distribution** is a special case of the multinomial distribution where there is only one trial ($n=1$). It models the probability of each of $k$ different outcomes in a single trial. Let $X$ be a random variable representing the outcome of the trial, we say that $$X\sim \text{Cat}_k(\pmb{\theta}) \triangleq \text{Mu}_k(1,\pmb{\theta}).$$
+The **categorical distribution** is a special case of the multinomial distribution where there is only one trial ($n=1$). It models the probability of each of $k$ different outcomes in a single trial. Let $X$ be a random variable representing the outcome of the trial, we say that $$\mathbf{X}\sim \text{Cat}(\pmb{\theta}) \triangleq \text{Mu}_k(\pmb{\mathbf{X}}\mid 1,\pmb{\theta}).$$
 
-Note that since we have just one experiment, the vector of outcomes must contain exactly one non-zero element equal to one. For example, $\mathbf{x}=(1,0,\ldots,0)$ indicates that outcome 1 occurred, $\mathbf{x}=(0,1,0,\ldots,0)$ indicates that outcome 2 occurred, and so on.
+Note that since we have just one experiment, the vector of outcomes must contain exactly one non-zero element equal to one. For example, $\mathbf{x}=(1,0,\ldots,0)$ indicates that outcome 1 occurred, $\mathbf{x}=(0,1,0,\ldots,0)$ indicates that outcome 2 occurred, and so on. It's common to say that a single r.v. and not a vector of them is modelled as a categorical distribution; since only one class is true at any given sample, we can use following notation for a r.v. $Y$:
+
+$$
+Y\sim\text{Cat}(\pmb{\theta}) \implies \mathbf{Y}^\star\sim\text{Cat}(\pmb{\theta}), \quad y=c \iff c\in\mathbf{y}^\star, c = 1
+$$
+
 :::
+
+::: {#prp-categorical-mle}
+
+## MLE for the Categorical Distribution
+
+The MLE for a r.v. $X\sim\text{Cat}(\pmb{\theta})$, and set of samples from $X$, $S$, is given by:
+$$
+\hat{\theta}=\frac{N_c}{N}
+$$
+:::
+
+Where $N$ is the number of samples from $X$ $\in S$, and $N_c$ is the number of times $X=c$ in $S$.  
+
+### Continuous
+
+#### Dirichlet
 
 ## Conjugate Priors
 
