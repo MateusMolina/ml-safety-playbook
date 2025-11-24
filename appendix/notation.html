@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>3&nbsp; Example: Anomaly Detection – Machine Learning Safety Playbook</title>
+<title>Appendix B — Notation – Machine Learning Safety Playbook</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,27 +20,7 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-  margin-bottom: 0em;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -50,8 +30,7 @@ div.csl-indent {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../introduction/example-spam-detection.html" rel="next">
-<link href="../introduction/probability-distributions.html" rel="prev">
+<link href="../appendix/propositions-theorems.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -141,7 +120,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../introduction/intro-uncertainty.html">Introduction</a></li><li class="breadcrumb-item"><a href="../introduction/example-anomaly-detection.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Example: Anomaly Detection</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../appendix/propositions-theorems.html">Appendices</a></li><li class="breadcrumb-item"><a href="../appendix/notation.html"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Notation</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -198,7 +177,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../introduction/example-anomaly-detection.html" class="sidebar-item-text sidebar-link active">
+  <a href="../introduction/example-anomaly-detection.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Example: Anomaly Detection</span></span></a>
   </div>
 </li>
@@ -237,7 +216,7 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../appendix/notation.html" class="sidebar-item-text sidebar-link">
+  <a href="../appendix/notation.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Notation</span></span></a>
   </div>
 </li>
@@ -248,25 +227,15 @@ window.Quarto = {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#extending-the-example-with-online-update" id="toc-extending-the-example-with-online-update" class="nav-link active" data-scroll-target="#extending-the-example-with-online-update"><span class="header-section-number">3.1</span> Extending the example with online update</a>
-  <ul class="collapse">
-  <li><a href="#modelling-the-prior-and-likelihood-as-beta-bernoulli-distributions" id="toc-modelling-the-prior-and-likelihood-as-beta-bernoulli-distributions" class="nav-link" data-scroll-target="#modelling-the-prior-and-likelihood-as-beta-bernoulli-distributions"><span class="header-section-number">3.1.1</span> Modelling the prior and likelihood as beta-bernoulli distributions</a></li>
-  </ul></li>
-  <li><a href="#online-updates-of-beta-bernoulli-model" id="toc-online-updates-of-beta-bernoulli-model" class="nav-link" data-scroll-target="#online-updates-of-beta-bernoulli-model"><span class="header-section-number">3.2</span> Online updates of beta-bernoulli model</a></li>
-  </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/MateusMolina/ml-safety-playbook/edit/main/introduction/example-anomaly-detection.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../introduction/intro-uncertainty.html">Introduction</a></li><li class="breadcrumb-item"><a href="../introduction/example-anomaly-detection.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Example: Anomaly Detection</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../appendix/propositions-theorems.html">Appendices</a></li><li class="breadcrumb-item"><a href="../appendix/notation.html"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Notation</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Example: Anomaly Detection</span></h1>
+<h1 class="title">Appendix B — Notation</h1>
 </div>
 
 
@@ -283,120 +252,10 @@ window.Quarto = {
 </header>
 
 
-<div id="exm-anomaly-detection" class="theorem example">
-<p><span class="theorem-title"><strong>Example 3.1 (Anomaly Detection)</strong></span> A machine is equipped with an electric current sensor and a control system that flags if the electric current is outside of the typical range. We can assign a random variable <span class="math inline">\(F\)</span> that maps boolean outcomes to events in <span class="math inline">\(\Omega\)</span>, i.e., <span class="math inline">\(F: \Omega\rightarrow\{f,nf\}\)</span>, where <span class="math inline">\(f\)</span> represents at least one flagged event and <span class="math inline">\(nf\)</span> a non-flagged one, and <span class="math inline">\(\Omega\)</span> represents the event space for workpieces being processed in the machine.</p>
-<p>Let us assume that we monitor another property of this machine, namely, how often we have to discard a workpiece being produced there. We attribute another random variable <span class="math inline">\(D\)</span> to this process that also maps <span class="math inline">\(D:\Omega\rightarrow\{d,nd\}\)</span></p>
-<p>We want to continuously verify how effective our anomaly detection metric is in predicting defective workpieces, that is, monitor our <span class="math inline">\(p(D=d\vert F=f)\)</span> or simply <span class="math inline">\(p(d|f)\)</span> for convenience. This will be our <em>posterior</em>. Ideally, if we want to implement a metric as proxy for defective workpieces, this posterior should be close to <span class="math inline">\(1\)</span>, i.e., all flagged events led to a defective workpiece.</p>
-</div>
-<p>To make the discussion concrete, consider the following toy scenario. Suppose that, historically, <span class="math inline">\(2\%\)</span> of the parts produced by the machine turn out defective (a really bad rate, but useful for the demonstration). This means: <span class="math display">\[
-p(d)=0.02
-\]</span></p>
-<p>We also happen to know from historical data that when a defect is present, the current sensor raises a flag <span class="math inline">\(90\%\)</span> of the time, but it also generates false alarms: even when the part is fine, it still flags <span class="math inline">\(15\%\)</span> of the time. Formally: <span class="math display">\[
-p(f\vert d)  = 0.9 \text{, }
-p(f\vert nd) = 0.15
-\]</span></p>
-<p>From <a href="intro-uncertainty.html#eq-prob" class="quarto-xref">Equation&nbsp;<span>1.2</span></a> and <a href="intro-uncertainty.html#eq-sum" class="quarto-xref">Equation&nbsp;<span>1.1</span></a>, we can compute <span class="math inline">\(p(f)\)</span>:</p>
-<p><span class="math display">\[
-p(f)=p(f\vert d)p(d) + p(f\vert nd)p(nd)
-\]</span></p>
-<p>Bayes’ rule lets us update the belief about a part being defective as soon as the sensor fires. Applying <a href="intro-uncertainty.html#eq-bayes" class="quarto-xref">Equation&nbsp;<span>1.3</span></a> and since <span class="math inline">\(Y\)</span> can only assume one of the values in the set <span class="math inline">\(\{d,nd\}\)</span>, i.e., <span class="math inline">\(p(nd)=1-p(d)\)</span>, we have the following equation in function of the variables we already know:</p>
-<p><span class="math display">\[
-p(d\vert f)=\frac{p(f\vert d)p(d)}{p(f)}=\frac{p(f\vert d)p(d)}{p(f\vert d)p(d) + p(f\vert nd)(1-p(d))}
-\]</span></p>
-<p>This computes to <span class="math inline">\(p(d\vert f) =\)</span> 0.11, which is still surprisingly low given our prior and likelihood. The method, however, forces us to be realistic in our belief and say that we either need more <em>evidence</em> to prove <span class="math inline">\(A\)</span> as a metric for <span class="math inline">\(Y\)</span> or we should pivot to other experiments. Since our result depended so strongly on our choice of priors, we can assume that reliably collecting this information is critically important for significant outcomes using the method. Indeed, this is a common critique about the Bayesian approach to probability: it’s often more difficult to be reproduced in comparison to frequentist approaches, since the research outcome depends heavily on these initial assumptions.</p>
-<section id="extending-the-example-with-online-update" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="extending-the-example-with-online-update"><span class="header-section-number">3.1</span> Extending the example with online update</h2>
-<p>The previous example computed an analytical estimate for our posterior, making no explicit assumption about the underlying probability distribution of the prior and likelihood, treating them as fixed point estimates based on historical data.</p>
-<p>The bayesian approach conceptualizes probabilities as uncertainty. This is useful for online learning scenarios, where part of the dataset is encountered during runtime. In order to apply online learning to <a href="#exm-anomaly-detection" class="quarto-xref">Example&nbsp;<span>3.1</span></a>, let us first formally define our new learning task:</p>
-<p><span class="math display">\[
-p(\theta_{f,d} \vert \ \mathcal{D}_f)=?
-\]</span></p>
-<p>Where <span class="math inline">\(\theta_{f,d}\)</span> is the probability of the part being defective given the sensor reading, <span class="math inline">\(\mathcal{D}_f=\{D_1, D_2, \dots, D_i\}\)</span> is the set of observations of <span class="math inline">\(D\)</span> outcomes when <span class="math inline">\(F=f\)</span>. Interestingly, <span class="math inline">\(\theta_{f,d}\)</span> is both a probability and a random variable itself, since we are uncertain about its value.</p>
-<p>We can once again express our task in terms of the bayesian equation (<a href="intro-uncertainty.html#eq-bayes" class="quarto-xref">Equation&nbsp;<span>1.3</span></a>), but now making use of proportionality since, for the moment, we are not interested in the normalizing constant <span class="math inline">\(p(\mathcal{D}_f)\)</span>: <span id="eq-exm-update"><span class="math display">\[
-\begin{align*}
-p(\theta_{f,d} \vert \ \mathcal{D}_f)&amp;\propto p(\mathcal{D}_f\vert \theta_{f,d})p(\theta_{f,d}) \\
-&amp;\propto p(\mathcal{D}_f\vert \theta_{f,d})(\theta_{f,d})
-\end{align*}
-\tag{3.1}\]</span></span></p>
-<section id="modelling-the-prior-and-likelihood-as-beta-bernoulli-distributions" class="level3" data-number="3.1.1">
-<h3 data-number="3.1.1" class="anchored" data-anchor-id="modelling-the-prior-and-likelihood-as-beta-bernoulli-distributions"><span class="header-section-number">3.1.1</span> Modelling the prior and likelihood as beta-bernoulli distributions</h3>
-<p>Now, we need ways to express both our likelihood and prior as probability distributions, instead of point estimates, since we want to update our belief as new data points are observed. For that, we use the concept of <em>conjugate priors</em>, which are pairs of probability distributions that, when used together in Bayes’ rule, yield a posterior distribution of the same family as the prior distribution. This property greatly simplifies the process of updating beliefs with new evidence.</p>
-<p>In our case, we can use the Beta distribution as our prior and the Bernoulli distribution as our likelihood. Specifically, we can model the prior distribution of <span class="math inline">\(\theta_{f,d}\)</span> as a Beta distribution, <span class="math inline">\(Beta(a, b)\)</span>, and the likelihood of the observed data as a Bernoulli distribution, <span class="math inline">\(Ber(\theta_{f,d})\)</span>.</p>
-<p><span class="math display">\[
-\mathcal{D}_f\vert \theta_{f,d} \sim Ber(\theta_{f,d})
-\]</span> <span class="math display">\[
-\theta_{f,d} \sim Beta(a, b)
-\]</span></p>
-<p>Where <span class="math inline">\(\sim\)</span> means that the random variable follows the probability distribution on the right side. The Beta distribution is defined on the interval <span class="math inline">\([0, 1]\)</span> and is parameterized by two positive shape parameters, <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>, commonly referred as hyperparameters and they are used to encode our beliefs into the prior distribution. It is often used to model the distribution of probabilities. The Bernoulli distribution, on the other hand, models binary outcomes (success/failure) and is parameterized by a single probability parameter <span class="math inline">\(\theta\)</span>.</p>
-<p>We can write our likelihood and prior as: <span class="math display">\[p(\mathcal{D}_f\vert \theta_{f,d})=\theta_{f,d}^{N_{f,d}}(1-\theta_{f,d})^{N_{f,nd}}\]</span> <span class="math display">\[p(\theta_{f,d})\propto \theta_{f,d}^{a-1}(1-\theta_{f,d})^{b-1}\]</span></p>
-<p>Here, <span class="math inline">\(N_{f,d}\)</span> and <span class="math inline">\(N_{f,nd}\)</span> are the counts of flagged defective and non-defective events. Plugging in these expressions into <a href="#eq-exm-update" class="quarto-xref">Equation&nbsp;<span>3.1</span></a>, we get: <span id="eq-exm-update-2"><span class="math display">\[
-\begin{align*}
-p(\theta_{f,d} \vert \ \mathcal{D}_f)&amp;\propto Ber(\theta_{f,d})Beta(a, b) \\
-&amp;\propto \theta_{f,d}^{N_{f,d}}(1-\theta_{f,d})^{N_{f,nd}}\theta_{f,d}^{a-1}(1-\theta_{f,d})^{b-1} \\
-&amp;\propto \theta_{f,d}^{N_{f,d}+a-1}(1-\theta_{f,d})^{N_{f,nd}+b-1} \\
-&amp;\propto Beta(a+N_{f,d}, b+N_{f,nd})
-\end{align*}
-\tag{3.2}\]</span></span></p>
-<p>We see that the posterior also follows a Beta distribution, with updated parameters <span class="math inline">\(a+N_{f,d}\)</span> and <span class="math inline">\(b+N_{f,nd}\)</span>. This means that we can update our belief about the probability of a part being defective by simply updating the parameters of the Beta distribution as we observe new data. Therefore, Bayesian inference can be used both sequentially or in batch mode with equivalent results, which it makes it suitable for online learning scenarios. For a proof of this property, see <span class="citation" data-cites="murphyMachineLearningProbabilistic2014">Murphy (<a href="../references.html#ref-murphyMachineLearningProbabilistic2014" role="doc-biblioref">2014</a>)</span>. From Murphy’s book, we can also look at useful properties of the Beta distribution, such as its mean, mode and variance: <span id="eq-beta-props"><span class="math display">\[
-\mathbb{E}[\theta]=\frac{a}{a+b}, \quad mode(\theta)=\frac{a-1}{a+b-2}, \quad Var(\theta)=\frac{ab}{(a+b)^2(a+b+1)}
-\tag{3.3}\]</span></span></p>
-<p>Based on that, we can compute the mode, or MAP estimate, of our posterior distribution as: <span id="eq-exm-map"><span class="math display">\[
-\begin{align*}
-\hat{\theta}_{f,d}\vert \ \mathcal{D}_f&amp;=\frac{a+N_{f,d}-1}{a+b+N_{f,d}+N_{f,nd}-2} \\
-&amp;=\frac{a+N_{f,d}-1}{a+b+N_f-2} \\
-\end{align*}
-\tag{3.4}\]</span></span></p>
-<p>Where <span class="math inline">\(N_f=N_{f,d}+N_{f,nd}\)</span> is the total number of flagged events. Let us plot the prior, likelihood and posterior distributions for our initial example. We can choose the hyperparameters <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> such that the prior mean matches our initial belief of <span class="math inline">\(p(d)=0.02\)</span>. A good choice is to set <span class="math inline">\(a=2\)</span> and <span class="math inline">\(b=98\)</span>, which gives us the same prior mean of <span class="math inline">\(2/(2+98)=0.02\)</span>. For the likelihood, we can use the counts of flagged defective and non-defective events based on our initial example. Assuming we observed <span class="math inline">\(90\)</span> flagged defective events and <span class="math inline">\(15\)</span> flagged non-defective events, we have <span class="math inline">\(N_{f,d}=90\)</span> and <span class="math inline">\(N_{f,nd}=15\)</span>. Thus, our posterior will have parameters <span class="math inline">\(a+N_{f,d}=2+90=92\)</span> and <span class="math inline">\(b+N_{f,nd}=98+15=113\)</span>.</p>
-<div id="23db87ee" class="cell" data-execution_count="1">
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="example-anomaly-detection_files/figure-html/cell-2-output-1.png" width="656" height="375" class="figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-</section>
-<section id="online-updates-of-beta-bernoulli-model" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="online-updates-of-beta-bernoulli-model"><span class="header-section-number">3.2</span> Online updates of beta-bernoulli model</h2>
-<p>To see how new observations gradually nudge our posterior beliefs, the next simulation follows 1000 consecutive parts using the <a href="#algo-beta-bernoulli-update" class="quarto-xref">Algorithm 1</a>. After each part, the posterior is updated and the mode and the error bar is computed based on <a href="#eq-beta-props" class="quarto-xref">Equation&nbsp;<span>3.3</span></a>. The error bar is computed as three times the standard deviation (<span class="math inline">\(3\sigma\)</span>) around the mode, assuming a latent true latent defect probability of flagged events of <span class="math inline">\(\theta_{f,d}^\star=0.6\)</span>.</p>
-<div id="e9d4bdc4" class="cell" data-execution_count="2">
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="example-anomaly-detection_files/figure-html/cell-3-output-1.png" width="758" height="374" class="figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Our error bar shrinks as we observe more data, reflecting our increased confidence in the estimate. The mode converges towards the true latent defect probability of flagged events, <span class="math inline">\(\theta_{f,d}^\star=0.6\)</span>, demonstrating how Bayesian updating refines our beliefs with accumulating evidence.</p>
-<div id="algo-beta-bernoulli-update" class="pseudocode-container quarto-float" data-line-number-punc=":" data-caption-prefix="Algorithm" data-line-number="true" data-pseudocode-number="1" data-indent-size="1.2em" data-no-end="false" data-comment-delimiter="//">
-<div class="pseudocode">
-\begin{algorithm} \caption{Sequential Beta-Bernoulli Update for $\theta_{f,d}$}\begin{algorithmic} \INPUT $a_0 \geq 1, b_0 \geq 1$, prior Beta hyperparameters \INPUT $\{d_i\}_{i=1}^T$, sequence of flagged defect observations \OUTPUT $\{\hat{\theta}_{f,d}(t)\}_{t=1}^T$, $\{\sigma(t)\}_{t=1}^T$ \Procedure{BetaBernoulliUpdate}{$a_0, b_0, \{d_i\}_{i=1}^T$} \State $a \leftarrow a_0$ \Comment{initialize posterior parameters} \State $b \leftarrow b_0$ \For{$t = 1$ \To $T$} \State $d \leftarrow d_i$ \Comment{observe whether part is defective} \If{$d = \texttt{defect}$} \State $a \leftarrow a + 1$ \Comment{increment success count} \Else \State $b \leftarrow b + 1$ \Comment{increment failure count} \EndIf \State $\hat{\theta}_{f,d}(t) \leftarrow \dfrac{a - 1}{a + b - 2}$ \Comment{MAP estimate (mode)} \State $\sigma^2(t) \leftarrow \dfrac{ab}{(a+b)^2(a+b+1)}$ \Comment{posterior variance} \State $\sigma(t) \leftarrow \sqrt{\sigma^2(t)}$ \EndFor \State \textbf{return} $\{\hat{\theta}_{f,d}(t)\}_{t=1}^T, \{\sigma(t)\}_{t=1}^T$ \EndProcedure \end{algorithmic} \end{algorithm}
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Generalization
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>This algorithm assumes <span class="math inline">\(a_0 \geq 1\)</span> and <span class="math inline">\(b_0 \geq 1\)</span>, which corresponds to using the Beta distribution to encode pseudo-counts or prior observations. For more general priors (e.g., Jeffreys prior with <span class="math inline">\(a_0 = b_0 = 0.5\)</span>), the MAP estimate should be replaced with the posterior mean <span class="math inline">\(\frac{a}{a+b}\)</span> when <span class="math inline">\(a \leq 1\)</span> or <span class="math inline">\(b \leq 1\)</span>, since the mode is undefined in those cases.</p>
-</div>
-</div>
+<p>We use <span class="math inline">\(P\)</span> to denote probability mass functions (pmfs) for discrete random variables and <span class="math inline">\(p\)</span> to denote probability density functions (pdfs) for continuous random variables. For cumulative distribution functions (cdfs), we use <span class="math inline">\(F\)</span> for both discrete and continuous random variables when there is no risk of confusion.</p>
+<p>We use uppercase letters (e.g., <span class="math inline">\(X\)</span>, <span class="math inline">\(Y\)</span>) to denote random variables and lowercase letters (e.g., <span class="math inline">\(x\)</span>, <span class="math inline">\(y\)</span>) to denote their realizations. Boldface letters (e.g., <span class="math inline">\(\mathbf{X}\)</span>, <span class="math inline">\(\mathbf{y}\)</span>) denote vectors or matrices.</p>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
-<div id="ref-murphyMachineLearningProbabilistic2014" class="csl-entry" role="listitem">
-Murphy, Kevin P. 2014. <em>Machine <span>Learning</span> - <span>A Probabilistic Perspective</span></em>. Adaptive <span>Computation</span> and <span>Machine Learning</span>. Cambridge: MIT Press.
-</div>
-</div>
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -801,18 +660,15 @@ Murphy, Kevin P. 2014. <em>Machine <span>Learning</span> - <span>A Probabilistic
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../introduction/probability-distributions.html" class="pagination-link" aria-label="Probability Distributions">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Probability Distributions</span></span>
+      <a href="../appendix/propositions-theorems.html" class="pagination-link" aria-label="Propositions and Theorems">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Propositions and Theorems</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../introduction/example-spam-detection.html" class="pagination-link" aria-label="Example: Spam Detection">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Example: Spam Detection</span></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav>
 </div> <!-- /content -->
-    <footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/MateusMolina/ml-safety-playbook/edit/main/introduction/example-anomaly-detection.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div></div></footer><script type="text/javascript">
+    <footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/MateusMolina/ml-safety-playbook/edit/main/appendix/notation.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div></div></footer><script type="text/javascript">
     (function(d) {
       d.querySelectorAll(".pseudocode-container").forEach(function(el) {
         let pseudocodeOptions = {
