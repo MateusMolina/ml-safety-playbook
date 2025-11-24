@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.25">
+<meta name="generator" content="quarto-1.8.26">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -59,7 +59,7 @@ div.csl-indent {
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap-0dd2bd5de344125cf763a379ddc3eb04.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -157,9 +157,7 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
-      <a href="../index.html" class="sidebar-logo-link">
-      </a>
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Machine Learning Safety Playbook</a> 
         <div class="sidebar-tools-main">
@@ -473,7 +471,7 @@ p(\mathbf{x}_i\vert y_i=c, \pmb{\Theta}) = \prod_j ber(x_{ij}\vert \theta_{jc})
 p(\pmb{\Theta}\vert \mathcal{D}) \propto p(\mathcal{D}\vert \pmb{\Theta})p(\pmb{\Theta})
 \tag{4.3}\]</span></span></p>
 <p>We can use the maximum likelihood estimate (MLE) to compute the parameters in <span class="math inline">\(\pmb{\Theta}\)</span>. Later on, we will discuss the limitations of this approach and how we can improve it.</p>
-<p><strong>Computing the training likelihood <span class="math inline">\(p(\mathcal{D}\vert\pmb{\Theta})\)</span>.</strong> Since <span class="math inline">\(\mathcal{D}\subseteq \mathbf{X}\times \mathcal{Y}\)</span>, we can express the equation using <a href="intro-uncertainty.html#eq-prob" class="quarto-xref">Equation&nbsp;<span>1.2</span></a>:</p>
+<p><strong>Computing the training likelihood <span class="math inline">\(p(\mathcal{D}\vert\pmb{\Theta})\)</span>.</strong> Since <span class="math inline">\(\mathcal{D}\subseteq \mathbf{X}\times \mathcal{Y}\)</span>, we can express the equation using <a href="intro-uncertainty.html#thm-product-rule" class="quarto-xref">Theorem&nbsp;<span>1.2</span></a>:</p>
 <p><span id="eq-exm-spam-training-likelihood-aggregated"><span class="math display">\[
 \begin{align}
 p(\mathcal{D}\mid \pmb{\Theta}) &amp;= \prod_{i} p(\mathbf{x}_i,y_i\mid \pmb{\Theta}) \\
@@ -484,14 +482,10 @@ p(\mathcal{D}\mid \pmb{\Theta}) &amp;= \prod_{i} p(\mathbf{x}_i,y_i\mid \pmb{\Th
 <p><span id="eq-exm-spam-training-likelihood-aggregated-2"><span class="math display">\[
 p(\mathcal{D}\mid \pmb{\Theta}) = \prod_{i} \prod_{c} [\pi_c^{\mathbb{I}(y_i=c)} \prod_j \text{ber}(x_{ij}\mid \pmb{\theta})^{\mathbb{I}(y_i=c)}]
 \tag{4.5}\]</span></span></p>
-<p>Returning to <a href="#eq-exm-spam-training-likelihood" class="quarto-xref">Equation&nbsp;<span>4.3</span></a>, assuming independence between data points, we can express the full likelihood of the dataset <span class="math inline">\(\mathcal{D}\)</span> as:</p>
-<p><span id="eq-exm-spam-training-likelihood-5"><span class="math display">\[
-p(\mathcal{D}\vert \pmb{\Theta}) = \prod_{i} p(\mathbf{x}_i,y_i\vert \pmb{\Theta})
-\tag{4.6}\]</span></span></p>
-<p>Plugging <span class="quarto-unresolved-ref">?eq-exm-spam-training-likelihood-4</span> into <a href="#eq-exm-spam-training-likelihood-5" class="quarto-xref">Equation&nbsp;<span>4.6</span></a>, and taking the logarithm to simplify the product into a sum, we get: <span id="eq-exm-spam-training-log-likelihood"><span class="math display">\[
+<p>Taking the logarithm from <a href="#eq-exm-spam-training-likelihood-aggregated-2" class="quarto-xref">Equation&nbsp;<span>4.5</span></a>, and taking the logarithm to simplify the product into a sum, we get: <span id="eq-exm-spam-training-log-likelihood"><span class="math display">\[
 \log p(\mathcal{D}\vert \pmb{\Theta}) = \sum_{i} \sum_c \mathbb{I}(y_i=c) \log \pi_c + \sum_{i} \sum_j \sum_c [ \mathbb{I}(y_i=c) \log \theta_{jc} +(1-\mathbb{I}(y_i=c)) \log (1-\theta_{jc})]
-\tag{4.7}\]</span></span></p>
-<p><strong>Computing the MLE for <span class="math inline">\(\theta_{jc}\)</span>.</strong> To compute the MLE for <span class="math inline">\(\theta_{jc}\)</span>, we need to maximize the log-likelihood from <a href="#eq-exm-spam-training-log-likelihood" class="quarto-xref">Equation&nbsp;<span>4.7</span></a> with respect to the parameters <span class="math inline">\(\theta_{jc}\)</span>.</p>
+\tag{4.6}\]</span></span></p>
+<p><strong>Computing the MLE for <span class="math inline">\(\theta_{jc}\)</span>.</strong> To compute the MLE for <span class="math inline">\(\theta_{jc}\)</span>, we need to maximize the log-likelihood from <a href="#eq-exm-spam-training-log-likelihood" class="quarto-xref">Equation&nbsp;<span>4.6</span></a> with respect to the parameters <span class="math inline">\(\theta_{jc}\)</span>.</p>
 <p>To do this, we can take the derivative of the log-likelihood with respect to <span class="math inline">\(\theta_{jc}\)</span>, set it to zero, and solve for <span class="math inline">\(\theta_{jc}\)</span>. This gives us the following equation:</p>
 <p><span class="math display">\[
 \frac{\partial}{\partial \theta_{jc}} \log p(\mathcal{D}\vert \pmb{\Theta}) = \sum_{i} \sum_c \mathbb{I}(y_i=c) \frac{1}{\theta_{jc}} - \sum_{i} \sum_c (1-\mathbb{I}(y_i=c)) \frac{1}{1-\theta_{jc}} = 0
@@ -505,8 +499,18 @@ p(\mathcal{D}\vert \pmb{\Theta}) = \prod_{i} p(\mathbf{x}_i,y_i\vert \pmb{\Theta
 <p>To compute the matrix of probabilities <span class="math inline">\(\pmb{\theta}\)</span>, we can use the maximum likelihood estimate (MLE) for each word <span class="math inline">\(j\)</span> in the vocabulary and each class <span class="math inline">\(c\)</span>:</p>
 <p><span id="eq-exm-spam-mle"><span class="math display">\[
 \hat{\theta}_{jc} = \frac{\sum_{i} x_{ij} \mathbb{I}(y_i=c)}{\sum_{i} \mathbb{I}(y_i=c)}
-\tag{4.8}\]</span></span></p>
+\tag{4.7}\]</span></span></p>
 <p>Where <span class="math inline">\(\mathbb{I}(\cdot)\)</span> is the indicator function that returns 1 if the condition is true and 0 otherwise.</p>
+<p><strong>Computing the MLE for <span class="math inline">\(\pi_c\)</span>.</strong> Similarly, to compute the MLE for the prior class probabilities <span class="math inline">\(\pi_c\)</span>, we need to maximize the log-likelihood from <a href="#eq-exm-spam-training-log-likelihood" class="quarto-xref">Equation&nbsp;<span>4.6</span></a> with respect to the parameters <span class="math inline">\(\pi_c\)</span>.</p>
+<p>Taking the derivative of the log-likelihood with respect to <span class="math inline">\(\pi_c\)</span> and setting it to zero (subject to the constraint that <span class="math inline">\(\sum_c \pi_c = 1\)</span>), we get:</p>
+<p><span class="math display">\[
+\frac{\partial}{\partial \pi_c} \log p(\mathcal{D}\vert \pmb{\Theta}) = \sum_{i} \mathbb{I}(y_i=c) \frac{1}{\pi_c} = 0
+\]</span></p>
+<p>Which leads to the MLE for <span class="math inline">\(\pi_c\)</span> as follows:</p>
+<p><span id="eq-exm-spam-mle-prior"><span class="math display">\[
+\hat{\pi}_c = \frac{\sum_{i} \mathbb{I}(y_i=c)}{N}
+\tag{4.8}\]</span></span></p>
+<p>where <span class="math inline">\(N\)</span> is the total number of training examples. In other words, the MLE for the prior class probability is simply the fraction of training examples that belong to class <span class="math inline">\(c\)</span>.</p>
 <div id="chl-black-swan" class="theorem">
 <p><span class="theorem-title"><strong>Challenge 4.1 (Black Swan)</strong></span> However, using the MLE directly suffers from the <strong>black swan problem</strong>: This is analogous to the classical black swan problem: just because we’ve never observed a black swan doesn’t mean the probability of seeing one should be exactly zero. It assigns extreme probabilities (exactly 0 or 1) when a word never appears or always appears in messages of a particular class. This leads to several issues:</p>
 <ol type="1">
@@ -909,7 +913,20 @@ Table&nbsp;4.5: Predictions using log-probabilities
 </section>
 <section id="relaxing-assumption-for-the-prior" class="level2" data-number="4.4">
 <h2 data-number="4.4" class="anchored" data-anchor-id="relaxing-assumption-for-the-prior"><span class="header-section-number">4.4</span> Relaxing assumption for the prior</h2>
-<p>In <span class="quarto-unresolved-ref">?eq-exm-spam-prior</span>, we assumed a uniform prior for the classes. However, this may not reflect the true distribution of spam and non-spam messages in practice. To relax this assumption, we can</p>
+<p>In <a href="#eq-exm-spam-mle-prior" class="quarto-xref">Equation&nbsp;<span>4.8</span></a>, we assumed a uniform prior for the classes. However, this may not reflect the true distribution of spam and non-spam messages in practice. Let us investigate how we can relax this assumption.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>#TODO #12 Section: Relaxing Assumption for the prior, Example Spam Detection</p>
+</div>
+</div>
 
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
