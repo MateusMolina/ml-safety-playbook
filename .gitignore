@@ -1,9 +1,10 @@
-/.quarto/
+.quarto
 **/*.quarto_ipynb
 _book
 .mypy_cache
 *_files
 !docs/**/*_files
+.venv
 
 Latex
 *.acn
@@ -50,7 +51,9 @@ Latex
 *.xdy
 *.xml
 *blx.bib
-.bak 
+.bak
 .mtc
 build/
 
+
+/.quarto/

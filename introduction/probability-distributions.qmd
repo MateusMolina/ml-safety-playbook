@@ -1,0 +1,102 @@
+---
+title: Probability Distributions
+---
+
+## Univariate
+
+### Discrete
+
+#### Bernoulli
+
+#### Binomial
+
+### Continuous
+
+#### Gaussian: (Normal) Distribution
+
+#### Beta
+
+#### Poisson
+
+#### Weibull
+
+## Multivariate
+
+### Discrete
+
+#### Multinomial (generalization of Binomial)
+
+::: {#def-multinomial}
+
+## Multinomial Distribution
+The **multinomial distribution** is a generalization of the binomial distribution. It models the probability of counts for each of $k$ different outcomes in $n$ independent trials, where each trial results in exactly one of the $k$ outcomes. Let $\mathbf{x} = (x_1, x_2, \ldots, x_k) \in \mathbf{X}$ be the vector of counts for each outcome and $\mathbf{X}$ the vector of random variables, we say that $$\mathbf{X}\sim \text{Mu}_k(\mathbf{X} \mid n,\pmb{\theta}).$$ The probability mass function (PMF) of the multinomial distribution is given by:
+$$
+\begin{aligned}
+P(\mathbf{X}=\mathbf{x}) &= \binom{n}{x_1, x_2, \ldots, x_k} \theta_1^{x_1} \theta_2^{x_2} \ldots \theta_k^{x_k}\\
+&= \binom{n}{x_1, x_2, \ldots, x_k} \prod_{i=1}^{k} \theta_i^{x_i}
+\end{aligned}
+$$ {#eq-pmf-multinomial}
+where:
+
+- $n$ is the total number of trials,
+- $x_i$ is the count of occurrences of outcome $i$ (with $\sum_{i=1}^{k} x_i = n$),
+- $p_i$ is the probability of outcome $i$ (with $\sum_{i=1}^{k} \theta_i = 1$).
+- The term $$\binom{n}{x_1, x_2, \ldots, x_k} \triangleq \frac{n!}{x_1! x_2! \ldots x_k!}$$ is the multinomial coefficient, which counts the number of ways to arrange the counts of the different outcomes.
+
+::: 
+
+::: {#exm-die-multinomial}
+
+## 5 ones and 5 sixes in 10 rolls of a fair die
+Suppose we roll a fair six-sided die 10 times. We want to find the probability of getting 5 ones and 5 sixes: 1 appears 5 times, 2 appears 0 times, 3 appears 0 times, 4 appears 0 times, 5 appears 0 times, and 6 appears 5 times.
+Let $\mathbf{x} = (5, 0, 0, 0, 0, 5)$ be the vector of counts for each face. Since the die is fair, the probabilities for each face are equal: $$\pmb{\theta} = \left(\frac{1}{6}, \frac{1}{6}, \frac{1}{6}, \frac{1}{6}, \frac{1}{6}, \frac{1}{6}\right).$$
+We can say that $$\mathbf{X}\sim \text{Mu}_6(\mathbf{X} \mid 10,\pmb{\theta}).$$ By applying @eq-pmf-multinomial, we can calculate the probability of observing the counts in $\mathbf{x}$:
+$$
+\begin{aligned}
+p(\mathbf{X}=\mathbf{x}) &= \binom{10}{5, 0, 0, 0, 0, 5} \left(\frac{1}{6}\right)^5 \left(\frac{1}{6}\right)^0 \left(\frac{1}{6}\right)^0 \left(\frac{1}{6}\right)^0 \left(\frac{1}{6}\right)^0 \left(\frac{1}{6}\right)^5\\
+&= \frac{10!}{5! 0! 0! 0! 0! 5!} \left(\frac{1}{6}\right)^{10} \approx 4.17\times 10^{-6}\\
+\end{aligned}
+$$
+
+You can expect to be this lucky about once every 240,000 times you repeat this experiment!
+:::
+
+A special case of the multinomial distribution is the categorical distribution, which models the outcome of a single trial with $k$ possible outcomes.
+
+::: {#def-categorical}
+
+## Categorical Distribution
+
+The **categorical distribution** is a special case of the multinomial distribution where there is only one trial ($n=1$). It models the probability of each of $k$ different outcomes in a single trial. Let $X$ be a random variable representing the outcome of the trial, we say that $$\mathbf{X}\sim \text{Cat}(\pmb{\theta}) \triangleq \text{Mu}_k(\pmb{\mathbf{X}}\mid 1,\pmb{\theta}).$$
+
+Note that since we have just one experiment, the vector of outcomes must contain exactly one non-zero element equal to one. For example, $\mathbf{x}=(1,0,\ldots,0)$ indicates that outcome 1 occurred, $\mathbf{x}=(0,1,0,\ldots,0)$ indicates that outcome 2 occurred, and so on. It's common to say that a single r.v. and not a vector of them is modelled as a categorical distribution; since only one class is true at any given sample, we can use following notation for a r.v. $Y$:
+
+$$
+Y\sim\text{Cat}(\pmb{\theta}) \implies \mathbf{Y}^\star\sim\text{Cat}(\pmb{\theta}), \quad y=c \iff c\in\mathbf{y}^\star, c = 1
+$$
+
+:::
+
+::: {#prp-categorical-mle}
+
+## MLE for the Categorical Distribution
+
+The MLE for a r.v. $X\sim\text{Cat}(\pmb{\theta})$, and set of samples from $X$, $S$, is given by:
+$$
+\hat{\theta}=\frac{N_c}{N}
+$$
+:::
+
+Where $N$ is the number of samples from $X$ $\in S$, and $N_c$ is the number of times $X=c$ in $S$.  
+
+### Continuous
+
+#### Dirichlet
+
+## Conjugate Priors
+
+### Beta-Bernoulli
+
+### Dirichlet-Multinomial
+
+### And Gaussian?

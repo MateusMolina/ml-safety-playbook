@@ -1,0 +1,51 @@
+---
+title: "Propositions and Theorems"
+---
+
+::: {#prp-categorical-indicators}
+
+## One-Hot Indicator Equivalence for Categorical Distributions
+
+Let $Y$ be a categorical random variable $Y \sim \text{cat}(Y\vert \pmb{\pi})$, taking values in $C=\{1,\dots,C\}$ with class probabilities 
+$$\pi_c>0 \quad \sum_{c=1}^C\pi_c=1 \quad \pi_c=P(Y=c) \quad \forall \pi_c \in \pmb{\pi}.$$ 
+
+Then the pmf of $Y$ can be equivalently expressed using one-hot indicators as:
+
+$$
+P(Y\mid \pmb{\pi})=\prod_{c}^C \pi_c^{\mathbb{1}\{Y=c\}},
+$$
+
+which can be further simplified by substituting $\mathbb{1}\{Y=c\}\triangleq y_{c}$:
+
+$$
+P(Y\mid \pmb{\pi})=\prod_{c}^C \pi_c^{y_{c}}.
+$$
+
+:::
+
+::: {.proof}
+By definition of the categorical distribution, we have that only a single class $c^*$ is active, i.e., $\mathbb{1}\{Y=c^*\}=1$ and $\mathbb{1}\{Y=c\}=0$ for all $c \neq c^*$. Therefore, the product simplifies to:
+
+$$
+\begin{align*}
+\prod_{c=1}^C P(Y=c)^{\mathbb{1}\{Y=c\}} &= P(Y=c^*)^{\mathbb{1}\{Y=c^*\}} \cdot \prod_{c \neq c^*} P(Y=c)^{\mathbb{1}\{Y=c\}} \\
+&= P(Y=c^*)^{1} \cdot \prod_{c \neq c^*} P(Y=c)^{0} \\
+&= P(Y=c^*)
+\end{align*}
+$$
+
+When we evaluate the pmf $P(Y\mid \pmb{\pi})$ at the realized value $Y=c^*$, we have that $P(Y\mid \pmb{\pi}) = P(Y=c^*)$, which confirms the equivalence.
+
+:::
+
+::: {#cor-categorical-one-hot-indicator-conditional}
+## One-Hot Indicator Equivalence for Conditional pmfs
+
+Let $X$ be any r.v. and $Y$ be a categorical random variable $Y \sim \text{cat}(Y \mid \pmb{\pi})$, taking values in $C=\{1,\dots,C\}$. Then the conditional pmf of $Y$ given $X$ can be equivalently expressed using one-hot indicators as:
+
+$$
+P(X\mid Y, \pmb{\pi})=\prod_{c}^C P(X\mid Y=c) ^{\mathbb{1}\{Y=c\}}.
+$$
+:::
+
+The proof follows directly from @prp-categorical-indicators, since only a single class $c^*$ is active for $Y$.

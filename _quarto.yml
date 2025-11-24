@@ -12,9 +12,14 @@ book:
     - part: "Introduction"
       chapters:
         - introduction/intro-uncertainty.qmd
+        - introduction/probability-distributions.qmd
         - introduction/example-anomaly-detection.qmd
+        - introduction/example-spam-detection.qmd
     - references.qmd
     - part: "Concepts"
+  appendices:
+    - appendix/propositions-theorems.qmd
+    - appendix/notation.qmd
 bibliography: references.bib
 
 format:
@@ -22,6 +27,7 @@ format:
     theme:
       - cosmo
       - brand
+    css: styles.css
 
 execute:
   echo: false
@@ -30,6 +36,8 @@ execute:
 custom-amsthm:
   - key: prm
     name: Problem
+  - key: chl
+    name: Challenge
 
 filters:
   - custom-amsthm-environments
