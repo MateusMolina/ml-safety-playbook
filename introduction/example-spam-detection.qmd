@@ -103,7 +103,7 @@ $$ {#eq-exm-spam-training-likelihood}
 
 We can use the maximum likelihood estimate (MLE) to compute the parameters in $\pmb{\Theta}$. Later on, we will discuss the limitations of this approach and how we can improve it.
 
-**Computing the training likelihood $p(\mathcal{D}\vert\pmb{\Theta})$.** Since $\mathcal{D}\subseteq \mathbf{X}\times \mathcal{Y}$, we can express the equation using @eq-prob:
+**Computing the training likelihood $p(\mathcal{D}\vert\pmb{\Theta})$.** Since $\mathcal{D}\subseteq \mathbf{X}\times \mathcal{Y}$, we can express the equation using @Thm-product-rule:
 
 $$
 \begin{align}
@@ -118,13 +118,7 @@ $$
 p(\mathcal{D}\mid \pmb{\Theta}) = \prod_{i} \prod_{c} [\pi_c^{\mathbb{I}(y_i=c)} \prod_j \text{ber}(x_{ij}\mid \pmb{\theta})^{\mathbb{I}(y_i=c)}]
 $$ {#eq-exm-spam-training-likelihood-aggregated-2}
 
-Returning to @eq-exm-spam-training-likelihood, assuming independence between data points, we can express the full likelihood of the dataset $\mathcal{D}$ as:
-
-$$
-p(\mathcal{D}\vert \pmb{\Theta}) = \prod_{i} p(\mathbf{x}_i,y_i\vert \pmb{\Theta})
-$$ {#eq-exm-spam-training-likelihood-5}
-
-Plugging @eq-exm-spam-training-likelihood-4 into @eq-exm-spam-training-likelihood-5, and taking the logarithm to simplify the product into a sum, we get:
+Taking the logarithm from @eq-exm-spam-training-likelihood-aggregated-2, and taking the logarithm to simplify the product into a sum, we get:
 $$
 \log p(\mathcal{D}\vert \pmb{\Theta}) = \sum_{i} \sum_c \mathbb{I}(y_i=c) \log \pi_c + \sum_{i} \sum_j \sum_c [ \mathbb{I}(y_i=c) \log \theta_{jc} +(1-\mathbb{I}(y_i=c)) \log (1-\theta_{jc})]
 $$ {#eq-exm-spam-training-log-likelihood}
@@ -151,7 +145,23 @@ $$
 \hat{\theta}_{jc} = \frac{\sum_{i} x_{ij} \mathbb{I}(y_i=c)}{\sum_{i} \mathbb{I}(y_i=c)}
 $$ {#eq-exm-spam-mle}
 
-Where $\mathbb{I}(\cdot)$ is the indicator function that returns 1 if the condition is true and 0 otherwise. 
+Where $\mathbb{I}(\cdot)$ is the indicator function that returns 1 if the condition is true and 0 otherwise.
+
+**Computing the MLE for $\pi_c$.** Similarly, to compute the MLE for the prior class probabilities $\pi_c$, we need to maximize the log-likelihood from @eq-exm-spam-training-log-likelihood with respect to the parameters $\pi_c$.
+
+Taking the derivative of the log-likelihood with respect to $\pi_c$ and setting it to zero (subject to the constraint that $\sum_c \pi_c = 1$), we get:
+
+$$
+\frac{\partial}{\partial \pi_c} \log p(\mathcal{D}\vert \pmb{\Theta}) = \sum_{i} \mathbb{I}(y_i=c) \frac{1}{\pi_c} = 0
+$$
+
+Which leads to the MLE for $\pi_c$ as follows:
+
+$$
+\hat{\pi}_c = \frac{\sum_{i} \mathbb{I}(y_i=c)}{N}
+$$ {#eq-exm-spam-mle-prior}
+
+where $N$ is the total number of training examples. In other words, the MLE for the prior class probability is simply the fraction of training examples that belong to class $c$. 
 
 ::: {#chl-black-swan}
 
@@ -273,4 +283,10 @@ predictions_log_df
 
 ## Relaxing assumption for the prior
 
-In @eq-exm-spam-prior, we assumed a uniform prior for the classes. However, this may not reflect the true distribution of spam and non-spam messages in practice. To relax this assumption, we can
+In @eq-exm-spam-mle-prior, we assumed a uniform prior for the classes. However, this may not reflect the true distribution of spam and non-spam messages in practice. Let us investigate how we can relax this assumption.
+
+::: {.callout-note}
+
+#TODO #12 Section: Relaxing Assumption for the prior, Example Spam Detection
+
+:::
