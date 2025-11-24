@@ -31,7 +31,6 @@ format:
 
 execute:
   echo: false
-  freeze: auto
 
 custom-amsthm:
   - key: prm
