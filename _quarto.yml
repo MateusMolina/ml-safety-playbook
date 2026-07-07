@@ -2,7 +2,7 @@ project:
   type: book
 
 book:
-  title: "Machine Learning Safety Playbook"
+  title: "Dependable Machine Learning"
   author: "Mateus Molina"
   repo-url: https://github.com/MateusMolina/ml-safety-playbook
   repo-actions: [edit]

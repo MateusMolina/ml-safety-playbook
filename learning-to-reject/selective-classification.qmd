@@ -1,0 +1,18 @@
+---
+title: "Selective Classification"
+---
+
+## Sources
+
+
+@ARTICLE{LearningToReject,
+	author={Zhang, Xu-Yao and Xie, Guo-Sen and Li, Xiuli and Mei, Tao and Liu, Cheng-Lin},
+	journal={Proceedings of the IEEE},
+	title={A Survey on Learning to Reject},
+	year={2023},
+	volume={111},
+	number={2},
+	pages={185-215},
+	doi={10.1109/JPROC.2023.3238024}
+}
+
